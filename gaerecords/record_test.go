@@ -147,5 +147,3 @@ func TestGetDatastoreKeyForUnpersistedRecordWithParentRecord(t *testing.T) {
 	assertEqual(t, people.RecordType(), key.Kind())
 	
 }
-
-// next: more tests to make keys work better (i.e. parent keys should work too)

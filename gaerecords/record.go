@@ -89,13 +89,14 @@ func (r *Record) HasParent() bool {
 	Persistence
 */
 
+// Gets the datastore key for this record
 func (r *Record) GetDatastoreKey() *datastore.Key {
 	
 	var key *datastore.Key
 	var parentKey *datastore.Key
 	
 	if r.HasParent() {
-		parentKey = r.GetDatastoreKey()
+		parentKey = r.Parent().GetDatastoreKey()
 	}
 	
 	if r.IsPersisted() {
