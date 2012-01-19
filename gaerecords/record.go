@@ -24,7 +24,7 @@ type Record struct {
 	Manager *RecordManager
 	
 	// The fields that make up the data of this record
-	// managed via the Get() and Set() methods
+	// managed via the Get*() and Set*() methods
 	Fields RecordFields
 	
 }
@@ -92,12 +92,12 @@ func (r *Record) SetBool(key string, value bool) *Record {
 }
 
 // Gets a key field
-func (r *Record) GetKey(key string) *datastore.Key {
+func (r *Record) GetKeyField(key string) *datastore.Key {
 	return r.Get(key).(*datastore.Key)
 }
 
 // Sets the key value of a field
-func (r *Record) SetKey(key string, value *datastore.Key) *Record {
+func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
 

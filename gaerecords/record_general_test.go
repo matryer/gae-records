@@ -66,16 +66,16 @@ func TestGetAndSetBool(t *testing.T) {
 	
 }
 
-func TestGetAndSetKey(t *testing.T) {
+func TestGetAndSetKeyField(t *testing.T) {
 	
 	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	var key *datastore.Key = people.NewKey()
 	
-	assertEqual(t, person, person.SetKey("field", key))
+	assertEqual(t, person, person.SetKeyField("field", key))
 	assertEqual(t, key, person.Fields["field"])
-	assertEqual(t, key, person.GetKey("field"))
+	assertEqual(t, key, person.GetKeyField("field"))
 	
 }
 
