@@ -18,7 +18,7 @@ func assertEqual(t *testing.T, a interface{}, b interface{}) {
 var TestContext *appenginetesting.Context
 
 // Creates a test appengine context object
-func CreateTestAppengineContext(t *testing.T) appengine.Context {
+func AppEngineContext(t *testing.T) appengine.Context {
 	
 	if TestContext == nil {
 		t.Logf("<<< Test context created >>>")
@@ -31,13 +31,13 @@ func CreateTestAppengineContext(t *testing.T) appengine.Context {
 
 // Creates a test 'people' record manager
 func CreateTestPeopleRecordManager(t *testing.T) *RecordManager {
-	return NewRecordManager(CreateTestAppengineContext(t), "people")
+	return NewRecordManager(AppEngineContext(t), "people")
 }
 
 // Resets the datastore to a default test position
 func CreateTestPerson(t *testing.T) (*Record, os.Error) {
 	
-	context := CreateTestAppengineContext(t)
+	context := AppEngineContext(t)
 	people := NewRecordManager(context, "people")
 	person := people.New()
 	key := person.DatastoreKey()
