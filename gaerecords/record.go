@@ -1,3 +1,4 @@
+// gaerecords is an Active record style wrapper around Google App Engine datastore
 package gaerecords
 
 import (
@@ -12,9 +13,13 @@ type Record struct {
 	
 	recordID int64
 	parent *Record
-	cachedKey *datastore.Key
+	datastoreKey *datastore.Key
 	
+	// The RecordManager responsible for handling interactions with this record
 	Manager *RecordManager
+	
+	// The fields that make up the data of this record
+	// managed via the Get() and Set() methods
 	Fields RecordFields
 	
 }
@@ -31,15 +36,16 @@ func NewRecord() *Record {
 	Fields
 */
 
-// Sets a field in the record
-func (r *Record) Set(k string, v interface{}) *Record {
-	r.Fields[k] = v
+// Sets a field in the record.  The value must be an acceptable datastore
+// type or another Record
+func (r *Record) Set(key string, value interface{}) *Record {
+	r.Fields[key] = value
 	return r
 }
 
 // Gets the value of a field in a record
-func (r *Record) Get(k string) interface{} {
-	return r.Fields[k]
+func (r *Record) Get(key string) interface{} {
+	return r.Fields[key]
 }
 
 
@@ -59,7 +65,7 @@ func (r *Record) setID(id int64) *Record {
 	r.recordID = id
 	
 	// invalidate the key
-	r.cachedKey = nil
+	r.datastoreKey = nil
 	
 	// chain
 	return r
@@ -75,16 +81,18 @@ func (r *Record) IsPersisted() bool {
 	Parentage
 */
 
+// Sets the parent record of this record.
 func (r *Record) SetParent(parent *Record) *Record {
 	r.parent = parent
 	return r
 }
 
+// Gets the parent record of this record or nil if it has no parent.
 func (r *Record) Parent() *Record {
 	return r.parent
 }
 
-// TODO: test me
+// Gets whether this record has a parent or not.  Same as record.Parent() != nil.
 func (r *Record) HasParent() bool {
 	return r.Parent() != nil
 }
@@ -96,7 +104,7 @@ func (r *Record) HasParent() bool {
 // Gets the datastore key for this record
 func (r *Record) GetDatastoreKey() *datastore.Key {
 	
-	if r.cachedKey == nil {
+	if r.datastoreKey == nil {
 	
 		var key *datastore.Key
 		var parentKey *datastore.Key
@@ -106,16 +114,16 @@ func (r *Record) GetDatastoreKey() *datastore.Key {
 		}
 	
 		if r.IsPersisted() {
-			key = datastore.NewKey(r.Manager.appengineContext, r.Manager.RecordType(), "", int64(r.ID()), parentKey)
+			key = r.Manager.GetKeyWithID(r.ID(), parentKey)
 		} else {
-			key = datastore.NewIncompleteKey(r.Manager.appengineContext, r.Manager.RecordType(), parentKey)
+			key = r.Manager.GetKey(parentKey)
 		}
 	
-		r.cachedKey = key
+		r.datastoreKey = key
 	
 	}
 	
-	return r.cachedKey
+	return r.datastoreKey
 	
 }
 
@@ -123,16 +131,26 @@ func (r *Record) GetDatastoreKey() *datastore.Key {
 	PropertyList
 */
 
+// Creates a datastore.PropertyList containing the fields from the record
 func (r *Record) GetFieldsAsPropertyList() datastore.PropertyList {
 	
 	var list datastore.PropertyList = make(datastore.PropertyList, len(r.Fields))
 	var counter int = 0
 	
 	for k, v := range r.Fields {
-		list[counter] = datastore.Property { k, v, true, false }
+		list[counter] = datastore.Property { k, v, false, false }
 		counter++
 	}
 	
 	return list
+	
+}
+
+// Sets the fields in the record to match those of the specified datastore.PropertyList
+func (r *Record) SetFieldsFromPropertyList(plist datastore.PropertyList) {
+	
+	for _, property := range plist {
+		r.Fields[property.Name] = property.Value
+	}
 	
 }
