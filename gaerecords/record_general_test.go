@@ -65,9 +65,9 @@ func TestSetIDAndGetID(t *testing.T) {
 	people := CreateTestPeopleRecordManager()
 	person := people.New()
 	
-	assertEqual(t, RecordID(-1), person.ID())
+	assertEqual(t, int64(-1), person.ID())
 	assertEqual(t, person, person.setID(123))
-	assertEqual(t, RecordID(123), person.ID())
+	assertEqual(t, int64(123), person.ID())
 	
 }
 

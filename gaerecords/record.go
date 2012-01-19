@@ -7,13 +7,10 @@ import (
 // A map of the fields of a record
 type RecordFields map[string]interface{}
 
-// The type of IDs used to uniquely identify records
-type RecordID int64
-
 // Represents a single record
 type Record struct {
 	
-	recordID RecordID
+	recordID int64
 	parent *Record
 	
 	Manager *RecordManager
@@ -50,12 +47,12 @@ func (r *Record) Get(k string) interface{} {
 */
 
 // Gets the ID for this record
-func (r *Record) ID() RecordID {
+func (r *Record) ID() int64 {
 	return r.recordID
 }
 
 // Sets the ID for this record
-func (r *Record) setID(id RecordID) *Record {
+func (r *Record) setID(id int64) *Record {
 	r.recordID = id
 	return r
 }
