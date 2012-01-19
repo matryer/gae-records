@@ -40,7 +40,7 @@ func CreateTestPerson(t *testing.T) (*Record, os.Error) {
 	context := CreateTestAppengineContext(t)
 	people := NewRecordManager(context, "people")
 	person := people.New()
-	key := person.GetDatastoreKey()
+	key := person.DatastoreKey()
 	
 	person.Set("name", "Mat").Set("age", int64(29))
 	

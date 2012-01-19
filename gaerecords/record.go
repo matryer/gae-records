@@ -64,8 +64,7 @@ func (r *Record) setID(id int64) *Record {
 	// set the record ID
 	r.recordID = id
 	
-	// invalidate the key
-	r.datastoreKey = nil
+	r.invalidateDatastoreKey()
 	
 	// chain
 	return r
@@ -83,7 +82,14 @@ func (r *Record) IsPersisted() bool {
 
 // Sets the parent record of this record.
 func (r *Record) SetParent(parent *Record) *Record {
+	
+	// set the parent
 	r.parent = parent
+	
+	// invalidate the datastore key
+	r.invalidateDatastoreKey()
+	
+	// chain
 	return r
 }
 
@@ -102,7 +108,7 @@ func (r *Record) HasParent() bool {
 */
 
 // Gets the datastore key for this record
-func (r *Record) GetDatastoreKey() *datastore.Key {
+func (r *Record) DatastoreKey() *datastore.Key {
 	
 	if r.datastoreKey == nil {
 	
@@ -110,13 +116,13 @@ func (r *Record) GetDatastoreKey() *datastore.Key {
 		var parentKey *datastore.Key
 	
 		if r.HasParent() {
-			parentKey = r.Parent().GetDatastoreKey()
+			parentKey = r.Parent().DatastoreKey()
 		}
 	
 		if r.IsPersisted() {
-			key = r.Manager.GetKeyWithID(r.ID(), parentKey)
+			key = r.Manager.NewKeyWithID(r.ID(), parentKey)
 		} else {
-			key = r.Manager.GetKey(parentKey)
+			key = r.Manager.NewKey(parentKey)
 		}
 	
 		r.datastoreKey = key
@@ -125,6 +131,31 @@ func (r *Record) GetDatastoreKey() *datastore.Key {
 	
 	return r.datastoreKey
 	
+}
+
+func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
+	
+	// does the key have an ID?
+	if key.IntID() > 0 {
+		
+		// set the ID
+		r.setID(key.IntID())
+		
+	}
+	
+	// set the key
+	r.datastoreKey = key
+	
+	// chain
+	return r
+	
+}
+
+// Invalidates the internally cached datastore key for this
+// record so that when it is next requested via DatastoreKey() it will
+// be regenerated to match the corrected state
+func (r *Record) invalidateDatastoreKey() {
+	r.datastoreKey = nil
 }
 
 /*

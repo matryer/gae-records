@@ -38,13 +38,13 @@ func (m *RecordManager) RecordType() string {
 	Keys
 */
 
-// Gets a datastore Key for this kind of record
-func (m *RecordManager) GetKey(parent *datastore.Key) *datastore.Key {
+// Creates a new datastore Key for this kind of record with the specified parent
+func (m *RecordManager) NewKey(parent *datastore.Key) *datastore.Key {
 	return datastore.NewIncompleteKey(m.appengineContext, m.RecordType(), parent)
 }
 
-// Gets a datastore Key for this kind of record with the specified ID
-func (m *RecordManager) GetKeyWithID(id int64, parent *datastore.Key) *datastore.Key {
+// Creates a new datastore Key for this kind of record with the specified ID and parent
+func (m *RecordManager) NewKeyWithID(id int64, parent *datastore.Key) *datastore.Key {
 	return datastore.NewKey(m.appengineContext, m.RecordType(), "", int64(id), parent)
 }
 
@@ -55,7 +55,7 @@ func (m *RecordManager) GetKeyWithID(id int64, parent *datastore.Key) *datastore
 // Finds a single record by its ID
 func (m *RecordManager) Find(id int64) *Record {
 	
-	key := m.GetKeyWithID(id, nil)
+	key := m.NewKeyWithID(id, nil)
 	
 	var plist datastore.PropertyList
 	
@@ -69,7 +69,9 @@ func (m *RecordManager) Find(id int64) *Record {
 		
 		// build the record
 		record := m.New()
+		
 		record.SetFieldsFromPropertyList(plist)
+		record.SetDatastoreKey(key)
 		
 		return record
 		
