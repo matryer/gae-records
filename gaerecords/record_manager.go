@@ -2,6 +2,7 @@ package gaerecords
 
 import (
 	"appengine"
+	"os"
 	"appengine/datastore"
 )
 
@@ -53,7 +54,7 @@ func (m *RecordManager) NewKeyWithID(id int64) *datastore.Key {
 */
 
 // Finds a single record by its ID
-func (m *RecordManager) Find(id int64) *Record {
+func (m *RecordManager) Find(id int64) (*Record, os.Error) {
 	
 	key := m.NewKeyWithID(id)
 	
@@ -63,7 +64,8 @@ func (m *RecordManager) Find(id int64) *Record {
 	
 	if err != nil {
 		
-		// TODO: handle error
+		// return the error
+		return nil, err
 		
 	} else {
 		
@@ -73,9 +75,34 @@ func (m *RecordManager) Find(id int64) *Record {
 		record.SetFieldsFromPropertyList(plist)
 		record.SetDatastoreKey(key)
 		
-		return record
+		return record, nil
 		
 	}
 	
-	return nil
+	return nil, nil
+	
 }
+
+// Saves a record
+func (m *RecordManager) Save(record *Record) (bool, os.Error) {
+	
+	var plist datastore.PropertyList = record.GetFieldsAsPropertyList()
+	newKey, err := datastore.Put(m.appengineContext, record.DatastoreKey(), &plist)
+	
+	if err != nil {
+		return false, err
+	} else {
+		
+		// update the record
+		if !record.IsPersisted() {
+			record.SetDatastoreKey(newKey)
+		}
+		
+		return true, nil
+		
+	}
+	
+	return false, nil
+	
+}
+
