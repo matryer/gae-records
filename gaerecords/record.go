@@ -54,7 +54,14 @@ func (r *Record) ID() int64 {
 
 // Sets the ID for this record
 func (r *Record) setID(id int64) *Record {
+	
+	// set the record ID
 	r.recordID = id
+	
+	// invalidate the key
+	r.cachedKey = nil
+	
+	// chain
 	return r
 }
 

@@ -5,6 +5,23 @@ import (
 	"appengine/datastore"
 )
 
+func TestGetDatastoreKeyChangingIDInvalidatesCache(t *testing.T) {
+	
+	people := CreateTestPeopleRecordManager()
+	person := people.New()
+	
+	var key *datastore.Key = person.GetDatastoreKey()
+	
+	person.setID(123)
+	
+	var keyAfterID *datastore.Key = person.GetDatastoreKey()
+	
+	if key.Eq(keyAfterID) {
+		t.Errorf("Key cache should be invalidated after setID is called")
+	}
+	
+}
+
 func TestGetDatastoreKeyForPersistedRecord(t *testing.T) {
 	
 	people := CreateTestPeopleRecordManager()
