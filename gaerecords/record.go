@@ -4,14 +4,13 @@ import (
 	"appengine/datastore"
 )
 
+// A map of the fields of a record
 type RecordFields map[string]interface{}
 
+// The type of IDs used to uniquely identify records
 type RecordID int64
 
-/*
-	Record
-	------------------------------------------------------------
-*/
+// Represents a single record
 type Record struct {
 	
 	recordID RecordID
