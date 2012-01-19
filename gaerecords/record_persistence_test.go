@@ -35,18 +35,18 @@ func TestLoad(t *testing.T) {
 	close(c)
 	
 	// ensure it took the fields
-	assertEqual(t, "Mat", record.Fields["name"])
-	assertEqual(t, 27, record.Fields["age"])
-	assertEqual(t, true, record.Fields["dev"])
+	assertEqual(t, "Mat", record.Fields()["name"])
+	assertEqual(t, 27, record.Fields()["age"])
+	assertEqual(t, true, record.Fields()["dev"])
 	
 }
 
 func TestSave(t *testing.T) {
 	
 	record := CreateTestRecord(t)
-	record.Fields["name"] = "Mat"
-	record.Fields["age"] = 27
-	record.Fields["dev"] = true
+	record.Fields()["name"] = "Mat"
+	record.Fields()["age"] = 27
+	record.Fields()["dev"] = true
 	
 	savedProperties := make(map[string]interface{})
 	

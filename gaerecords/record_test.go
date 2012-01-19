@@ -10,7 +10,13 @@ func TestNewRecord(t *testing.T) {
 	record := NewRecord(model)
 	
 	assertNotNil(t, record, "new(Record)")
-	assertNotNil(t, record.Fields, "record.Fields")
-	assertEqual(t, model, record.Model)
+	assertNotNil(t, record.Fields(), "record.Fields()")
+	assertEqual(t, model, record.Model())
+	
+}
+
+func TestNoIDValue(t *testing.T) {
+	
+	assertEqual(t, int64(0), NoIDValue)
 	
 }

@@ -6,21 +6,62 @@ import (
 	"appengine/datastore"
 )
 
+// The key value that indicates there is no ID
+var NoIDValue int64 = 0
+
 type Record struct {
-	Fields map[string]interface{}
-	Model *Model
+	
+	fields map[string]interface{}
+	
+	model *Model
+	
+	datastoreKey *datastore.Key
+	
+	recordID int64
+	
 }
 
 /*
 	Constuctors
+	----------------------------------------------------------------------
 */
 func NewRecord(model *Model) *Record {
 	
 	record := new(Record)
-	record.Fields = make(map[string]interface{})
-	record.Model = model
+	record.fields = make(map[string]interface{})
+	record.model = model
 	return record
 	
+}
+
+/*
+	Properties
+	----------------------------------------------------------------------
+*/
+func (r *Record) Model() *Model {
+	return r.model
+}
+
+/*
+	IDs
+	----------------------------------------------------------------------
+*/
+
+// Gets the ID for this record
+func (r *Record) ID() int64 {
+	return r.recordID
+}
+
+// Sets the ID for this record
+func (r *Record) setID(id int64) *Record {
+	
+	// set the record ID
+	r.recordID = id
+	
+	r.invalidateDatastoreKey()
+	
+	// chain
+	return r
 }
 
 
@@ -33,7 +74,7 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 		
 	// load the fields
 	for f := range c {
-		r.Fields[f.Name] = f.Value
+		r.fields[f.Name] = f.Value
 	}
 	
 	// no errors
@@ -42,7 +83,7 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 
 func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
-	for k, v := range r.Fields {
+	for k, v := range r.fields {
 		c <- datastore.Property{
 		        Name:  k,
 		        Value: v,
@@ -57,19 +98,81 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 }
 
 /*
+	Datastore Key
+	----------------------------------------------------------------------
+*/
+
+// Gets the datastore key for this record
+func (r *Record) DatastoreKey() *datastore.Key {
+	
+	if r.datastoreKey == nil {
+	
+		var key *datastore.Key
+	
+		if r.IsPersisted() {
+			key = r.model.NewKeyWithID(r.ID())
+		} else {
+			key = r.model.NewKey()
+		}
+	
+		r.datastoreKey = key
+	
+	}
+	
+	return r.datastoreKey
+	
+}
+
+// Sets the datastore Key and updates the records ID if needed
+func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
+	
+	// does the key have an ID?
+	if key.IntID() > 0 {
+		
+		// set the ID
+		r.setID(key.IntID())
+		
+	}
+	
+	// set the key
+	r.datastoreKey = key
+	
+	// chain
+	return r
+	
+}
+
+// Invalidates the internally cached datastore key for this
+// record so that when it is next requested via DatastoreKey() it will
+// be regenerated to match the corrected state
+func (r *Record) invalidateDatastoreKey() {
+	r.datastoreKey = nil
+}
+
+// Whether this record has been persisted in the
+// datastore or not
+func (r *Record) IsPersisted() bool {
+	return r.recordID != NoIDValue
+}
+
+/*
 	Fields
 	----------------------------------------------------------------------
 */
 
+func (r *Record) Fields() map[string]interface{} {
+	return r.fields
+}
+
 // Gets the value of a field in a record
 func (r *Record) Get(key string) interface{} {
-	return r.Fields[key]
+	return r.fields[key]
 }
 	
 // Sets a field in the record.  The value must be an acceptable datastore
 // type or another Record
 func (r *Record) Set(key string, value interface{}) *Record {
-	r.Fields[key] = value
+	r.fields[key] = value
 	return r
 }
 

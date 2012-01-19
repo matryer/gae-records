@@ -25,5 +25,5 @@ func CreateTestRecord(t *testing.T) *Record {
 }
 
 func CreateTestModel(t *testing.T) *Model {
-	return new(Model)
+	return NewModel("test")
 }
