@@ -5,5 +5,3 @@ gae-records: Active Record like wrapper for Google App Engine Datasource in Go
 ---
 
 This project aims to simplify the interactions with the appengine/datastore in Go by wrapping the functionality in easy to use classes.
-
----
