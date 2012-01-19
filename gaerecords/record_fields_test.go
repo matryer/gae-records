@@ -7,7 +7,7 @@ import (
 
 func TestSet(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	// Set() should chain
@@ -20,7 +20,7 @@ func TestSet(t *testing.T) {
 
 func TestGet(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	person.fields["age"] = 29
@@ -31,7 +31,7 @@ func TestGet(t *testing.T) {
 
 func TestGetAndSetString(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	assertEqual(t, person, person.SetString("name", "Mat"))
@@ -42,7 +42,7 @@ func TestGetAndSetString(t *testing.T) {
 
 func TestGetAndSetInt(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	assertEqual(t, person, person.SetInt("age", 27))
@@ -53,7 +53,7 @@ func TestGetAndSetInt(t *testing.T) {
 
 func TestGetAndSetBool(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	assertEqual(t, person, person.SetBool("field", true))
@@ -64,7 +64,7 @@ func TestGetAndSetBool(t *testing.T) {
 
 func TestGetAndSetKeyField(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	var key *datastore.Key = datastore.NewIncompleteKey(AppEngineContext(t), "Entity", nil)

@@ -14,7 +14,7 @@ func TestNewModel(t *testing.T) {
 
 func TestNew(t *testing.T) {
 	
-	model := CreateTestModel(t)
+	model := CreateTestModel()
 	record := model.New()
 	
 	assertNotNil(t, record, "Record shouldn't be nil")

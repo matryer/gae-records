@@ -8,7 +8,7 @@ import (
 
 func TestSetDatastoreKey(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	var key *datastore.Key = people.NewKeyWithID(123)
@@ -22,7 +22,7 @@ func TestSetDatastoreKey(t *testing.T) {
 
 func TestDatastoreKeyChangingIDInvalidatesCache(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	var key *datastore.Key = person.DatastoreKey()
@@ -39,7 +39,7 @@ func TestDatastoreKeyChangingIDInvalidatesCache(t *testing.T) {
 
 func TestDatastoreKeyForPersistedRecord(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New().setID(123)
 	
 	var key *datastore.Key = person.DatastoreKey()
@@ -51,7 +51,7 @@ func TestDatastoreKeyForPersistedRecord(t *testing.T) {
 
 func TestDatastoreKeyForUnpersistedRecord(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	var key *datastore.Key = person.DatastoreKey()
@@ -63,7 +63,7 @@ func TestDatastoreKeyForUnpersistedRecord(t *testing.T) {
 
 func TestIsPersisted(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	assertEqual(t, false, person.IsPersisted())

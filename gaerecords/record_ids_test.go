@@ -6,7 +6,7 @@ import (
 
 func TestSetIDAndGetID(t *testing.T) {
 	
-	people := CreateTestModel(t)
+	people := CreateTestModel()
 	person := people.New()
 	
 	assertEqual(t, NoIDValue, person.ID())

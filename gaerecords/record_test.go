@@ -6,7 +6,7 @@ import (
 
 func TestNewRecord(t *testing.T) {
 	
-	model := CreateTestModel(t)
+	model := CreateTestModel()
 	record := NewRecord(model)
 	
 	assertNotNil(t, record, "new(Record)")

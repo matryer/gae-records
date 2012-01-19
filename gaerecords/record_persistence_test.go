@@ -13,7 +13,7 @@ import (
 
 func TestLoad(t *testing.T) {
 	
-	record := CreateTestRecord(t)
+	record := CreateTestRecord()
 	
 	c := make(chan datastore.Property)
 	
@@ -43,7 +43,7 @@ func TestLoad(t *testing.T) {
 
 func TestSave(t *testing.T) {
 	
-	record := CreateTestRecord(t)
+	record := CreateTestRecord()
 	record.Fields()["name"] = "Mat"
 	record.Fields()["age"] = 27
 	record.Fields()["dev"] = true
