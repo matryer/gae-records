@@ -77,33 +77,6 @@ func (r *Record) IsPersisted() bool {
 }
 
 /*
-	Parentage
-*/
-
-// Sets the parent record of this record.
-func (r *Record) SetParent(parent *Record) *Record {
-	
-	// set the parent
-	r.parent = parent
-	
-	// invalidate the datastore key
-	r.invalidateDatastoreKey()
-	
-	// chain
-	return r
-}
-
-// Gets the parent record of this record or nil if it has no parent.
-func (r *Record) Parent() *Record {
-	return r.parent
-}
-
-// Gets whether this record has a parent or not.  Same as record.Parent() != nil.
-func (r *Record) HasParent() bool {
-	return r.Parent() != nil
-}
-
-/*
 	Persistence
 */
 
@@ -113,16 +86,11 @@ func (r *Record) DatastoreKey() *datastore.Key {
 	if r.datastoreKey == nil {
 	
 		var key *datastore.Key
-		var parentKey *datastore.Key
-	
-		if r.HasParent() {
-			parentKey = r.Parent().DatastoreKey()
-		}
 	
 		if r.IsPersisted() {
-			key = r.Manager.NewKeyWithID(r.ID(), parentKey)
+			key = r.Manager.NewKeyWithID(r.ID())
 		} else {
-			key = r.Manager.NewKey(parentKey)
+			key = r.Manager.NewKey()
 		}
 	
 		r.datastoreKey = key
@@ -133,6 +101,7 @@ func (r *Record) DatastoreKey() *datastore.Key {
 	
 }
 
+// Sets the datastore Key and updates the records ID if needed
 func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 	
 	// does the key have an ID?

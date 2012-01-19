@@ -5,34 +5,6 @@ import (
 )
 
 /*
-	Relationships
-*/
-func TestSetParentAndParent(t *testing.T) {
-
-	people := CreateTestPeopleRecordManager(t)
-	parent := people.New()
-
-	child := people.New()
-	
-	assertEqual(t, child, child.SetParent(parent))
-	assertEqual(t, parent, child.Parent())
-
-}
-
-func TestHasParent(t *testing.T) {
-	
-	people := CreateTestPeopleRecordManager(t)
-	parent := people.New()
-	child := people.New()
-	
-	assertEqual(t, false, child.HasParent())
-	
-	child.SetParent(parent)
-	assertEqual(t, true, child.HasParent())
-	
-}
-
-/*
 	Fields
 */
 

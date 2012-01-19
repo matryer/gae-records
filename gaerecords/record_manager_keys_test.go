@@ -7,25 +7,20 @@ import (
 func TestGetKey(t *testing.T) {
 	
 	people := CreateTestPeopleRecordManager(t)
-	key := people.NewKey(nil)
+	key := people.NewKey()
 	
 	assertEqual(t, people.RecordType(), key.Kind())
-	
-	key2 := people.NewKey(key)
-	assertEqual(t, key, key2.Parent())
+	assertEqual(t, true, key.Incomplete())
 	
 }
 
 func TestNewKeyWithID(t *testing.T) {
 	
 	people := CreateTestPeopleRecordManager(t)
-	key := people.NewKeyWithID(123, nil)
+	key := people.NewKeyWithID(123)
 	
 	assertEqual(t, people.RecordType(), key.Kind())
 	assertEqual(t, int64(123), key.IntID())
-	
-	key2 := people.NewKeyWithID(456, key)
-	assertEqual(t, key, key2.Parent())
-	assertEqual(t, int64(456), key2.IntID())
+	assertEqual(t, false, key.Incomplete())
 	
 }
