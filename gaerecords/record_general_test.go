@@ -9,7 +9,7 @@ import (
 */
 func TestSetParentAndParent(t *testing.T) {
 
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	parent := people.New()
 
 	child := people.New()
@@ -21,7 +21,7 @@ func TestSetParentAndParent(t *testing.T) {
 
 func TestHasParent(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	parent := people.New()
 	child := people.New()
 	
@@ -38,7 +38,7 @@ func TestHasParent(t *testing.T) {
 
 func TestSet(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	// Set() should chain
@@ -51,7 +51,7 @@ func TestSet(t *testing.T) {
 
 func TestGet(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	person.Fields["age"] = 29
@@ -62,7 +62,7 @@ func TestGet(t *testing.T) {
 
 func TestSetIDAndGetID(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	assertEqual(t, int64(-1), person.ID())
@@ -73,7 +73,7 @@ func TestSetIDAndGetID(t *testing.T) {
 
 func TestIsPersisted(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	assertEqual(t, false, person.IsPersisted())

@@ -6,17 +6,16 @@ import (
 
 func TestNewRecordManager(t *testing.T) {
 
-	context := CreateTestAppengineContext()
-	m := NewRecordManager(context, "something")
+	m := NewRecordManager(TestContext, "something")
 	
 	assertEqual(t, "something", m.RecordType())
-	assertEqual(t, context, m.appengineContext)
+	assertEqual(t, TestContext, m.appengineContext)
 	
 }
 
 func TestNew(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	assertEqual(t, people, person.Manager)
@@ -25,7 +24,7 @@ func TestNew(t *testing.T) {
 
 func TestRecordType(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	assertEqual(t, "people", people.RecordType())
 	
 }

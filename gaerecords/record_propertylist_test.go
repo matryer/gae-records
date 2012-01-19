@@ -6,7 +6,7 @@ import (
 
 func TestSimplePropertyList(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	
 	person := people.New().
 							Set("name", "Mat").

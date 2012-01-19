@@ -3,6 +3,7 @@ package gaerecords
 import (
 	"testing"
 	"os"
+	"appengine"
 	"appengine/datastore"
 	"gae-go-testing.googlecode.com/git/appenginetesting"
 )
@@ -14,21 +15,29 @@ func assertEqual(t *testing.T, a interface{}, b interface{}) {
 	}
 }
 
+var TestContext *appenginetesting.Context
+
 // Creates a test appengine context object
-func CreateTestAppengineContext() *appenginetesting.Context {
-	appengineContext, _ := appenginetesting.NewContext(nil)
-	return appengineContext
+func CreateTestAppengineContext(t *testing.T) appengine.Context {
+	
+	if TestContext == nil {
+		t.Logf("<<< Test context created >>>")
+		TestContext, _ = appenginetesting.NewContext(nil)
+	}
+	
+	return TestContext
+	
 }
 
 // Creates a test 'people' record manager
-func CreateTestPeopleRecordManager() *RecordManager {
-	return NewRecordManager(CreateTestAppengineContext(), "people")
+func CreateTestPeopleRecordManager(t *testing.T) *RecordManager {
+	return NewRecordManager(CreateTestAppengineContext(t), "people")
 }
 
 // Resets the datastore to a default test position
-func CreateTestPerson() (*Record, os.Error) {
+func CreateTestPerson(t *testing.T) (*Record, os.Error) {
 	
-	context := CreateTestAppengineContext()
+	context := CreateTestAppengineContext(t)
 	people := NewRecordManager(context, "people")
 	person := people.New()
 	key := person.GetDatastoreKey()

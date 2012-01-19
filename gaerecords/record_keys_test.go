@@ -7,7 +7,7 @@ import (
 
 func TestGetDatastoreKeyChangingIDInvalidatesCache(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	var key *datastore.Key = person.GetDatastoreKey()
@@ -24,7 +24,7 @@ func TestGetDatastoreKeyChangingIDInvalidatesCache(t *testing.T) {
 
 func TestGetDatastoreKeyForPersistedRecord(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New().setID(123)
 	
 	var key *datastore.Key = person.GetDatastoreKey()
@@ -36,7 +36,7 @@ func TestGetDatastoreKeyForPersistedRecord(t *testing.T) {
 
 func TestGetDatastoreKeyForUnpersistedRecord(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	person := people.New()
 	
 	var key *datastore.Key = person.GetDatastoreKey()
@@ -48,7 +48,7 @@ func TestGetDatastoreKeyForUnpersistedRecord(t *testing.T) {
 
 func TestGetDatastoreKeyForPersistedRecordWithParentRecord(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	
 	parent := people.New().setID(123)
 	person := people.New().setID(456).SetParent(parent)
@@ -74,7 +74,7 @@ func TestGetDatastoreKeyForPersistedRecordWithParentRecord(t *testing.T) {
 
 func TestGetDatastoreKeyForUnpersistedRecordWithParentRecord(t *testing.T) {
 	
-	people := CreateTestPeopleRecordManager()
+	people := CreateTestPeopleRecordManager(t)
 	
 	parent := people.New().setID(123)
 	person := people.New().SetParent(parent)

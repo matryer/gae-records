@@ -6,10 +6,10 @@ import (
 
 func TestFind(t *testing.T) {
 	
-	//_, err := CreateTestPerson()
+	_, err := CreateTestPerson(t)
 	//people := CreateTestPeopleRecordManager()
 	
-	//assertEqual(t, "", err.String())
+	assertEqual(t, "", err.String())
 	//assertEqual(t, -100, testPerson.ID())
 	
 }
