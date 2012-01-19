@@ -3,22 +3,14 @@ package gaerecords
 import (
 	"os"
 	"testing"
-	"appengine"
 	"appengine/datastore"
 	"gae-go-testing.googlecode.com/git/appenginetesting"
 )
 
-var TestContext *appenginetesting.Context
-
 // Creates a test appengine context object
-func AppEngineContext(t *testing.T) appengine.Context {
+func UseTestAppEngineContext() {
 	
-	if TestContext == nil {
-		t.Logf("<<< Test context created >>>")
-		TestContext, _ = appenginetesting.NewContext(nil)
-	}
-	
-	return TestContext
+	appEngineContext, _ = appenginetesting.NewContext(nil)
 	
 }
 
@@ -49,5 +41,13 @@ func CreatePersistedRecord(model *Model) (*Record, os.Error) {
 	person.setID(newKey.IntID())
 	
 	return person, nil
+	
+}
+
+
+func TestSetup(t *testing.T) {
+	
+	UseTestAppEngineContext()
+	t.Logf("<<< Test context created %v >>>", appEngineContext)
 	
 }

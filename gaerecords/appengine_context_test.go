@@ -20,4 +20,7 @@ func TestGetAppEngineContext(t *testing.T) {
 	
 	assertEqual(t, appEngineContext, GetAppEngineContext())
 	
+	appEngineContext = nil
+	UseTestAppEngineContext()
+	
 }
