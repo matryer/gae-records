@@ -46,7 +46,7 @@ func TestSetFieldsFromPropertyList(t *testing.T) {
 	plist[2] = datastore.Property{ "is_dev", true, false, false }
 	
 	// inject it into the record
-	person.SetFieldsFromPropertyList(plist)
+	assertEqual(t, person, person.SetFieldsFromPropertyList(plist))
 	
 	assertEqual(t, "Mat", person.Fields["name"])
 	assertEqual(t, int64(29), person.Fields["age"])

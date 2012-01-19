@@ -83,3 +83,56 @@ func TestSave_ExistingRecord(t *testing.T) {
 	assertEqual(t, int64(27), person1.Get("age"))
 	
 }
+
+func TestAll(t *testing.T) {
+
+	// create 10 people
+	people := CreateTestPeopleRecordManager(t)
+	person1 := people.New().SetString("name", "Mat")
+	person2 := people.New().SetString("name", "Mat")
+	person3 := people.New().SetString("name", "Mat")
+	person4 := people.New().SetString("name", "Mat")
+	person5 := people.New().SetString("name", "Mat")
+	person6 := people.New().SetString("name", "Mat")
+	person7 := people.New().SetString("name", "Mat")
+	person8 := people.New().SetString("name", "Mat")
+	person9 := people.New().SetString("name", "Mat")
+	person10 := people.New().SetString("name", "Mat")
+	
+	// save them all
+	person1.Save()
+	person2.Save()
+	person3.Save()
+	person4.Save()
+	person5.Save()
+	person6.Save()
+	person7.Save()
+	person8.Save()
+	person9.Save()
+	person10.Save()
+	
+	// get all
+	peeps, err := people.All()
+	
+	if err != nil {
+		t.Errorf(".All() shouldn't raise error: %v", err)
+	}
+	
+	t.Errorf("%v", peeps)
+	return
+	
+	assertEqual(t, 10, len(peeps))
+	assertEqual(t, person1.ID(), peeps[0].ID())
+	assertEqual(t, person2.ID(), peeps[1].ID())
+	assertEqual(t, person3.ID(), peeps[2].ID())
+	assertEqual(t, person4.ID(), peeps[3].ID())
+	assertEqual(t, person5.ID(), peeps[4].ID())
+	assertEqual(t, person6.ID(), peeps[5].ID())
+	assertEqual(t, person7.ID(), peeps[6].ID())
+	assertEqual(t, person8.ID(), peeps[7].ID())
+	assertEqual(t, person9.ID(), peeps[8].ID())
+	assertEqual(t, person10.ID(), peeps[9].ID())
+	
+}
+
+

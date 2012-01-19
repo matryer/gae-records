@@ -210,10 +210,13 @@ func (r *Record) GetFieldsAsPropertyList() datastore.PropertyList {
 }
 
 // Sets the fields in the record to match those of the specified datastore.PropertyList
-func (r *Record) SetFieldsFromPropertyList(plist datastore.PropertyList) {
+func (r *Record) SetFieldsFromPropertyList(plist datastore.PropertyList) *Record {
 	
 	for _, property := range plist {
 		r.Fields[property.Name] = property.Value
 	}
+	
+	// chain
+	return r
 	
 }
