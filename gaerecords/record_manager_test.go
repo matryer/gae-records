@@ -4,10 +4,6 @@ import (
 	"testing"
 )
 
-func CreateTestPeopleRecordManager() *RecordManager {
-	return NewRecordManager(CreateTestAppengineContext(), "people")
-}
-
 func TestNewRecordManager(t *testing.T) {
 
 	context := CreateTestAppengineContext()

@@ -4,10 +4,7 @@ import (
 	"appengine"
 )
 
-/*
-	RecordManager
-	------------------------------------------------------------
-*/
+// Represents a kind of records that can be interacted with
 type RecordManager struct {
 	recordType string
 	appengineContext appengine.Context
@@ -31,7 +28,7 @@ func (m *RecordManager) New() *Record {
 	return r
 }
 
-// Gets the record type
+// Gets a string representing the record type managed by this manager
 func (m *RecordManager) RecordType() string {
 	return m.recordType
 }

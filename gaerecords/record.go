@@ -12,6 +12,7 @@ type Record struct {
 	
 	recordID int64
 	parent *Record
+	cachedKey *datastore.Key
 	
 	Manager *RecordManager
 	Fields RecordFields
@@ -88,20 +89,43 @@ func (r *Record) HasParent() bool {
 // Gets the datastore key for this record
 func (r *Record) GetDatastoreKey() *datastore.Key {
 	
-	var key *datastore.Key
-	var parentKey *datastore.Key
+	if r.cachedKey == nil {
 	
-	if r.HasParent() {
-		parentKey = r.Parent().GetDatastoreKey()
+		var key *datastore.Key
+		var parentKey *datastore.Key
+	
+		if r.HasParent() {
+			parentKey = r.Parent().GetDatastoreKey()
+		}
+	
+		if r.IsPersisted() {
+			key = datastore.NewKey(r.Manager.appengineContext, r.Manager.RecordType(), "", int64(r.ID()), parentKey)
+		} else {
+			key = datastore.NewIncompleteKey(r.Manager.appengineContext, r.Manager.RecordType(), parentKey)
+		}
+	
+		r.cachedKey = key
+	
 	}
 	
-	if r.IsPersisted() {
-		key = datastore.NewKey(r.Manager.appengineContext, r.Manager.RecordType(), "", int64(r.ID()), parentKey)
-	} else {
-		key = datastore.NewIncompleteKey(r.Manager.appengineContext, r.Manager.RecordType(), parentKey)
-	}
-	
-	return key
+	return r.cachedKey
 	
 }
 
+/*
+	PropertyList
+*/
+
+func (r *Record) GetFieldsAsPropertyList() datastore.PropertyList {
+	
+	var list datastore.PropertyList = make(datastore.PropertyList, len(r.Fields))
+	var counter int = 0
+	
+	for k, v := range r.Fields {
+		list[counter] = datastore.Property { k, v, true, false }
+		counter++
+	}
+	
+	return list
+	
+}
