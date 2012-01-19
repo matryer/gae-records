@@ -8,6 +8,9 @@ import (
 // A map of the fields of a record
 type RecordFields map[string]interface{}
 
+// The key value that indicates there is no ID
+var NoIDValue int64 = 0
+
 // Represents a single record
 type Record struct {
 	
@@ -28,7 +31,7 @@ type Record struct {
 func NewRecord() *Record {
 	r := new(Record)
 	r.Fields = make(RecordFields)
-	r.recordID = -1
+	r.recordID = NoIDValue
 	return r
 }
 
@@ -73,7 +76,7 @@ func (r *Record) setID(id int64) *Record {
 // Whether this record has been persisted in the
 // datastore or not
 func (r *Record) IsPersisted() bool {
-	return r.recordID > -1
+	return r.recordID != NoIDValue
 }
 
 /*
