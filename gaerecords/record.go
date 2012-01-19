@@ -133,10 +133,39 @@ func (r *Record) IsPersisted() bool {
 */
 
 // Saves the record to the datastore.
-func (r *Record) Save() (bool, os.Error) {
+func (r *Record) Put() (bool, os.Error) {
 	return r.Manager.Save(r)
 }
 
+/*
+	Data IO
+*/
+func (r *Record) Load(c <-chan datastore.Property) os.Error {
+		
+	// load the fields
+	if r.Fields == nil {
+		r.Fields = make(RecordFields)
+	}
+	
+	for f := range c {
+		r.Fields[f.Name] = f.Value
+	}
+	
+	return nil
+}
+
+func (r *Record) Save(c chan<- datastore.Property) os.Error {
+
+	for k, v := range r.Fields {
+		c <- datastore.Property{
+		        Name:  k,
+		        Value: v,
+		    }
+	}
+
+	close(c)
+	return nil
+}
 
 
 /*
@@ -190,33 +219,3 @@ func (r *Record) invalidateDatastoreKey() {
 	r.datastoreKey = nil
 }
 
-/*
-	PropertyList
-*/
-
-// Creates a datastore.PropertyList containing the fields from the record
-func (r *Record) GetFieldsAsPropertyList() datastore.PropertyList {
-	
-	var list datastore.PropertyList = make(datastore.PropertyList, len(r.Fields))
-	var counter int = 0
-	
-	for k, v := range r.Fields {
-		list[counter] = datastore.Property { k, v, false, false }
-		counter++
-	}
-	
-	return list
-	
-}
-
-// Sets the fields in the record to match those of the specified datastore.PropertyList
-func (r *Record) SetFieldsFromPropertyList(plist datastore.PropertyList) *Record {
-	
-	for _, property := range plist {
-		r.Fields[property.Name] = property.Value
-	}
-	
-	// chain
-	return r
-	
-}

@@ -30,16 +30,6 @@ func (m *RecordManager) New() *Record {
 	return r
 }
 
-// Creates a new record and initialises it using data from the
-// propertyList, and the specified key.
-func (m *RecordManager) NewFromPropertyListAndKey(propertyList datastore.PropertyList, key *datastore.Key) *Record {
-	
-	return m.New().
-					SetFieldsFromPropertyList(propertyList).
-					SetDatastoreKey(key)
-	
-}
-
 // Gets a string representing the record type managed by this manager
 func (m *RecordManager) RecordType() string {
 	return m.recordType
@@ -68,9 +58,9 @@ func (m *RecordManager) Find(id int64) (*Record, os.Error) {
 	
 	key := m.NewKeyWithID(id)
 	
-	var plist datastore.PropertyList
+	var record Record
 	
-	err := datastore.Get(m.appengineContext, key, &plist)
+	err := datastore.Get(m.appengineContext, key, datastore.PropertyLoadSaver(&record))
 	
 	if err != nil {
 		
@@ -80,7 +70,7 @@ func (m *RecordManager) Find(id int64) (*Record, os.Error) {
 	} else {
 		
 		// build and return the record
-		return m.NewFromPropertyListAndKey(plist, key), nil
+		return record.SetDatastoreKey(key), nil
 		
 	}
 	
@@ -91,8 +81,7 @@ func (m *RecordManager) Find(id int64) (*Record, os.Error) {
 // Saves a record.
 func (m *RecordManager) Save(record *Record) (bool, os.Error) {
 	
-	var plist datastore.PropertyList = record.GetFieldsAsPropertyList()
-	newKey, err := datastore.Put(m.appengineContext, record.DatastoreKey(), &plist)
+	newKey, err := datastore.Put(m.appengineContext, record.DatastoreKey(), datastore.PropertyLoadSaver(record))
 	
 	if err != nil {
 		return false, err
@@ -116,34 +105,23 @@ func (m *RecordManager) All() ([]*Record, os.Error) {
 	
 	query := datastore.NewQuery(m.RecordType())
 	
-	var plists []*datastore.PropertyList
-	_, err := query.GetAll(m.appengineContext, &plists)
+	var records []*Record
+	keys, err := query.GetAll(m.appengineContext, &records)
 	
 	if err != nil {
 		return nil, err
 	} else {
 		
-		/*
-		// make an array to hold these records
-		records := make([]*Record, 0, len(plists))
-		
 		// build each record
-		for index, _ := range plists {
-			
-			// create a new record
-			record := m.New()
+		for index, record := range records {
 			
 			// set the data
-			record.SetFieldsFromPropertyList(plists)
 			record.SetDatastoreKey(keys[index])
-			
-			// save the record
-			records = append(records, record)
-			
+						
 		}
 		
 		return records, nil
-		*/
+
 	}
 	
 	return nil, nil

@@ -7,9 +7,15 @@ import (
 func TestFind(t *testing.T) {
 	
 	people := CreateTestPeopleRecordManager(t)
-	testPerson, _ := CreateTestPerson(t)
-		
-	foundPerson, _ := people.Find(testPerson.ID())
+	testPerson, err := CreateTestPerson(t)
+	
+	//t.Errorf("%v", testPerson)
+
+	if err != nil {
+		t.Errorf("ERROR: %v", err)
+	}
+
+	foundPerson, _ := people.Find(1)
 	
 	if foundPerson == nil {
 		
@@ -100,16 +106,16 @@ func TestAll(t *testing.T) {
 	person10 := people.New().SetString("name", "Mat")
 	
 	// save them all
-	person1.Save()
-	person2.Save()
-	person3.Save()
-	person4.Save()
-	person5.Save()
-	person6.Save()
-	person7.Save()
-	person8.Save()
-	person9.Save()
-	person10.Save()
+	person1.Put()
+	person2.Put()
+	person3.Put()
+	person4.Put()
+	person5.Put()
+	person6.Put()
+	person7.Put()
+	person8.Put()
+	person9.Put()
+	person10.Put()
 	
 	// get all
 	peeps, err := people.All()
@@ -117,9 +123,6 @@ func TestAll(t *testing.T) {
 	if err != nil {
 		t.Errorf(".All() shouldn't raise error: %v", err)
 	}
-	
-	t.Errorf("%v", peeps)
-	return
 	
 	assertEqual(t, 10, len(peeps))
 	assertEqual(t, person1.ID(), peeps[0].ID())
@@ -134,5 +137,3 @@ func TestAll(t *testing.T) {
 	assertEqual(t, person10.ID(), peeps[9].ID())
 	
 }
-
-

@@ -27,5 +27,9 @@ for p := range people.All() {
 // load a specific person
 mat := people.Find(1)
 
+<<<<<<< HEAD
 // change something
+=======
+// change something and save it
+>>>>>>> exp-record-as-property-load-saver
 mat.SetInt("age", 29).Put()

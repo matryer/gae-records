@@ -44,9 +44,7 @@ func CreateTestPerson(t *testing.T) (*Record, os.Error) {
 	
 	person.Set("name", "Mat").Set("age", int64(29))
 	
-	var plist datastore.PropertyList = person.GetFieldsAsPropertyList()
-	
-	newKey, err := datastore.Put(context, key, &plist)
+	newKey, err := datastore.Put(context, key, datastore.PropertyLoadSaver(person))
 	
 	if err != nil {
 		return nil, err
