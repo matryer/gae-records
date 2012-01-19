@@ -2,6 +2,7 @@
 package gaerecords
 
 import (
+	"os"
 	"appengine/datastore"
 )
 
@@ -29,9 +30,17 @@ type Record struct {
 
 // Creates a new record
 func NewRecord() *Record {
+	
+	// create the record
 	r := new(Record)
+	
+	// prepare the fields
 	r.Fields = make(RecordFields)
+	
+	// Start off with no ID
 	r.recordID = NoIDValue
+	
+	// return it
 	return r
 }
 
@@ -80,7 +89,18 @@ func (r *Record) IsPersisted() bool {
 }
 
 /*
-	Persistence
+	IO
+*/
+
+// Saves the record to the datastore.
+func (r *Record) Save() (bool, os.Error) {
+	return r.Manager.Save(r)
+}
+
+
+
+/*
+	DatastoreKey
 */
 
 // Gets the datastore key for this record
