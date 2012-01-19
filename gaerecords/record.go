@@ -1,4 +1,3 @@
-// gaerecords is an Active record style wrapper around Google App Engine datastore
 package gaerecords
 
 import (
@@ -7,46 +6,59 @@ import (
 	"appengine/datastore"
 )
 
-// A map of the fields of a record
-type RecordFields map[string]interface{}
-
-// The key value that indicates there is no ID
-var NoIDValue int64 = 0
-
-// Represents a single record
 type Record struct {
+	Fields map[string]interface{}
+	Model *Model
+}
+
+/*
+	Constuctors
+*/
+func NewRecord(model *Model) *Record {
 	
-	recordID int64
-	parent *Record
-	datastoreKey *datastore.Key
-	
-	// The RecordManager responsible for handling interactions with this record
-	Manager *RecordManager
-	
-	// The fields that make up the data of this record
-	// managed via the Get*() and Set*() methods
-	Fields RecordFields
+	record := new(Record)
+	record.Fields = make(map[string]interface{})
+	record.Model = model
+	return record
 	
 }
 
-// Creates a new record
-func NewRecord() *Record {
+
+/*
+	Persistence
+	----------------------------------------------------------------------
+*/
+
+func (r *Record) Load(c <-chan datastore.Property) os.Error {
+		
+	// load the fields
+	for f := range c {
+		r.Fields[f.Name] = f.Value
+	}
 	
-	// create the record
-	r := new(Record)
+	// no errors
+	return nil
+}
+
+func (r *Record) Save(c chan<- datastore.Property) os.Error {
+
+	for k, v := range r.Fields {
+		c <- datastore.Property{
+		        Name:  k,
+		        Value: v,
+		}
+	}
+
+	// this channel is finished
+	close(c)
 	
-	// prepare the fields
-	r.Fields = make(RecordFields)
-	
-	// Start off with no ID
-	r.recordID = NoIDValue
-	
-	// return it
-	return r
+	// no errors
+	return nil
 }
 
 /*
 	Fields
+	----------------------------------------------------------------------
 */
 
 // Gets the value of a field in a record
@@ -100,122 +112,3 @@ func (r *Record) GetKeyField(key string) *datastore.Key {
 func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
-
-/*
-	ID Management
-*/
-
-// Gets the ID for this record
-func (r *Record) ID() int64 {
-	return r.recordID
-}
-
-// Sets the ID for this record
-func (r *Record) setID(id int64) *Record {
-	
-	// set the record ID
-	r.recordID = id
-	
-	r.invalidateDatastoreKey()
-	
-	// chain
-	return r
-}
-
-// Whether this record has been persisted in the
-// datastore or not
-func (r *Record) IsPersisted() bool {
-	return r.recordID != NoIDValue
-}
-
-/*
-	IO
-*/
-
-// Saves the record to the datastore.
-func (r *Record) Put() (bool, os.Error) {
-	return r.Manager.Save(r)
-}
-
-/*
-	Data IO
-*/
-func (r *Record) Load(c <-chan datastore.Property) os.Error {
-		
-	// load the fields
-	if r.Fields == nil {
-		r.Fields = make(RecordFields)
-	}
-	
-	for f := range c {
-		r.Fields[f.Name] = f.Value
-	}
-	
-	return nil
-}
-
-func (r *Record) Save(c chan<- datastore.Property) os.Error {
-
-	for k, v := range r.Fields {
-		c <- datastore.Property{
-		        Name:  k,
-		        Value: v,
-		    }
-	}
-
-	close(c)
-	return nil
-}
-
-
-/*
-	DatastoreKey
-*/
-
-// Gets the datastore key for this record
-func (r *Record) DatastoreKey() *datastore.Key {
-	
-	if r.datastoreKey == nil {
-	
-		var key *datastore.Key
-	
-		if r.IsPersisted() {
-			key = r.Manager.NewKeyWithID(r.ID())
-		} else {
-			key = r.Manager.NewKey()
-		}
-	
-		r.datastoreKey = key
-	
-	}
-	
-	return r.datastoreKey
-	
-}
-
-// Sets the datastore Key and updates the records ID if needed
-func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
-	
-	// does the key have an ID?
-	if key.IntID() > 0 {
-		
-		// set the ID
-		r.setID(key.IntID())
-		
-	}
-	
-	// set the key
-	r.datastoreKey = key
-	
-	// chain
-	return r
-	
-}
-
-// Invalidates the internally cached datastore key for this
-// record so that when it is next requested via DatastoreKey() it will
-// be regenerated to match the corrected state
-func (r *Record) invalidateDatastoreKey() {
-	r.datastoreKey = nil
-}
-

@@ -1,8 +1,9 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=goweb
+TARG=gaerecords
 GOFILES=\
-	record_manager.go \
-	record.go
+  appengine_context.go \
+	record.go \
+	model.go
 
 include $(GOROOT)/src/Make.pkg
