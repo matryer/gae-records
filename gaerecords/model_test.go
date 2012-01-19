@@ -4,10 +4,11 @@ import (
 	"testing"
 )
 
-func TestModel(t *testing.T) {
+func TestNewModel(t *testing.T) {
 	
-	model := CreateTestModel(t)
-	assertNotNil(t, model, "new(Model)")
+	model := NewModel("kind")
+	
+	assertEqual(t, model.RecordType(), "kind")
 	
 }
 
