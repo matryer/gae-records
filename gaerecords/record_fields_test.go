@@ -67,7 +67,7 @@ func TestGetAndSetKeyField(t *testing.T) {
 	people := CreateTestModel()
 	person := people.New()
 	
-	var key *datastore.Key = datastore.NewIncompleteKey(AppEngineContext(t), "Entity", nil)
+	var key *datastore.Key = datastore.NewIncompleteKey(appEngineContext, "Entity", nil)
 	
 	assertEqual(t, person, person.SetKeyField("field", key))
 	assertEqual(t, key, person.Fields()["field"])
