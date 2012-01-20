@@ -69,7 +69,15 @@ func deleteOne(record *Record) os.Error {
 }
 
 func deleteOneByID(model *Model, id int64) os.Error {
-	return datastore.Delete(GetAppEngineContext(), model.NewKeyWithID(id))
+	
+	context := model.BeforeDeleteByID.Trigger(id)
+	
+	if !context.Cancel {
+		return datastore.Delete(GetAppEngineContext(), model.NewKeyWithID(id))
+	}
+	
+	return ErrOperationCancelledByEventCallback
+	
 }
 
 func putOne(record *Record) os.Error {

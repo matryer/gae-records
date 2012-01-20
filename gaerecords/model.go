@@ -14,6 +14,8 @@ type Model struct {
 	// Event that gets triggered after a record of this kind has been
 	// found.  Useful for any processing of records after they have been loaded.
 	AfterFind Event
+	
+	BeforeDeleteByID Event
 
 	// internal string holding the 'type' of this model,
 	// or the kind of data this model works with
