@@ -36,11 +36,7 @@ type Record struct {
 // Creates a new record of the given Model type.  Not recommended.  Instead call the
 // New() method on the model object itself.
 func NewRecord(model *Model) *Record {
-
-	record := new(Record)
-	record.model = model
-	return record
-
+	return new(Record).SetModel(model)
 }
 
 /*
