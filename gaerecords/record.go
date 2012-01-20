@@ -47,6 +47,16 @@ func (r *Record) Model() *Model {
 	return r.model
 }
 
+// Gets a human readable string representation of this record
+func (r *Record) String() string {
+	
+	if r.IsPersisted() {
+		return fmt.Sprintf("{Record:model=%v,id=%v}", r.model.String(), r.ID())
+	}
+	
+	return fmt.Sprintf("{Record:model=%v}", r.model.String())
+}
+
 /*
 	IDs
 	----------------------------------------------------------------------
@@ -255,4 +265,15 @@ func (r *Record) GetKeyField(key string) *datastore.Key {
 // Sets the *datastore.Key value of a field with the specified key.
 func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
+}
+
+
+/*
+	Errors
+	----------------------------------------------------------------------
+*/
+
+// Causes the record to panic
+func (r *Record) panic(message string) {
+	
 }
