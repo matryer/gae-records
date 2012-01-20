@@ -9,7 +9,7 @@ This project aims to simplify the interactions with the appengine/datastore in G
 ---
 
 // define a type of record
-people := RecordType("people")
+people := NewModel("people")
 
 // create a new person
 person := people.New().
@@ -27,9 +27,5 @@ for p := range people.All() {
 // load a specific person
 mat := people.Find(1)
 
-<<<<<<< HEAD
-// change something
-=======
 // change something and save it
->>>>>>> exp-record-as-property-load-saver
 mat.SetInt("age", 29).Put()
