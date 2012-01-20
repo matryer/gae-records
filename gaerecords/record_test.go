@@ -21,6 +21,30 @@ func TestNoIDValue(t *testing.T) {
 
 }
 
+func TestRecordModel(t *testing.T) {
+	
+	var record *Record = new(Record)
+	
+	//assertNil(t, record.Model(), "record.Model()")
+	
+	model := CreateTestModel()
+	record.model = model
+	
+	assertEqual(t, model, record.Model())
+	
+}
+
+func TestRecordSetModel(t *testing.T) {
+	
+	var record *Record = new(Record)
+	
+	model := CreateTestModel()
+	
+	assertEqual(t, record, record.SetModel(model))	
+	assertEqual(t, model, record.model)
+	
+}
+
 func TestRecordString(t *testing.T) {
 	
 	model := NewModel("people")

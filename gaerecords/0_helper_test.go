@@ -16,3 +16,8 @@ func assertNotNil(t *testing.T, a interface{}, msg string) {
 		t.Errorf("%v. Expected not to be nil.", msg)
 	}
 }
+func assertNil(t *testing.T, a interface{}, msg string) {
+	if a != nil {
+		t.Errorf("%v. Expected to be nil but was: %v", msg, a)
+	}
+}
