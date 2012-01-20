@@ -216,6 +216,11 @@ func (r *Record) Fields() map[string]interface{} {
 // Gets the value of a field in a record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
 func (r *Record) Get(key string) interface{} {
+	
+	if r == nil {
+		panic(fmt.Sprintf("gaerecords: Cannot Get(\"%v\") property from a nil Record", key))
+	}
+	
 	return r.Fields()[key]
 }
 
