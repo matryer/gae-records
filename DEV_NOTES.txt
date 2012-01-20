@@ -1,0 +1,6 @@
+
+Format
+======
+
+  gofmt -spaces=true -tabwidth=2 -w -s .
+

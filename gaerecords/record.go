@@ -13,15 +13,13 @@ var NoIDValue int64 = 0
 // Represents a single record of data (like a single row in a database, or a single resource
 // on a web server).  Synonymous with an Entity in appengine/datastore.
 type Record struct {
-	
 	fields map[string]interface{}
-	
+
 	model *Model
-	
+
 	datastoreKey *datastore.Key
-	
+
 	recordID int64
-	
 }
 
 /*
@@ -32,11 +30,11 @@ type Record struct {
 // Creates a new record of the given Model type.  Not recommended.  Instead call the
 // New() method on the model object itself.
 func NewRecord(model *Model) *Record {
-	
+
 	record := new(Record)
 	record.model = model
 	return record
-	
+
 }
 
 /*
@@ -63,16 +61,15 @@ func (r *Record) ID() int64 {
 
 // Sets the ID for this record.  Used internally.
 func (r *Record) setID(id int64) *Record {
-	
+
 	// set the record ID
 	r.recordID = id
-	
+
 	r.invalidateDatastoreKey()
-	
+
 	// chain
 	return r
 }
-
 
 /*
 	Persistence
@@ -84,12 +81,12 @@ func (r *Record) setID(id int64) *Record {
 // applies them to the internal Fields() object.
 // Used internally by the datastore.
 func (r *Record) Load(c <-chan datastore.Property) os.Error {
-	
+
 	// load the fields
 	for f := range c {
 		r.Fields()[f.Name] = f.Value
 	}
-	
+
 	// no errors
 	return nil
 }
@@ -102,14 +99,14 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 	for k, v := range r.Fields() {
 		c <- datastore.Property{
-		        Name:  k,
-		        Value: v,
+			Name:  k,
+			Value: v,
 		}
 	}
 
 	// this channel is finished
 	close(c)
-	
+
 	// no errors
 	return nil
 }
@@ -136,42 +133,42 @@ func (r *Record) Delete() os.Error {
 // Gets the appengine/datastore Key for this record.  If this record is persisted in the
 // datastore it wil be a complete key, otherwise, this method will return an incomplete key.
 func (r *Record) DatastoreKey() *datastore.Key {
-	
+
 	if r.datastoreKey == nil {
-	
+
 		var key *datastore.Key
-	
+
 		if r.IsPersisted() {
 			key = r.model.NewKeyWithID(r.ID())
 		} else {
 			key = r.model.NewKey()
 		}
-	
+
 		r.datastoreKey = key
-	
+
 	}
-	
+
 	return r.datastoreKey
-	
+
 }
 
 // Sets the datastore Key and updates the records ID if needed
 func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
-	
+
 	// does the key have an ID?
 	if key.IntID() > 0 {
-		
+
 		// set the ID
 		r.setID(key.IntID())
-		
+
 	}
-	
+
 	// set the key
 	r.datastoreKey = key
-	
+
 	// chain
 	return r
-	
+
 }
 
 // Invalidates the internally cached datastore key for this
@@ -196,14 +193,14 @@ func (r *Record) IsPersisted() bool {
 // persistable fields for this record.  Instead of manipulating this object directly,
 // you should use the Get*() and Set*() methods.
 func (r *Record) Fields() map[string]interface{} {
-	
+
 	// ensure we have a map to store the fields
 	if r.fields == nil {
 		r.fields = make(map[string]interface{})
 	}
-	
+
 	return r.fields
-	
+
 }
 
 // Gets the value of a field in a record.  Strongly typed alternatives are provided and recommended
@@ -211,7 +208,7 @@ func (r *Record) Fields() map[string]interface{} {
 func (r *Record) Get(key string) interface{} {
 	return r.Fields()[key]
 }
-	
+
 // Sets a field in the record.  The value must be an acceptable datastore
 // type or another Record.  Strongly typed alternatives are provided and recommended
 // to use where possible.

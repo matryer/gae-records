@@ -5,44 +5,44 @@ import (
 )
 
 func TestFind(t *testing.T) {
-	
+
 	model := CreateTestModel()
 	record, _ := CreatePersistedRecord(t, model)
-	
+
 	loadedRecord, err := model.Find(record.ID())
-	
+
 	if err != nil {
 		t.Errorf("Model.Find: %v", err)
 	}
-	
+
 	assertEqual(t, record.ID(), loadedRecord.ID())
-	
+
 }
 
 func TestModelDelete(t *testing.T) {
-	
+
 	model := CreateTestModelWithPropertyType("findAllmodel")
 	record, _ := CreatePersistedRecord(t, model)
-	
+
 	recordId := record.ID()
-	
+
 	err := model.Delete(recordId)
-	
+
 	if err != nil {
 		t.Errorf("deleteOneByID: %v", err)
 	}
 
 	// try and load it
 	loadedRecord, err := findOneByID(model, recordId)
-	
+
 	if err == nil || loadedRecord != nil {
 		t.Errorf("Error expected when trying to findOneByID a deleted record. The loaded record is: %v", loadedRecord)
 	}
-	
+
 }
 
 func TestAll(t *testing.T) {
-	
+
 	model := CreateTestModelWithPropertyType("modelAll")
 	record1, _ := CreatePersistedRecord(t, model)
 	record2, _ := CreatePersistedRecord(t, model)

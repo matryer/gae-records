@@ -18,13 +18,13 @@ type Model struct {
 //
 //   people := NewModel("people")
 func NewModel(recordType string) *Model {
-	
+
 	model := new(Model)
-	
+
 	model.recordType = recordType
-	
+
 	return model
-	
+
 }
 
 // Creates a new record of this type.
