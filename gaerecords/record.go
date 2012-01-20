@@ -97,11 +97,11 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 }
 
 func (r *Record) Put() os.Error {
-	return PutOne(r)
+	return putOne(r)
 }
 
 func (r *Record) Delete() os.Error {
-	return DeleteOne(r)
+	return deleteOne(r)
 }
 
 /*

@@ -5,7 +5,7 @@ import (
 	"appengine/datastore"
 )
 
-func FindAll(model *Model) ([]*Record, os.Error) {
+func findAll(model *Model) ([]*Record, os.Error) {
 	
 	query := datastore.NewQuery(model.RecordType())
 	
@@ -27,7 +27,7 @@ func FindAll(model *Model) ([]*Record, os.Error) {
 	
 }
 
-func FindOneByID(model *Model, id int64) (*Record, os.Error) {
+func findOneByID(model *Model, id int64) (*Record, os.Error) {
 	
 	key := model.NewKeyWithID(id)
 	
@@ -46,7 +46,7 @@ func FindOneByID(model *Model, id int64) (*Record, os.Error) {
 	
 }
 
-func DeleteOne(record *Record) os.Error {
+func deleteOne(record *Record) os.Error {
 	
 	err := datastore.Delete(GetAppEngineContext(), record.DatastoreKey())
 	
@@ -61,11 +61,11 @@ func DeleteOne(record *Record) os.Error {
 	
 }
 
-func DeleteOneByID(model *Model, id int64) os.Error {
+func deleteOneByID(model *Model, id int64) os.Error {
 	return datastore.Delete(GetAppEngineContext(), model.NewKeyWithID(id))
 }
 
-func PutOne(record *Record) os.Error {
+func putOne(record *Record) os.Error {
 	
 	newKey, err := datastore.Put(GetAppEngineContext(), record.DatastoreKey(), datastore.PropertyLoadSaver(record))
 	

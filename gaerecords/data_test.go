@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestFindOneByID(t *testing.T) {
+func TestfindOneByID(t *testing.T) {
 	
 	model := CreateTestModelWithPropertyType("modeltwo")
 	record, err := CreatePersistedRecord(t, model)
@@ -16,13 +16,13 @@ func TestFindOneByID(t *testing.T) {
 		t.Errorf("CreatePersistedRecord didn't create the record")
 	}
 	
-	loadedRecord, err2 := FindOneByID(model, record.ID())
+	loadedRecord, err2 := findOneByID(model, record.ID())
 	
 	if err2 != nil {
-		t.Errorf("FindOneByID: %v", err2)
+		t.Errorf("findOneByID: %v", err2)
 	}
 	if loadedRecord == nil {
-		t.Errorf("FindOneByID didn't create the record")
+		t.Errorf("findOneByID didn't create the record")
 	}
 	
 	if record != nil && loadedRecord != nil {
@@ -37,19 +37,19 @@ func TestFindOneByID(t *testing.T) {
 	
 }
 
-func TestFindAll(t *testing.T) {
+func TestfindAll(t *testing.T) {
 	
-	model := CreateTestModelWithPropertyType("findallmodel")
+	model := CreateTestModelWithPropertyType("findAllmodel")
 	record1, _ := CreatePersistedRecord(t, model)
 	record2, _ := CreatePersistedRecord(t, model)
 	record3, _ := CreatePersistedRecord(t, model)
 	record4, _ := CreatePersistedRecord(t, model)
 	record5, _ := CreatePersistedRecord(t, model)
 	
-	records, err := FindAll(model)
+	records, err := findAll(model)
 	
 	if err != nil {
-		t.Errorf("FindAll: %v", err)
+		t.Errorf("findAll: %v", err)
 	} else {
 		
 		// validate the records
@@ -66,17 +66,17 @@ func TestFindAll(t *testing.T) {
 	
 }
 
-func TestDeleteOne(t *testing.T) {
+func TestdeleteOne(t *testing.T) {
 	
-	model := CreateTestModelWithPropertyType("findallmodel")
+	model := CreateTestModelWithPropertyType("findAllmodel")
 	record, _ := CreatePersistedRecord(t, model)
 	
 	recordId := record.ID()
 	
-	err := DeleteOne(record)
+	err := deleteOne(record)
 	
 	if err != nil {
-		t.Errorf("DeleteOne: %v", err)
+		t.Errorf("deleteOne: %v", err)
 	}
 	
 	// the record should no longer be 'Persisted'
@@ -84,37 +84,37 @@ func TestDeleteOne(t *testing.T) {
 	assertEqual(t, NoIDValue, record.ID())
 	
 	// try and load it
-	loadedRecord, err := FindOneByID(model, recordId)
+	loadedRecord, err := findOneByID(model, recordId)
 	
 	if err == nil || loadedRecord != nil {
-		t.Errorf("Error expected when trying to FindOneByID a deleted record. The loaded record is: %v", loadedRecord)
+		t.Errorf("Error expected when trying to findOneByID a deleted record. The loaded record is: %v", loadedRecord)
 	}
 	
 }
 
-func TestDeleteOneByID(t *testing.T) {
+func TestdeleteOneByID(t *testing.T) {
 	
-	model := CreateTestModelWithPropertyType("findallmodel")
+	model := CreateTestModelWithPropertyType("findAllmodel")
 	record, _ := CreatePersistedRecord(t, model)
 	
 	recordId := record.ID()
 	
-	err := DeleteOneByID(model, recordId)
+	err := deleteOneByID(model, recordId)
 	
 	if err != nil {
-		t.Errorf("DeleteOneByID: %v", err)
+		t.Errorf("deleteOneByID: %v", err)
 	}
 
 	// try and load it
-	loadedRecord, err := FindOneByID(model, recordId)
+	loadedRecord, err := findOneByID(model, recordId)
 	
 	if err == nil || loadedRecord != nil {
-		t.Errorf("Error expected when trying to FindOneByID a deleted record. The loaded record is: %v", loadedRecord)
+		t.Errorf("Error expected when trying to findOneByID a deleted record. The loaded record is: %v", loadedRecord)
 	}
 	
 }
 
-func TestPutOne_Create(t *testing.T) {
+func TestputOne_Create(t *testing.T) {
 	
 	model := CreateTestModelWithPropertyType("modelthree")
 	record := model.New()
@@ -127,10 +127,10 @@ func TestPutOne_Create(t *testing.T) {
 		SetBool("dev", true).
 		SetInt64("age", 29)
 	
-	err := PutOne(record)
+	err := putOne(record)
 	
 	if err != nil {
-		t.Errorf("PutOne: %v", err)
+		t.Errorf("putOne: %v", err)
 	}
 	
 	assertEqual(t, true, record.IsPersisted())
@@ -141,7 +141,7 @@ func TestPutOne_Create(t *testing.T) {
 	}
 	
 	// reload the record
-	loadedRecord, _ := FindOneByID(model, record.ID())
+	loadedRecord, _ := findOneByID(model, record.ID())
 	
 	assertEqual(t, "Mat", loadedRecord.GetString("name"))
 	assertEqual(t, true, loadedRecord.GetBool("dev"))
@@ -149,7 +149,7 @@ func TestPutOne_Create(t *testing.T) {
 	
 }
 
-func TestPutOne_Update(t *testing.T) {
+func TestputOne_Update(t *testing.T) {
 	
 	model := CreateTestModelWithPropertyType("modelthree")
 	record := model.New()
@@ -162,10 +162,10 @@ func TestPutOne_Update(t *testing.T) {
 		SetBool("dev", true).
 		SetInt64("age", 29)
 	
-	err := PutOne(record)
+	err := putOne(record)
 	
 	if err != nil {
-		t.Errorf("PutOne: %v", err)
+		t.Errorf("putOne: %v", err)
 	}
 	
 	// make some changes
@@ -174,14 +174,14 @@ func TestPutOne_Update(t *testing.T) {
 		SetBool("dev", false).
 		SetInt64("age", 27)
 	
-	err = PutOne(record)
+	err = putOne(record)
 	
 	if err != nil {
-		t.Errorf("PutOne: %v", err)
+		t.Errorf("putOne: %v", err)
 	}
 	
 	// reload the record
-	loadedRecord, _ := FindOneByID(model, record.ID())
+	loadedRecord, _ := findOneByID(model, record.ID())
 	
 	assertEqual(t, "Laurie", loadedRecord.GetString("name"))
 	assertEqual(t, false, loadedRecord.GetBool("dev"))

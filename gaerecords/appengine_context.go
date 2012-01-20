@@ -7,6 +7,9 @@ import (
 
 var appEngineContext appengine.Context
 
+// Creates a new appengine.Context object from the given request.
+// At least one call to CreateAppEngineContext(*http.Request) is required per
+// request to ensure gaerecords uses the correct context.
 func CreateAppEngineContext(request *http.Request) appengine.Context {
 	
 	if appEngineContext == nil {
@@ -17,6 +20,7 @@ func CreateAppEngineContext(request *http.Request) appengine.Context {
 	return appEngineContext
 }
 
+// Gets the current appengine.Context object used by gaerecords.
 func GetAppEngineContext() appengine.Context {
 	
 	if appEngineContext == nil {

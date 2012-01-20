@@ -33,15 +33,15 @@ func (m *Model) RecordType() string {
 */
 
 func (m *Model) Find(id int64) (*Record, os.Error) {
-	return FindOneByID(m, id)
+	return findOneByID(m, id)
 }
 
 func (m *Model) All() ([]*Record, os.Error) {
-	return FindAll(m)
+	return findAll(m)
 }
 
 func (m *Model) Delete(id int64) os.Error {
-	return DeleteOneByID(m, id)
+	return deleteOneByID(m, id)
 }
 
 /*
