@@ -13,12 +13,18 @@ var NoIDValue int64 = 0
 // Represents a single record of data (like a single row in a database, or a single resource
 // on a web server).  Synonymous with an Entity in appengine/datastore.
 type Record struct {
+
+	// internal storage of record field data.
 	fields map[string]interface{}
 
+	// a reference to the model describing the
+	// type of this record.
 	model *Model
 
+	// an internal cache of the datastore.Key
 	datastoreKey *datastore.Key
 
+	// internal storage of this record's ID
 	recordID int64
 }
 
