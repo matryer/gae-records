@@ -134,6 +134,10 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 // Saves or updates this record.  Returns nil if successful, otherwise returns the os.Error
 // that was retrned by appengime/datastore.
 //  record.Put()
+//
+// Raises events:
+//   Model.BeforePut with Args(record)
+//   Model.AfterPut with Args(record)
 func (r *Record) Put() os.Error {
 	return putOne(r)
 }
@@ -141,6 +145,11 @@ func (r *Record) Put() os.Error {
 // Deletes this record.  Returns nil if successful, otherwise returns the os.Error
 // that was retrned by appengime/datastore.
 //   record.Delete()
+//
+// Raises events:
+//   Model.BeforeDelete with Args(id, record)
+//   Model.AfterDelete with Args(id, record)
+// Note: The Record will be passed to the events.
 func (r *Record) Delete() os.Error {
 	return deleteOne(r)
 }

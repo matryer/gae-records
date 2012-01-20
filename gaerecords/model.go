@@ -106,6 +106,9 @@ func (m *Model) String() string {
 // Finds the record of this type with the specified id.
 //  people := NewModel("people")
 //  firstPerson := people.Find(1)
+//
+// Raises events:
+//   Model.AfterFind with Args(record)
 func (m *Model) Find(id int64) (*Record, os.Error) {
 	return findOneByID(m, id)
 }
@@ -113,6 +116,9 @@ func (m *Model) Find(id int64) (*Record, os.Error) {
 // Finds all records of this type.
 //   people := NewModel("people")
 //   everyone := people.All()
+//
+// Raises events for each record:
+//   Model.AfterFind with Args(record)
 func (m *Model) All() ([]*Record, os.Error) {
 	return findAll(m)
 }
@@ -121,6 +127,11 @@ func (m *Model) All() ([]*Record, os.Error) {
 // the datastore error that was returned.
 //   people := NewModel("people")
 //   people.Delete(1)
+//
+// Raises events:
+//   Model.BeforeDelete with Args(id, nil)
+//   Model.AfterDelete with Args(id, nil)
+// Note: The Record will not be passed to the events.
 func (m *Model) Delete(id int64) os.Error {
 	return deleteOneByID(m, id)
 }

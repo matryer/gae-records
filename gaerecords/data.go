@@ -55,16 +55,28 @@ func findOneByID(model *Model, id int64) (*Record, os.Error) {
 
 func deleteOne(record *Record) os.Error {
 
-	err := datastore.Delete(GetAppEngineContext(), record.DatastoreKey())
+	// trigger the BeforeDeleteByID event
+	context := record.Model().BeforeDelete.Trigger(record.ID(), record)
 
-	if err == nil {
+	if !context.Cancel {
 
-		// clean up the record
-		record.setID(NoIDValue)
+		err := datastore.Delete(GetAppEngineContext(), record.DatastoreKey())
+
+		if err == nil {
+
+			// clean up the record
+			record.setID(NoIDValue)
+			
+			// trigger the AfterDeleteByID event
+			record.Model().AfterDelete.TriggerWithContext(context)
+
+		}
+
+		return err
 
 	}
-
-	return err
+	
+	return ErrOperationCancelledByEventCallback
 
 }
 

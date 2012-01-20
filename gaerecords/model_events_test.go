@@ -159,6 +159,121 @@ func TestBeforeAndAfterDeleteByIDEventsShareContext(t *testing.T) {
 
 }
 
+func TestModelBeforeDeleteEvent(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("beforeDeleteEventModel")
+	record, _ := CreatePersistedRecord(t, model)
+	var loadedRecord *Record
+
+	var called bool = false
+	var context *EventContext = nil
+
+	model.BeforeDelete.Do(func(c *EventContext) {
+		called = true
+		context = c
+		loadedRecord, _ = model.Find(record.ID())
+	})
+
+	recordID := record.ID()
+	
+	// do something that should trigger the event
+	record.Delete()
+
+	assertEqual(t, true, called)
+	assertNotNil(t, context.Args[0], "context.Args[0]")
+	assertEqual(t, recordID, context.Args[0].(int64))
+	assertEqual(t, record, context.Args[1])
+	assertEqual(t, recordID, loadedRecord.ID())
+
+}
+
+func TestModelBeforeDeleteEvent_Cancellation(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("beforeDeleteEventCancelModel")
+	record, _ := CreatePersistedRecord(t, model)
+
+	var called bool = false
+	var context *EventContext = nil
+
+	model.BeforeDelete.Do(func(c *EventContext) {
+		called = true
+		context = c
+
+		// cancel the delete
+		c.Cancel = true
+
+	})
+
+	recordID := record.ID()
+
+	// do something that should trigger the event
+	err := record.Delete()
+
+	if err != ErrOperationCancelledByEventCallback {
+		t.Errorf("ErrOperationCancelledByEventCallback Error should be returned if the delete operation was cancelled by an event callback")
+	}
+
+	foundRecord, _ := model.Find(record.ID())
+
+	assertEqual(t, recordID, foundRecord.ID())
+
+}
+
+func TestModelAfterDelete(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("afterDeleteByIDModel")
+	record, _ := CreatePersistedRecord(t, model)
+	var err os.Error = nil
+	var loadedRecord *Record = nil
+
+	var called bool = false
+	var context *EventContext = nil
+
+	model.AfterDelete.Do(func(c *EventContext) {
+		called = true
+		context = c
+		loadedRecord, err = model.Find(record.ID())
+	})
+
+	if loadedRecord != nil {
+		t.Errorf("loadedRecord should return nil after delete")
+	}
+	
+	recordID := record.ID()
+
+	// do something that should trigger the event
+	record.Delete()
+
+	assertEqual(t, true, called)
+	assertNotNil(t, context.Args[0], "context.Args[0]")
+	assertEqual(t, record, context.Args[1])
+	assertEqual(t, recordID, context.Args[0].(int64))
+
+}
+
+func TestBeforeAndAfterDeleteEventsShareContext(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("afterDeleteByIDModel")
+	record, _ := CreatePersistedRecord(t, model)
+
+	var context1 *EventContext = nil
+	var context2 *EventContext = nil
+
+	model.BeforeDelete.Do(func(c *EventContext) {
+		context1 = c
+	})
+	model.AfterDelete.Do(func(c *EventContext) {
+		context2 = c
+	})
+
+	// trigger the event
+	record.Delete()
+
+	// make sure they match
+	assertEqual(t, context1, context2)
+
+}
+
 func TestModelBeforePutEvent(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("afterFindEventModel")
@@ -182,6 +297,7 @@ func TestModelBeforePutEvent(t *testing.T) {
 	assertEqual(t, record.ID(), context.Args[0].(*Record).ID())
 
 }
+
 
 func TestModelBeforePutEvent_Cancellation(t *testing.T) {
 
