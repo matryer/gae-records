@@ -26,9 +26,16 @@ func TestRecordAsFieldValue(t *testing.T) {
 		Put()
 		
 	// load the main record again
-	loaded, _ := model.Find(record.ID())
+	loaded, err := model.Find(record.ID())
 	
-	assertNotNil(t, loaded, "loaded")
-	//assertEqual(t, loaded.Get("sub"), "Subrecord")
+	if loaded == nil {
+		t.Errorf("model.Find(%v) should find record. Record=%v Err=%v", record.ID(), loaded, err)
+	} else {
+		assertNotNil(t, loaded, "loaded")
+
+		t.Logf("%v", loaded)
+
+		assertEqual(t, loaded.Get("sub"), "Subrecord")
+	}
 	
 }
