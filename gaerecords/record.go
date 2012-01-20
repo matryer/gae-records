@@ -48,9 +48,27 @@ func NewRecord(model *Model) *Record {
 	----------------------------------------------------------------------
 */
 
-// Gets the current Model object describing this type of record.
+// Gets the current Model object representing the type of this record.
 func (r *Record) Model() *Model {
 	return r.model
+}
+
+// Sets the current Model object representing the type of this record.  It is recommended that
+// you create records with model.New() or use NewRecord(*Model) instead of using this method
+// directly.
+func (r *Record) SetModel(model *Model) *Record {
+	r.model = model
+	return r
+}
+
+// Gets a human readable string representation of this record
+func (r *Record) String() string {
+	
+	if r.IsPersisted() {
+		return fmt.Sprintf("{Record:model=%v,id=%v}", r.model.String(), r.ID())
+	}
+	
+	return fmt.Sprintf("{Record:model=%v}", r.model.String())
 }
 
 /*
@@ -83,7 +101,7 @@ func (r *Record) setID(id int64) *Record {
 */
 
 // CAUTION: This method does NOT load persisted records.  See Find().
-// PropertyLoadSaver.Load: Takes a channel of datastore.Property objects and
+// PropertyLoadSaver.Load takes a channel of datastore.Property objects and
 // applies them to the internal Fields() object.
 // Used internally by the datastore.
 func (r *Record) Load(c <-chan datastore.Property) os.Error {
@@ -98,7 +116,7 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 }
 
 // CAUTION: This method does NOT persist records.  See Put().
-// PropertyLoadSaver.Save: Writes datastore.Property objects and
+// PropertyLoadSaver.Save writes datastore.Property objects and
 // representing the Fields() of this record to the specified channel.
 // Used internally by the datastore to persist the values.
 func (r *Record) Save(c chan<- datastore.Property) os.Error {
@@ -212,6 +230,11 @@ func (r *Record) Fields() map[string]interface{} {
 // Gets the value of a field in a record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
 func (r *Record) Get(key string) interface{} {
+	
+	if r == nil {
+		panic(fmt.Sprintf("gaerecords: Cannot Get(\"%v\") property from a nil Record", key))
+	}
+	
 	return r.Fields()[key]
 }
 
@@ -261,4 +284,15 @@ func (r *Record) GetKeyField(key string) *datastore.Key {
 // Sets the *datastore.Key value of a field with the specified key.
 func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
+}
+
+
+/*
+	Errors
+	----------------------------------------------------------------------
+*/
+
+// Causes the record to panic
+func (r *Record) panic(message string) {
+	
 }

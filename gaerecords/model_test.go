@@ -20,3 +20,11 @@ func TestNew(t *testing.T) {
 	assertNotNil(t, record, "Record shouldn't be nil")
 
 }
+
+func TestModelString(t *testing.T) {
+	
+	model := NewModel("people")
+	
+	assertEqual(t, "{Model:people}", model.String())
+	
+}

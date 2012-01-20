@@ -16,7 +16,7 @@ func findAll(model *Model) ([]*Record, os.Error) {
 
 		// update the key for each loaded record
 		for index, record := range records {
-			record.SetDatastoreKey(keys[index])
+			record.SetModel(model).SetDatastoreKey(keys[index])
 		}
 
 		return records, nil

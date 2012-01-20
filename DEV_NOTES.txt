@@ -4,3 +4,8 @@ Format
 
   gofmt -spaces=true -tabwidth=2 -w -s .
 
+Documentation
+=============
+
+  godoc -http=:6060 -path="/Users/matryer/Work/gae-records/gaerecords/"
+  http://localhost:6060/pkg/gaerecords/

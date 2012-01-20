@@ -2,6 +2,7 @@ package gaerecords
 
 import (
 	"os"
+	"fmt"
 	"appengine/datastore"
 )
 
@@ -42,6 +43,11 @@ func (m *Model) New() *Record {
 // when calling NewModel(string) and is used as the Kind in the datasource keys.
 func (m *Model) RecordType() string {
 	return m.recordType
+}
+
+// Gets a human readable string representation of this model.
+func (m *Model) String() string {
+	return fmt.Sprintf("{Model:%v}", m.RecordType())
 }
 
 /*

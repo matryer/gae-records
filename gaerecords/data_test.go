@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestfindOneByID(t *testing.T) {
+func TestFindOneByID(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("modeltwo")
 	record, err := CreatePersistedRecord(t, model)
@@ -37,7 +37,7 @@ func TestfindOneByID(t *testing.T) {
 
 }
 
-func TestfindAll(t *testing.T) {
+func TestFindAll(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("findAllmodel")
 	record1, _ := CreatePersistedRecord(t, model)
@@ -62,13 +62,20 @@ func TestfindAll(t *testing.T) {
 		assertEqual(t, record4.ID(), records[3].ID())
 		assertEqual(t, record5.ID(), records[4].ID())
 
+		// ensure the model was set on each record
+		assertEqual(t, model, records[0].Model())
+		assertEqual(t, model, records[1].Model())
+		assertEqual(t, model, records[2].Model())
+		assertEqual(t, model, records[3].Model())
+		assertEqual(t, model, records[4].Model())
+		
 	}
 
 }
 
-func TestdeleteOne(t *testing.T) {
+func TestDeleteOne(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("findAllmodel")
+	model := CreateTestModelWithPropertyType("deleteOneModel")
 	record, _ := CreatePersistedRecord(t, model)
 
 	recordId := record.ID()
@@ -92,9 +99,9 @@ func TestdeleteOne(t *testing.T) {
 
 }
 
-func TestdeleteOneByID(t *testing.T) {
+func TestDeleteOneByID(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("findAllmodel")
+	model := CreateTestModelWithPropertyType("deleteOneByIDModel")
 	record, _ := CreatePersistedRecord(t, model)
 
 	recordId := record.ID()
@@ -114,7 +121,7 @@ func TestdeleteOneByID(t *testing.T) {
 
 }
 
-func TestputOne_Create(t *testing.T) {
+func TestPutOne_Create(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("modelthree")
 	record := model.New()
@@ -149,7 +156,7 @@ func TestputOne_Create(t *testing.T) {
 
 }
 
-func TestputOne_Update(t *testing.T) {
+func TestPutOne_Update(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("modelthree")
 	record := model.New()
