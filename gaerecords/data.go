@@ -5,7 +5,7 @@ import (
 	"appengine/datastore"
 )
 
-func LoadOneByID(model *Model, id int64) (*Record, os.Error) {
+func FindOneByID(model *Model, id int64) (*Record, os.Error) {
 	
 	key := model.NewKeyWithID(id)
 	

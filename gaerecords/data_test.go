@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestLoadOneByID(t *testing.T) {
+func TestFindOneByID(t *testing.T) {
 	
 	model := CreateTestModelWithPropertyType("modeltwo")
 	record, err := CreatePersistedRecord(t, model)
@@ -16,13 +16,13 @@ func TestLoadOneByID(t *testing.T) {
 		t.Errorf("CreatePersistedRecord didn't create the record")
 	}
 	
-	loadedRecord, err2 := LoadOneByID(model, record.ID())
+	loadedRecord, err2 := FindOneByID(model, record.ID())
 	
 	if err2 != nil {
-		t.Errorf("LoadOneByID: %v", err2)
+		t.Errorf("FindOneByID: %v", err2)
 	}
 	if loadedRecord == nil {
-		t.Errorf("LoadOneByID didn't create the record")
+		t.Errorf("FindOneByID didn't create the record")
 	}
 	
 	if record != nil && loadedRecord != nil {
@@ -64,7 +64,7 @@ func TestPutOne_Create(t *testing.T) {
 	}
 	
 	// reload the record
-	loadedRecord, _ := LoadOneByID(model, record.ID())
+	loadedRecord, _ := FindOneByID(model, record.ID())
 	
 	assertEqual(t, "Mat", loadedRecord.GetString("name"))
 	assertEqual(t, true, loadedRecord.GetBool("dev"))
@@ -104,7 +104,7 @@ func TestPutOne_Update(t *testing.T) {
 	}
 	
 	// reload the record
-	loadedRecord, _ := LoadOneByID(model, record.ID())
+	loadedRecord, _ := FindOneByID(model, record.ID())
 	
 	assertEqual(t, "Laurie", loadedRecord.GetString("name"))
 	assertEqual(t, false, loadedRecord.GetBool("dev"))

@@ -33,7 +33,7 @@ func (m *Model) RecordType() string {
 */
 
 func (m *Model) Find(id int64) (*Record, os.Error) {
-	return LoadOneByID(m, id)
+	return FindOneByID(m, id)
 }
 
 /*

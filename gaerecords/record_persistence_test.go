@@ -88,10 +88,10 @@ func TestPut_Create(t *testing.T) {
 	}
 	
 	// reload the record
-	loadedRecord, err := LoadOneByID(model, record.ID())
+	loadedRecord, err := FindOneByID(model, record.ID())
 	
 	if err != nil {
-		t.Errorf("LoadOneByID: %v", err)
+		t.Errorf("FindOneByID: %v", err)
 	}
 	
 	assertEqual(t, "Mat", loadedRecord.GetString("name"))
@@ -132,7 +132,7 @@ func TestPut_Update(t *testing.T) {
 	}
 	
 	// reload the record
-	loadedRecord, _ := LoadOneByID(model, record.ID())
+	loadedRecord, _ := FindOneByID(model, record.ID())
 	
 	assertEqual(t, "Laurie", loadedRecord.GetString("name"))
 	assertEqual(t, false, loadedRecord.GetBool("dev"))
