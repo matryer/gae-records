@@ -11,6 +11,8 @@ import (
 //  people := NewModel("people")
 type Model struct {
 
+	// Event that gets triggered after a record of this kind has been
+	// found.  Useful for any processing of records after they have been loaded.
 	AfterFind Event
 
 	// internal string holding the 'type' of this model,
