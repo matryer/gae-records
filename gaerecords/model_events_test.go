@@ -235,3 +235,26 @@ func TestModelAfterPutEvent(t *testing.T) {
 	assertEqual(t, record.ID(), context.Args[0].(*Record).ID())
 	
 }
+
+func TestBeforeAndAfterPutEventsShareContext(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("puttingSharedContext")
+	record, _ := CreatePersistedRecord(t, model)
+
+	var context1 *EventContext = nil
+	var context2 *EventContext = nil
+	
+	model.BeforePut.Do(func(c *EventContext){
+		context1 = c
+	})
+	model.AfterPut.Do(func(c *EventContext){
+		context2 = c
+	})
+	
+	// trigger the event
+	record.Put()
+	
+	// make sure they match
+	assertEqual(t, context1, context2)
+	
+}

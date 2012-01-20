@@ -108,7 +108,7 @@ func putOne(record *Record) os.Error {
 			record.SetDatastoreKey(newKey)
 			
 			// trigger the AfterPut event
-			record.Model().AfterPut.Trigger(record)
+			record.Model().AfterPut.TriggerWithContext(context)
 
 			return nil
 

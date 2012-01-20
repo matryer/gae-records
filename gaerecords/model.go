@@ -27,6 +27,7 @@ type Model struct {
 	BeforeDeleteByID Event
 	
 	// Event that gets triggered after a record has been deleted by ID.
+	// The EventContext is the same one that was passed to BeforeDeleteByID.
 	//
 	//   Args[0] - ID (int64) of the record that was just deleted.
 	//
