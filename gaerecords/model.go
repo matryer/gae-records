@@ -44,6 +44,7 @@ type Model struct {
 	BeforePut Event
 	
 	// Event that gets triggered after a record has been Put.
+	// The EventContext is the same one that was passed to BeforePut.
 	//
 	//   Args[0] - The *Record that was just Put
 	// 
