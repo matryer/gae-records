@@ -3,6 +3,7 @@ include $(GOROOT)/src/Make.inc
 TARG=gaerecords
 GOFILES=\
   namespace.go \
+  events.go \
   appengine_context.go \
 	data.go \
 	record.go \
