@@ -28,7 +28,6 @@ type Record struct {
 func NewRecord(model *Model) *Record {
 	
 	record := new(Record)
-	record.fields = make(map[string]interface{})
 	record.model = model
 	return record
 	
@@ -71,10 +70,10 @@ func (r *Record) setID(id int64) *Record {
 */
 
 func (r *Record) Load(c <-chan datastore.Property) os.Error {
-		
+	
 	// load the fields
 	for f := range c {
-		r.fields[f.Name] = f.Value
+		r.Fields()[f.Name] = f.Value
 	}
 	
 	// no errors
@@ -83,7 +82,7 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 
 func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
-	for k, v := range r.fields {
+	for k, v := range r.Fields() {
 		c <- datastore.Property{
 		        Name:  k,
 		        Value: v,
@@ -165,18 +164,25 @@ func (r *Record) IsPersisted() bool {
 */
 
 func (r *Record) Fields() map[string]interface{} {
+	
+	// ensure we have a map to store the fields
+	if r.fields == nil {
+		r.fields = make(map[string]interface{})
+	}
+	
 	return r.fields
+	
 }
 
 // Gets the value of a field in a record
 func (r *Record) Get(key string) interface{} {
-	return r.fields[key]
+	return r.Fields()[key]
 }
 	
 // Sets a field in the record.  The value must be an acceptable datastore
 // type or another Record
 func (r *Record) Set(key string, value interface{}) *Record {
-	r.fields[key] = value
+	r.Fields()[key] = value
 	return r
 }
 

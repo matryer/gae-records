@@ -36,6 +36,10 @@ func (m *Model) Find(id int64) (*Record, os.Error) {
 	return FindOneByID(m, id)
 }
 
+func (m *Model) All() ([]*Record, os.Error) {
+	return FindAll(m)
+}
+
 /*
 	datastore.Keys
 	----------------------------------------------------------------------

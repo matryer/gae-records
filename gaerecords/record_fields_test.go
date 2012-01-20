@@ -23,7 +23,7 @@ func TestGet(t *testing.T) {
 	people := CreateTestModel()
 	person := people.New()
 	
-	person.fields["age"] = 29
+	person.Fields()["age"] = 29
 	
 	assertEqual(t, 29, person.Get("age"))
 	

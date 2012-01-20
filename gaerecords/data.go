@@ -5,6 +5,28 @@ import (
 	"appengine/datastore"
 )
 
+func FindAll(model *Model) ([]*Record, os.Error) {
+	
+	query := datastore.NewQuery(model.RecordType())
+	
+	var records []*Record
+	keys, err := query.GetAll(GetAppEngineContext(), &records)
+	
+	if err == nil {
+		
+		// update the key for each loaded record
+		for index, record := range records {
+			record.SetDatastoreKey(keys[index])			
+		}
+		
+		return records, nil
+		
+	}
+	
+	return nil, err
+	
+}
+
 func FindOneByID(model *Model, id int64) (*Record, os.Error) {
 	
 	key := model.NewKeyWithID(id)
