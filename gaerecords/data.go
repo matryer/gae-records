@@ -37,8 +37,14 @@ func findOneByID(model *Model, id int64) (*Record, os.Error) {
 
 	if err == nil {
 
-		// build and return the record
-		return record.SetDatastoreKey(key), nil
+		// set the key
+		record.SetDatastoreKey(key)
+		
+		// raise the AfterFind event on the model
+		model.AfterFind.Trigger(record)
+		
+		// return the record
+		return record, nil
 
 	}
 

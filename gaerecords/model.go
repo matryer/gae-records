@@ -11,6 +11,8 @@ import (
 //  people := NewModel("people")
 type Model struct {
 
+	AfterFind Event
+
 	// internal string holding the 'type' of this model,
 	// or the kind of data this model works with
 	recordType string
