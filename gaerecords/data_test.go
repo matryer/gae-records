@@ -68,7 +68,7 @@ func TestFindAll(t *testing.T) {
 		assertEqual(t, model, records[2].Model())
 		assertEqual(t, model, records[3].Model())
 		assertEqual(t, model, records[4].Model())
-		
+
 	}
 
 }

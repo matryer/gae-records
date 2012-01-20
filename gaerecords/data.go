@@ -40,10 +40,10 @@ func findOneByID(model *Model, id int64) (*Record, os.Error) {
 
 		// set the key
 		record.SetDatastoreKey(key)
-		
+
 		// raise the AfterFind event on the model
 		model.AfterFind.Trigger(record)
-		
+
 		// return the record
 		return record, nil
 
@@ -69,28 +69,28 @@ func deleteOne(record *Record) os.Error {
 }
 
 func deleteOneByID(model *Model, id int64) os.Error {
-	
+
 	// trigger the BeforeDeleteByID event
 	context := model.BeforeDeleteByID.Trigger(id)
-	
+
 	if !context.Cancel {
-		
+
 		err := datastore.Delete(GetAppEngineContext(), model.NewKeyWithID(id))
-		
+
 		if err == nil {
-			
+
 			// trigger the AfterDeleteByID event
 			model.AfterDeleteByID.TriggerWithContext(context)
-			
+
 		}
-		
+
 		// return the error
 		return err
-		
+
 	}
-	
+
 	return ErrOperationCancelledByEventCallback
-	
+
 }
 
 func putOne(record *Record) os.Error {
@@ -99,23 +99,23 @@ func putOne(record *Record) os.Error {
 	context := record.Model().BeforePut.Trigger(record)
 
 	if !context.Cancel {
-		
+
 		newKey, err := datastore.Put(GetAppEngineContext(), record.DatastoreKey(), datastore.PropertyLoadSaver(record))
-		
+
 		if err == nil {
 
 			// update the record key
 			record.SetDatastoreKey(newKey)
-			
+
 			// trigger the AfterPut event
 			record.Model().AfterPut.TriggerWithContext(context)
 
 			return nil
 
 		}
-		
+
 		return err
-		
+
 	}
 
 	return ErrOperationCancelledByEventCallback

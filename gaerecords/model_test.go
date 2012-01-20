@@ -22,9 +22,9 @@ func TestNew(t *testing.T) {
 }
 
 func TestModelString(t *testing.T) {
-	
+
 	model := NewModel("people")
-	
+
 	assertEqual(t, "{Model:people}", model.String())
-	
+
 }

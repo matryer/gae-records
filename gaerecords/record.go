@@ -59,11 +59,11 @@ func (r *Record) SetModel(model *Model) *Record {
 
 // Gets a human readable string representation of this record
 func (r *Record) String() string {
-	
+
 	if r.IsPersisted() {
 		return fmt.Sprintf("{Record:model=%v,id=%v}", r.model.String(), r.ID())
 	}
-	
+
 	return fmt.Sprintf("{Record:model=%v}", r.model.String())
 }
 
@@ -226,11 +226,11 @@ func (r *Record) Fields() map[string]interface{} {
 // Gets the value of a field in a record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
 func (r *Record) Get(key string) interface{} {
-	
+
 	if r == nil {
 		panic(fmt.Sprintf("gaerecords: Cannot Get(\"%v\") property from a nil Record", key))
 	}
-	
+
 	return r.Fields()[key]
 }
 
@@ -282,7 +282,6 @@ func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
 
-
 /*
 	Errors
 	----------------------------------------------------------------------
@@ -290,5 +289,5 @@ func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 
 // Causes the record to panic
 func (r *Record) panic(message string) {
-	
+
 }

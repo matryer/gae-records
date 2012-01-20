@@ -37,14 +37,14 @@ func (e *Event) Do(f func(*EventContext)) {
 // Triggers the event with the specified arguments. 
 // A new EventContext is created and then TriggerWithContext() is called.
 func (e *Event) Trigger(args ...interface{}) *EventContext {
-	
+
 	// create a new context
 	var context *EventContext = new(EventContext)
 	context.Args = args
 	context.Cancel = false
-	
+
 	return e.TriggerWithContext(context)
-	
+
 }
 
 // Triggers the event with an existing EventContext object.
@@ -59,24 +59,24 @@ func (e *Event) Trigger(args ...interface{}) *EventContext {
 // Usually this method is called after a Before* event that produces an EventContext object.
 // This allows other events (i.e. After*) to share the same context.
 func (e *Event) TriggerWithContext(context *EventContext) *EventContext {
-	
+
 	for index, c := range e.Callbacks {
-		
+
 		// update the index
 		context.Index = index
-		
+
 		// call the callback
 		c(context)
-		
+
 		// do we need to cancel?
 		if context.Cancel == true {
 			break
 		}
-		
+
 	}
-	
+
 	return context
-	
+
 }
 
 /*
@@ -86,29 +86,29 @@ func (e *Event) TriggerWithContext(context *EventContext) *EventContext {
 
 // Type that provides context to event callbacks.
 type EventContext struct {
-	
+
 	// Whether the event should be cancelled or not.  If set to true inside a 
 	// callback func, no subsequent callbacks will be called.
 	Cancel bool
-	
+
 	// Array holding the arguments passed to Trigger() if any.
 	Args []interface{}
-	
+
 	// The index of this callback in the chain.  Will be 0 for first callback etc.
 	Index int
-	
+
 	data map[string]interface{}
 }
 
 // Sets some data.
 func (c *EventContext) Set(key string, value interface{}) *EventContext {
-	
+
 	// set the value
-	c.Data()[key] = value;
-	
+	c.Data()[key] = value
+
 	// chain
 	return c
-	
+
 }
 
 // Gets a map[string]interface{} of the data for this context.  Will return an
