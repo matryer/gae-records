@@ -20,7 +20,9 @@ type Model struct {
 	//
 	AfterFind Event
 
-	// Event that gets triggered before a record is deleted by ID.
+	// Event that gets triggered before a record is deleted. The Args will
+	// always contain the ID of the record being deleted, and depending on the
+	// operation, the second argument could be the *Record itself.
 	//
 	// Setting Cancel to true will cancel the delete operation.
 	//
@@ -29,8 +31,11 @@ type Model struct {
 	//
 	BeforeDelete Event
 
-	// Event that gets triggered after a record has been deleted by ID.
-	// The EventContext is the same one that was passed to BeforeDeleteByID.
+	// Event that gets triggered after a record has been deleted by ID. The Args will
+	// always contain the ID of the record being deleted, and depending on the
+	// operation, the second argument could be the *Record itself.
+	///
+	// The EventContext is the same one that was passed to BeforeDelete.
 	//
 	//   Args[0] - ID (int64) of the record that was just deleted.
 	//   Args[1] - *Record that was deleted (if available)
