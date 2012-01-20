@@ -1,5 +1,4 @@
-gae-records: Package containing a high performance and lightweight wrapper around appengine/datastore,
-providing Active Record and DBO style management of data.
+gae-records: Go package containing a high performance and lightweight wrapper around appengine/datastore, providing Active Record and DBO style management of data.
 
 (THIS PROJET IS UNDER CONSTRUCTION AND NOT YET READY FOR USE: But feel free to take a look around)
 
