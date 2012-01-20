@@ -97,6 +97,9 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 	return nil
 }
 
+func (r *Record) Put() os.Error {
+	return PutOne(r)
+}
 
 /*
 	Datastore Key

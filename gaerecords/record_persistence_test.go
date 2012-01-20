@@ -67,11 +67,15 @@ func TestSave(t *testing.T) {
 	
 }
 
-/*
-func TestPut(t *testing.T) {
+func TestPut_Create(t *testing.T) {
 	
-	model := CreateTestModel()
-	record, _ := CreatePersistedRecord(model)
+	model := CreateTestModelWithPropertyType("modelthree")
+	record := model.New()
+	
+	record.
+		SetString("name", "Mat").
+		SetBool("dev", true).
+		SetInt64("age", 29)
 	
 	assertEqual(t, false, record.IsPersisted());
 	
@@ -83,5 +87,57 @@ func TestPut(t *testing.T) {
 		assertEqual(t, true, record.IsPersisted());
 	}
 	
+	// reload the record
+	loadedRecord, err := LoadOneByID(model, record.ID())
+	
+	if err != nil {
+		t.Errorf("LoadOneByID: %v", err)
+	}
+	
+	assertEqual(t, "Mat", loadedRecord.GetString("name"))
+	assertEqual(t, true, loadedRecord.GetBool("dev"))
+	assertEqual(t, int64(29), loadedRecord.GetInt64("age"))
+	
 }
-*/
+
+func TestPut_Update(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("modelthree")
+	record := model.New()
+	
+	assertEqual(t, false, record.IsPersisted())
+	
+	// set some fields
+	record.
+		SetString("name", "Mat").
+		SetBool("dev", true).
+		SetInt64("age", 29)
+	
+	err := record.Put()
+	
+	if err != nil {
+		t.Errorf("PutOne: %v", err)
+	}
+	
+	// make some changes
+	record.
+		SetString("name", "Laurie").
+		SetBool("dev", false).
+		SetInt64("age", 27)
+	
+	err = record.Put()
+	
+	if err != nil {
+		t.Errorf("PutOne: %v", err)
+	}
+	
+	// reload the record
+	loadedRecord, _ := LoadOneByID(model, record.ID())
+	
+	assertEqual(t, "Laurie", loadedRecord.GetString("name"))
+	assertEqual(t, false, loadedRecord.GetBool("dev"))
+	assertEqual(t, int64(27), loadedRecord.GetInt64("age"))
+
+	
+}
+
