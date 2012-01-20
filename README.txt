@@ -8,24 +8,27 @@ This project aims to simplify the interactions with the appengine/datastore in G
 
 ---
 
-// define a type of record
-people := NewModel("people")
+Package containing a high performance and lightweight wrapper around appengine/datastore,
+providing Active Record and DBO style management of data.
 
-// create a new person
-person := people.New().
-  SetString("name", "Mat").
-  SetInt("age", 28)
+ // create a new model for 'people'
+ people := NewModel("people")
+ 
+ // create a new person
+ mat := people.New()
+ mat.
+   SetString("name", "Mat")
+   SetInt64("age", 28)
+   .Put()
 
-// save this person
-person.Put()
+ // load person with ID 1
+ person := people.Find(1)
 
-// Load and iterate over all people
-for p := range people.All() {
-  fmt.Println("%v is %v years old", p.GetString("name"), p.GetInt("age"))
-}
+ // change some fields
+ person.SetInt64("age", 29).Put()
 
-// load a specific person
-mat := people.Find(1)
+ // load all people
+ peeps := people.All()
 
-// change something and save it
-mat.SetInt("age", 29).Put()
+ // delete mat
+ mat.Delete()
