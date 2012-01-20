@@ -46,6 +46,25 @@ func FindOneByID(model *Model, id int64) (*Record, os.Error) {
 	
 }
 
+func DeleteOne(record *Record) os.Error {
+	
+	err := datastore.Delete(GetAppEngineContext(), record.DatastoreKey())
+	
+	if err == nil {
+		
+		// clean up the record
+		record.setID(NoIDValue)
+		
+	}
+	
+	return err
+	
+}
+
+func DeleteOneByID(model *Model, id int64) os.Error {
+	return datastore.Delete(GetAppEngineContext(), model.NewKeyWithID(id))
+}
+
 func PutOne(record *Record) os.Error {
 	
 	newKey, err := datastore.Put(GetAppEngineContext(), record.DatastoreKey(), datastore.PropertyLoadSaver(record))

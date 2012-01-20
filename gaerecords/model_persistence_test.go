@@ -19,6 +19,28 @@ func TestFind(t *testing.T) {
 	
 }
 
+func TestModelDelete(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("findallmodel")
+	record, _ := CreatePersistedRecord(t, model)
+	
+	recordId := record.ID()
+	
+	err := model.Delete(recordId)
+	
+	if err != nil {
+		t.Errorf("DeleteOneByID: %v", err)
+	}
+
+	// try and load it
+	loadedRecord, err := FindOneByID(model, recordId)
+	
+	if err == nil || loadedRecord != nil {
+		t.Errorf("Error expected when trying to FindOneByID a deleted record. The loaded record is: %v", loadedRecord)
+	}
+	
+}
+
 func TestAll(t *testing.T) {
 	
 	model := CreateTestModelWithPropertyType("modelAll")

@@ -66,6 +66,54 @@ func TestFindAll(t *testing.T) {
 	
 }
 
+func TestDeleteOne(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("findallmodel")
+	record, _ := CreatePersistedRecord(t, model)
+	
+	recordId := record.ID()
+	
+	err := DeleteOne(record)
+	
+	if err != nil {
+		t.Errorf("DeleteOne: %v", err)
+	}
+	
+	// the record should no longer be 'Persisted'
+	assertEqual(t, false, record.IsPersisted())
+	assertEqual(t, NoIDValue, record.ID())
+	
+	// try and load it
+	loadedRecord, err := FindOneByID(model, recordId)
+	
+	if err == nil || loadedRecord != nil {
+		t.Errorf("Error expected when trying to FindOneByID a deleted record. The loaded record is: %v", loadedRecord)
+	}
+	
+}
+
+func TestDeleteOneByID(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("findallmodel")
+	record, _ := CreatePersistedRecord(t, model)
+	
+	recordId := record.ID()
+	
+	err := DeleteOneByID(model, recordId)
+	
+	if err != nil {
+		t.Errorf("DeleteOneByID: %v", err)
+	}
+
+	// try and load it
+	loadedRecord, err := FindOneByID(model, recordId)
+	
+	if err == nil || loadedRecord != nil {
+		t.Errorf("Error expected when trying to FindOneByID a deleted record. The loaded record is: %v", loadedRecord)
+	}
+	
+}
+
 func TestPutOne_Create(t *testing.T) {
 	
 	model := CreateTestModelWithPropertyType("modelthree")

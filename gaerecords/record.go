@@ -100,6 +100,10 @@ func (r *Record) Put() os.Error {
 	return PutOne(r)
 }
 
+func (r *Record) Delete() os.Error {
+	return DeleteOne(r)
+}
+
 /*
 	Datastore Key
 	----------------------------------------------------------------------

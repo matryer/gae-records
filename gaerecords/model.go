@@ -40,6 +40,10 @@ func (m *Model) All() ([]*Record, os.Error) {
 	return FindAll(m)
 }
 
+func (m *Model) Delete(id int64) os.Error {
+	return DeleteOneByID(m, id)
+}
+
 /*
 	datastore.Keys
 	----------------------------------------------------------------------
