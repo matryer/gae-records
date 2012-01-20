@@ -13,14 +13,14 @@ func TestLoadOneByID(t *testing.T) {
 		t.Errorf("CreatePersistedRecord: %v", err)
 	}
 	
-	loadedRecord, err2 := LoadOneByID(model, 1)
+	loadedRecord, err2 := LoadOneByID(model, record.ID())
 	
 	if err2 != nil {
 		t.Errorf("LoadOneByID: %v", err)
 	}
-	
-	assertNotNil(t, record, "record")
-	assertNotNil(t, loadedRecord, "loadedRecord")
+	if loadedRecord == nil {
+		t.Errorf("LoadOneByID didn't create the record")
+	}
 	
 	if record != nil && loadedRecord != nil {
 		assertEqual(t, record.ID(), loadedRecord.ID())
