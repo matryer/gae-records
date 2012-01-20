@@ -13,18 +13,13 @@ func LoadOneByID(model *Model, id int64) (*Record, os.Error) {
 	
 	err := datastore.Get(GetAppEngineContext(), key, datastore.PropertyLoadSaver(record))
 	
-	if err != nil {
-	
-		// return the error
-		return nil, err
-	
-	} else {
+	if err == nil {
 	
 		// build and return the record
 		return record.SetDatastoreKey(key), nil
 	
 	}
 
-	return nil, nil
+	return nil, err
 	
 }

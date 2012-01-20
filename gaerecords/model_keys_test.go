@@ -17,7 +17,7 @@ func TestGetKey(t *testing.T) {
 
 func TestNewKeyWithID(t *testing.T) {
 	
-	model := CreateTestModel()
+	model := CreateTestModelWithPropertyType("modelname")
 	key := model.NewKeyWithID(123)
 	
 	assertEqual(t, model.RecordType(), key.Kind())

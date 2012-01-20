@@ -45,9 +45,9 @@ func TestGetAndSetInt(t *testing.T) {
 	people := CreateTestModel()
 	person := people.New()
 	
-	assertEqual(t, person, person.SetInt("age", 27))
+	assertEqual(t, person, person.SetInt64("age", 27))
 	assertEqual(t, int64(27), person.Fields()["age"])
-	assertEqual(t, int64(27), person.GetInt("age"))
+	assertEqual(t, int64(27), person.GetInt64("age"))
 	
 }
 

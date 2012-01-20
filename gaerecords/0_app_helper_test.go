@@ -21,17 +21,23 @@ func CreateTestRecord() *Record {
 func CreateTestModel() *Model {
 	return NewModel("model")
 }
+func CreateTestModelWithPropertyType(kind string) *Model {
+	return NewModel(kind)
+}
 
-func CreatePersistedRecord(model *Model) (*Record, os.Error) {
+func CreatePersistedRecord(t *testing.T, model *Model) (*Record, os.Error) {
 	
 	context := GetAppEngineContext()
-	people := CreateTestModel()
-	person := people.New()
+	person := model.New()
 	key := person.DatastoreKey()
 	
-	person.Set("name", "Mat").Set("age", int64(29))
+	person.
+		SetString("name", "Mat").
+		SetInt64("age", 29)
 	
 	newKey, err := datastore.Put(context, key, datastore.PropertyLoadSaver(person))
+	
+	t.Logf(">> Created new record with ID: '%v'", newKey)
 	
 	if err != nil {
 		return nil, err

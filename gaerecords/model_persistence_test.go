@@ -7,7 +7,7 @@ import (
 func TestFind(t *testing.T) {
 	
 	model := CreateTestModel()
-	record, _ := CreatePersistedRecord(model)
+	record, _ := CreatePersistedRecord(t, model)
 	
 	loadedRecord, err := model.Find(record.ID())
 	

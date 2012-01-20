@@ -39,7 +39,7 @@ func TestDatastoreKeyChangingIDInvalidatesCache(t *testing.T) {
 
 func TestDatastoreKeyForPersistedRecord(t *testing.T) {
 	
-	people := CreateTestModel()
+	people := CreateTestModelWithPropertyType("modeltwo")
 	person := people.New().setID(123)
 	
 	var key *datastore.Key = person.DatastoreKey()

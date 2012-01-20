@@ -188,12 +188,12 @@ func (r *Record) SetString(key string, value string) *Record {
 }
 
 // Gets an int64 field
-func (r *Record) GetInt(key string) int64 {
+func (r *Record) GetInt64(key string) int64 {
 	return r.Get(key).(int64)
 }
 
 // Sets the int64 value of a field
-func (r *Record) SetInt(key string, value int64) *Record {
+func (r *Record) SetInt64(key string, value int64) *Record {
 	return r.Set(key, value)
 }
 
