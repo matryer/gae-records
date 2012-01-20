@@ -80,7 +80,7 @@ func deleteOneByID(model *Model, id int64) os.Error {
 		if err == nil {
 			
 			// trigger the AfterDeleteByID event
-			model.AfterDeleteByID.Trigger(id)
+			model.AfterDeleteByID.TriggerWithContext(context)
 			
 		}
 		

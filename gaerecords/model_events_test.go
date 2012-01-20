@@ -134,6 +134,29 @@ func TestModelAfterDeleteByID(t *testing.T) {
 	
 }
 
+func TestBeforeAndAfterDeleteByIDEventsShareContext(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("afterDeleteByIDModel")
+	record, _ := CreatePersistedRecord(t, model)
+
+	var context1 *EventContext = nil
+	var context2 *EventContext = nil
+	
+	model.BeforeDeleteByID.Do(func(c *EventContext){
+		context1 = c
+	})
+	model.AfterDeleteByID.Do(func(c *EventContext){
+		context2 = c
+	})
+	
+	// trigger the event
+	model.Delete(record.ID())
+	
+	// make sure they match
+	assertEqual(t, context1, context2)
+	
+}
+
 func TestModelBeforePutEvent(t *testing.T) {
 	
 	model := CreateTestModelWithPropertyType("afterFindEventModel")

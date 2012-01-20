@@ -42,9 +42,16 @@ func (e *Event) Do(f func(*EventContext)) {
 // for checking if the event chain was cancelled, or if any data was collected along the way.
 func (e *Event) Trigger(args ...interface{}) *EventContext {
 	
+	// create a new context
 	var context *EventContext = new(EventContext)
 	context.Args = args
 	context.Cancel = false
+	
+	return e.TriggerWithContext(context)
+	
+}
+
+func (e *Event) TriggerWithContext(context *EventContext) *EventContext {
 	
 	for index, c := range e.Callbacks {
 		

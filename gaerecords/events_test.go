@@ -162,3 +162,19 @@ func TestEventContextSet(t *testing.T) {
 	
 }
 
+func TestEventTriggerWithContext(t *testing.T) {
+	
+	obj := new(TestObject)
+	customContext := new(EventContext)
+	
+	var context *EventContext
+	
+	obj.OnSomething.Do(func(e *EventContext){
+		context = e
+	})
+	
+	obj.OnSomething.TriggerWithContext(customContext)
+	
+	assertEqual(t, context, customContext)
+	
+}
