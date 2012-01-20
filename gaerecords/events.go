@@ -34,12 +34,8 @@ func (e *Event) Do(f func(*EventContext)) {
 	e.Callbacks = append(e.Callbacks, f)
 }
 
-// Triggers the event.  All funcs that have been registered with the Do() method will
-// be called.  If any of the funcs sets the EventContext.Cancel property to true, no
-// more callbacks will be called.
-//
-// Trigger() returns the EventContext that was passed through each callback which is useful
-// for checking if the event chain was cancelled, or if any data was collected along the way.
+// Triggers the event with the specified arguments. 
+// A new EventContext is created and then TriggerWithContext() is called.
 func (e *Event) Trigger(args ...interface{}) *EventContext {
 	
 	// create a new context
@@ -51,6 +47,17 @@ func (e *Event) Trigger(args ...interface{}) *EventContext {
 	
 }
 
+// Triggers the event with an existing EventContext object.
+//
+// All funcs that have been registered with the Do() method will
+// be called.  If any of the funcs sets the EventContext.Cancel property to true, no
+// more callbacks will be called.
+//
+// Trigger() returns the EventContext that was passed through each callback which is useful
+// for checking if the event chain was cancelled, or if any data was collected along the way.
+//
+// Usually this method is called after a Before* event that produces an EventContext object.
+// This allows other events (i.e. After*) to share the same context.
 func (e *Event) TriggerWithContext(context *EventContext) *EventContext {
 	
 	for index, c := range e.Callbacks {
