@@ -9,6 +9,9 @@ import (
 //  // create a new model for 'people'
 //  people := NewModel("people")
 type Model struct {
+
+	// internal string holding the 'type' of this model,
+	// or the kind of data this model works with
 	recordType string
 }
 
