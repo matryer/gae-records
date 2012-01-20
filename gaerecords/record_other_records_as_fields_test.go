@@ -13,18 +13,18 @@ func TestRecordAsFieldValue(t *testing.T) {
 	record := model.New()
 	
 	// create a sub-record
-	subrecord := model.New()
+	recordField := model.New()
 	
 	// set something on the sub-record
-	subrecord.SetString("Type", "Subrecord")
+	recordField.SetString("Type", "Subrecord")
 	
 	// set something on the main record
 	
 	record.
 		SetString("Name", "Mat").
-		Set("sub", subrecord).
+		Set("sub", recordField).
 		Put()
-		
+	
 	// load the main record again
 	loaded, err := model.Find(record.ID())
 	
