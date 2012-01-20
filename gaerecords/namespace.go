@@ -1,5 +1,8 @@
 // Package containing a high performance and lightweight wrapper around appengine/datastore,
 // providing Active Record and DBO style management of data.
+//
+// To persist records, use Record.Put().  To retrieve them, use Model.Find(id).
+//
 //  // create a new model for 'people'
 //  people := NewModel("people")
 //  
