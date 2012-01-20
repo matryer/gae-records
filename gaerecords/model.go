@@ -18,15 +18,35 @@ type Model struct {
 	//
 	AfterFind Event
 	
-	// Event that gets triggered before a record is deleted by ID.  Setting
-	// Cancel to true will cancel the delete operation.
+	// Event that gets triggered before a record is deleted by ID.
+	//
+	// Setting Cancel to true will cancel the delete operation.
 	//
 	//   Args[0] - ID (int64) of the record that is about to be deleted.
 	//
 	BeforeDeleteByID Event
 	
-	
+	// Event that gets triggered after a record has been deleted by ID.
+	//
+	//   Args[0] - ID (int64) of the record that was just deleted.
+	//
 	AfterDeleteByID Event
+
+	// Event that gets triggered before a record gets Put into the datastore.
+	// Use Args[0].(*Record).IsPersisted() to find out whether the record is being
+	// saved or updated.
+	//
+	// Setting Cancel to true will prevent the record from being Put
+	// 
+	//   Args[0] - The *Record that is about to be Put
+	//
+	BeforePut Event
+	
+	// Event that gets triggered after a record has been Put.
+	//
+	//   Args[0] - The *Record that was just Put
+	// 
+	AfterPut Event
 
 	// internal string holding the 'type' of this model,
 	// or the kind of data this model works with

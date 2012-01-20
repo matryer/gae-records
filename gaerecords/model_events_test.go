@@ -133,3 +133,82 @@ func TestModelAfterDeleteByID(t *testing.T) {
 	assertEqual(t, record.ID(), context.Args[0].(int64))
 	
 }
+
+func TestModelBeforePutEvent(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("afterFindEventModel")
+	record := model.New().Set("something", "something")
+	
+	var called bool = false
+	var context *EventContext = nil
+	
+	model.BeforePut.Do(func(c *EventContext){
+		called = true
+		context = c
+	})
+	
+	// do something that should trigger the event
+	record.Put()
+	
+	assertEqual(t, true, record.IsPersisted())
+	
+	assertEqual(t, true, called)
+	assertNotNil(t, context.Args[0], "context.Args[0]")
+	assertEqual(t, record.ID(), context.Args[0].(*Record).ID())
+	
+}
+
+func TestModelBeforePutEvent_Cancellation(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("afterFindEventModel")
+	record := model.New().Set("something", "something")
+	
+	var called bool = false
+	var context *EventContext = nil
+	
+	model.BeforePut.Do(func(c *EventContext){
+		called = true
+		context = c
+		
+		c.Cancel = true
+		
+	})
+	
+	// do something that should trigger the event
+	err := record.Put()
+	
+	if err != ErrOperationCancelledByEventCallback {
+		t.Errorf("ErrOperationCancelledByEventCallback Error should be returned if the delete operation was cancelled by an event callback")
+	}
+	
+	assertEqual(t, false, record.IsPersisted())
+	
+	assertEqual(t, true, called)
+	assertNotNil(t, context.Args[0], "context.Args[0]")
+	assertEqual(t, record.ID(), context.Args[0].(*Record).ID())
+	
+}
+
+func TestModelAfterPutEvent(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("afterFindEventModel")
+	record := model.New().Set("something", "something")
+	
+	var called bool = false
+	var context *EventContext = nil
+	
+	model.AfterPut.Do(func(c *EventContext){
+		called = true
+		context = c
+	})
+	
+	// do something that should trigger the event
+	record.Put()
+	
+	assertEqual(t, true, record.IsPersisted())
+	
+	assertEqual(t, true, called)
+	assertNotNil(t, context.Args[0], "context.Args[0]")
+	assertEqual(t, record.ID(), context.Args[0].(*Record).ID())
+	
+}

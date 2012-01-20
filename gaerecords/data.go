@@ -95,17 +95,29 @@ func deleteOneByID(model *Model, id int64) os.Error {
 
 func putOne(record *Record) os.Error {
 
-	newKey, err := datastore.Put(GetAppEngineContext(), record.DatastoreKey(), datastore.PropertyLoadSaver(record))
+	// trigger the BeforePut event on the model
+	context := record.Model().BeforePut.Trigger(record)
 
-	if err == nil {
+	if !context.Cancel {
+		
+		newKey, err := datastore.Put(GetAppEngineContext(), record.DatastoreKey(), datastore.PropertyLoadSaver(record))
+		
+		if err == nil {
 
-		// update the record key
-		record.SetDatastoreKey(newKey)
+			// update the record key
+			record.SetDatastoreKey(newKey)
+			
+			// trigger the AfterPut event
+			record.Model().AfterPut.Trigger(record)
 
-		return nil
+			return nil
 
+		}
+		
+		return err
+		
 	}
 
-	return err
+	return ErrOperationCancelledByEventCallback
 
 }
