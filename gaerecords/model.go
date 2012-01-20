@@ -1,6 +1,7 @@
 package gaerecords
 
 import (
+	"os"
 	"appengine/datastore"
 )
 
@@ -24,6 +25,15 @@ func (m *Model) New() *Record {
 
 func (m *Model) RecordType() string {
 	return m.recordType
+}
+
+/*
+	Persistence
+	----------------------------------------------------------------------
+*/
+
+func (m *Model) Find(id int64) (*Record, os.Error) {
+	return LoadOneByID(m, id)
 }
 
 /*

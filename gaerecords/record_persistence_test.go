@@ -66,3 +66,22 @@ func TestSave(t *testing.T) {
 	assertEqual(t, true, savedProperties["dev"])
 	
 }
+
+/*
+func TestPut(t *testing.T) {
+	
+	model := CreateTestModel()
+	record, _ := CreatePersistedRecord(model)
+	
+	assertEqual(t, false, record.IsPersisted());
+	
+	err := record.Put()
+	
+	if err != nil {
+		t.Errorf("Record.Put: %v", err)
+	} else {
+		assertEqual(t, true, record.IsPersisted());
+	}
+	
+}
+*/
