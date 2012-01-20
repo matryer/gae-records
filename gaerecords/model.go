@@ -25,15 +25,17 @@ type Model struct {
 	// Setting Cancel to true will cancel the delete operation.
 	//
 	//   Args[0] - ID (int64) of the record that is about to be deleted.
+	//   Args[1] - *Record to be deleted (if available)
 	//
-	BeforeDeleteByID Event
+	BeforeDelete Event
 
 	// Event that gets triggered after a record has been deleted by ID.
 	// The EventContext is the same one that was passed to BeforeDeleteByID.
 	//
 	//   Args[0] - ID (int64) of the record that was just deleted.
+	//   Args[1] - *Record that was deleted (if available)
 	//
-	AfterDeleteByID Event
+	AfterDelete Event
 
 	// Event that gets triggered before a record gets Put into the datastore.
 	// Use Args[0].(*Record).IsPersisted() to find out whether the record is being

@@ -71,7 +71,7 @@ func deleteOne(record *Record) os.Error {
 func deleteOneByID(model *Model, id int64) os.Error {
 
 	// trigger the BeforeDeleteByID event
-	context := model.BeforeDeleteByID.Trigger(id)
+	context := model.BeforeDelete.Trigger(id, nil)
 
 	if !context.Cancel {
 
@@ -80,7 +80,7 @@ func deleteOneByID(model *Model, id int64) os.Error {
 		if err == nil {
 
 			// trigger the AfterDeleteByID event
-			model.AfterDeleteByID.TriggerWithContext(context)
+			model.AfterDelete.TriggerWithContext(context)
 
 		}
 

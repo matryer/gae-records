@@ -59,7 +59,7 @@ func TestModelBeforeDeleteByIDEvent(t *testing.T) {
 	var called bool = false
 	var context *EventContext = nil
 
-	model.BeforeDeleteByID.Do(func(c *EventContext) {
+	model.BeforeDelete.Do(func(c *EventContext) {
 		called = true
 		context = c
 		loadedRecord, _ = model.Find(record.ID())
@@ -71,6 +71,7 @@ func TestModelBeforeDeleteByIDEvent(t *testing.T) {
 	assertEqual(t, true, called)
 	assertNotNil(t, context.Args[0], "context.Args[0]")
 	assertEqual(t, record.ID(), context.Args[0].(int64))
+	assertEqual(t, nil, context.Args[1])
 	assertEqual(t, record.ID(), loadedRecord.ID())
 
 }
@@ -83,7 +84,7 @@ func TestModelBeforeDeleteByIDEvent_Cancellation(t *testing.T) {
 	var called bool = false
 	var context *EventContext = nil
 
-	model.BeforeDeleteByID.Do(func(c *EventContext) {
+	model.BeforeDelete.Do(func(c *EventContext) {
 		called = true
 		context = c
 
@@ -115,7 +116,7 @@ func TestModelAfterDeleteByID(t *testing.T) {
 	var called bool = false
 	var context *EventContext = nil
 
-	model.AfterDeleteByID.Do(func(c *EventContext) {
+	model.AfterDelete.Do(func(c *EventContext) {
 		called = true
 		context = c
 		loadedRecord, err = model.Find(record.ID())
@@ -130,6 +131,7 @@ func TestModelAfterDeleteByID(t *testing.T) {
 
 	assertEqual(t, true, called)
 	assertNotNil(t, context.Args[0], "context.Args[0]")
+	assertEqual(t, nil, context.Args[1])
 	assertEqual(t, record.ID(), context.Args[0].(int64))
 
 }
@@ -142,10 +144,10 @@ func TestBeforeAndAfterDeleteByIDEventsShareContext(t *testing.T) {
 	var context1 *EventContext = nil
 	var context2 *EventContext = nil
 
-	model.BeforeDeleteByID.Do(func(c *EventContext) {
+	model.BeforeDelete.Do(func(c *EventContext) {
 		context1 = c
 	})
-	model.AfterDeleteByID.Do(func(c *EventContext) {
+	model.AfterDelete.Do(func(c *EventContext) {
 		context2 = c
 	})
 
