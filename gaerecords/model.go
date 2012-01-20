@@ -24,6 +24,9 @@ type Model struct {
 	//   Args[0] - ID (int64) of the record that is about to be deleted.
 	//
 	BeforeDeleteByID Event
+	
+	
+	AfterDeleteByID Event
 
 	// internal string holding the 'type' of this model,
 	// or the kind of data this model works with
