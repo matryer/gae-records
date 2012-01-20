@@ -1,15 +1,9 @@
-gae-records: Active Record like wrapper for Google App Engine Datasource in Go
+gae-records: Package containing a high performance and lightweight wrapper around appengine/datastore,
+providing Active Record and DBO style management of data.
 
 (THIS PROJET IS UNDER CONSTRUCTION AND NOT YET READY FOR USE: But feel free to take a look around)
 
 ---
-
-This project aims to simplify the interactions with the appengine/datastore in Go by wrapping the functionality in easy to use classes.
-
----
-
-Package containing a high performance and lightweight wrapper around appengine/datastore,
-providing Active Record and DBO style management of data.
 
  // create a new model for 'people'
  people := NewModel("people")
@@ -32,3 +26,4 @@ providing Active Record and DBO style management of data.
 
  // delete mat
  mat.Delete()
+ 
