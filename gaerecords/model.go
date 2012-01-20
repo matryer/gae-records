@@ -13,8 +13,16 @@ type Model struct {
 
 	// Event that gets triggered after a record of this kind has been
 	// found.  Useful for any processing of records after they have been loaded.
+	//
+	//   Args[0] - The *Record that has been found.
+	//
 	AfterFind Event
 	
+	// Event that gets triggered before a record is deleted by ID.  Setting
+	// Cancel to true will cancel the delete operation.
+	//
+	//   Args[0] - ID (int64) of the record that is about to be deleted.
+	//
 	BeforeDeleteByID Event
 
 	// internal string holding the 'type' of this model,
