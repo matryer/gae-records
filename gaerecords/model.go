@@ -13,6 +13,8 @@ type Model struct {
 
 	// Event that gets triggered after a record of this kind has been
 	// found.  Useful for any processing of records after they have been loaded.
+	// For any operations that cause multiple finds (i.e. All()) this event
+	// will be triggered for each record.
 	//
 	//   Args[0] - The *Record that has been found.
 	//
