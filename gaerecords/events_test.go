@@ -25,6 +25,19 @@ func TestSimpleEvent(t *testing.T) {
 
 }
 
+func TestHasCallbacks(t *testing.T) {
+	
+	obj := new(TestObject)
+	assertEqual(t, false, obj.OnSomething.HasCallbacks())
+
+	// add a callback
+	obj.OnSomething.Do(func(e *EventContext) {})
+	
+	// now it should be true
+	assertEqual(t, true, obj.OnSomething.HasCallbacks())
+	
+}
+
 func TestEventWithManyCallbacks(t *testing.T) {
 
 	obj := new(TestObject)

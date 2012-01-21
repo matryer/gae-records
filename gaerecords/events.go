@@ -34,14 +34,26 @@ func (e *Event) Do(f func(*EventContext)) {
 	e.Callbacks = append(e.Callbacks, f)
 }
 
+// Gets whether the event has any registered callbacks or not.
+func (e *Event) HasCallbacks() bool {
+	return len(e.Callbacks) > 0
+}
+
 // Triggers the event with the specified arguments. 
-// A new EventContext is created and then TriggerWithContext() is called.
+//
+// If any callbacks are registered, a new EventContext is created
+// and then TriggerWithContext() is called.
+//
+// If no callbacks are registered, Trigger() does nothing but still
+// returns a usable EventContext object.
 func (e *Event) Trigger(args ...interface{}) *EventContext {
 
 	// create a new context
 	var context *EventContext = new(EventContext)
 	context.Args = args
 	context.Cancel = false
+	
+	if !e.HasCallbacks() { return context }
 
 	return e.TriggerWithContext(context)
 
@@ -50,7 +62,11 @@ func (e *Event) Trigger(args ...interface{}) *EventContext {
 // Triggers the event with an existing EventContext object.
 //
 // All funcs that have been registered with the Do() method will
-// be called.  If any of the funcs sets the EventContext.Cancel property to true, no
+// be called.
+//
+// If no callbacks are registered, TriggerWithContext() does nothing.
+//
+// If any of the funcs sets the EventContext.Cancel property to true, no
 // more callbacks will be called.
 //
 // Trigger() returns the EventContext that was passed through each callback which is useful
@@ -59,6 +75,8 @@ func (e *Event) Trigger(args ...interface{}) *EventContext {
 // Usually this method is called after a Before* event that produces an EventContext object.
 // This allows other events (i.e. After*) to share the same context.
 func (e *Event) TriggerWithContext(context *EventContext) *EventContext {
+
+	if !e.HasCallbacks() { return context }
 
 	for index, c := range e.Callbacks {
 
