@@ -51,6 +51,17 @@ func TestGetAndSetInt(t *testing.T) {
 
 }
 
+func TestGetAndSetFloat64(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	assertEqual(t, person, person.SetFloat64("age", 27.5))
+	assertEqual(t, float64(27.5), person.Fields()["age"])
+	assertEqual(t, float64(27.5), person.GetFloat64("age"))
+
+}
+
 func TestGetAndSetBool(t *testing.T) {
 
 	people := CreateTestModel()
@@ -73,4 +84,31 @@ func TestGetAndSetKeyField(t *testing.T) {
 	assertEqual(t, key, person.Fields()["field"])
 	assertEqual(t, key, person.GetKeyField("field"))
 
+}
+
+func TestDifferentValueTypes(t *testing.T) {
+	
+	people := CreateTestModel()
+	person := people.New()
+	
+	err := person.
+		//Set("1", int(1)).
+		//Set("2", uint8(1)).     
+		//Set("3", uint16(1)).    
+		//Set("4", uint32(1)).    
+		//Set("5", uint64(1)).    
+		//Set("6", int8(1)).      
+		//Set("7", int16(1)).     
+		//Set("8", int32(1)).     
+		Set("9", int64(1)).     
+		//Set("10", float32(1.1)).   
+		Set("11", float64(1.1)).   
+		//Set("12", complex64(1.1)). 
+		//Set("13", complex128(1.1))
+		Put()
+	
+	if err != nil {
+		t.Errorf("TestDifferentValueTypes failed with error: %v", err)
+	}
+	
 }

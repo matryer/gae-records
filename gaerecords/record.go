@@ -271,6 +271,16 @@ func (r *Record) SetInt64(key string, value int64) *Record {
 	return r.Set(key, value)
 }
 
+// Gets the float64 value of a field with the specified key.
+func (r *Record) GetFloat64(key string) float64 {
+	return r.Get(key).(float64)
+}
+
+// Sets the float64 value of a field with the specified key.
+func (r *Record) SetFloat64(key string, value float64) *Record {
+	return r.Set(key, value)
+}
+
 // Gets the bool value of a field with the specified key.
 func (r *Record) GetBool(key string) bool {
 	return r.Get(key).(bool)
