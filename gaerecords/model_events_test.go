@@ -376,3 +376,25 @@ func TestBeforeAndAfterPutEventsShareContext(t *testing.T) {
 	assertEqual(t, context1, context2)
 
 }
+
+
+func TestAfterNewEvent(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("afterNewEventModel")
+	
+	var called bool = false
+	var context *EventContext = nil
+	
+	model.AfterNew.Do(func(c *EventContext){
+		context = c
+		called = true
+	})
+	
+	newRecord := model.New()
+	
+	assertEqual(t, true, called)
+	if called {
+		assertEqual(t, newRecord, context.Args[0])
+	}
+	
+}

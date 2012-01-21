@@ -11,6 +11,12 @@ import (
 //  people := NewModel("people")
 type Model struct {
 
+	// Event that gets triggered after a record has been created.
+	// Useful for initializing Records.
+	//
+	//   Args[0] - The *Record that has been created
+	AfterNew Event
+
 	// Event that gets triggered after a record of this kind has been
 	// found.  Useful for any processing of records after they have been loaded.
 	// For any operations that cause multiple finds (i.e. All()) this event
