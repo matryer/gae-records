@@ -23,7 +23,7 @@ type Record struct {
 
 	// an internal cache of the datastore.Key
 	datastoreKey *datastore.Key
-	
+
 	// whether the record needs persisting or not
 	needsPersisting bool
 
@@ -42,8 +42,8 @@ func NewRecord(model *Model) *Record {
 
 	// create and setup the record
 	record := new(Record).
-							configureRecord(model, nil).
-							SetNeedsPersisting(true)
+		configureRecord(model, nil).
+		SetNeedsPersisting(true)
 
 	// trigger the event
 	model.AfterNew.Trigger(record)
@@ -109,10 +109,15 @@ func (r *Record) setID(id int64) *Record {
 	----------------------------------------------------------------------
 */
 
+// Gets whether this record needs persisting in the datastore or not.  If this
+// record is synched with the datastore (as far as this record knows) it will
+// return false, otherwise, if something has changed or this is a new record, true
+// will be returned.
 func (r *Record) NeedsPersisting() bool {
 	return r.needsPersisting
 }
 
+// Sets whether this record needs persisting or not.  Advanced use only.
 func (r *Record) SetNeedsPersisting(value bool) *Record {
 	r.needsPersisting = value
 	return r
@@ -156,7 +161,7 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 // (Internal) Configures a Record after it has been found or created using means other than
 // model.New() or NewRecord(model).
 func (r *Record) configureRecord(model *Model, key *datastore.Key) *Record {
-	
+
 	return r.
 		SetModel(model).
 		SetDatastoreKey(key).
@@ -218,10 +223,10 @@ func (r *Record) DatastoreKey() *datastore.Key {
 func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 
 	if key == nil {
-		 
+
 		r.setID(NoIDValue)
 		r.datastoreKey = nil
-		
+
 	} else {
 
 		// does the key have an ID?
@@ -234,7 +239,7 @@ func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 
 		// set the key
 		r.datastoreKey = key
-	
+
 	}
 
 	// chain
@@ -298,11 +303,11 @@ func (r *Record) Set(key string, value interface{}) *Record {
 	if r.model.OnChanged.HasCallbacks() {
 		r.model.OnChanged.Trigger(r, key, value, oldValue)
 	}
-	
+
 	if value != oldValue {
 		r.SetNeedsPersisting(true)
 	}
-	
+
 	return r
 }
 

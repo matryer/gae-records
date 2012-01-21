@@ -16,11 +16,11 @@ func TestSetDatastoreKey(t *testing.T) {
 
 	// ensure the ID was updated
 	assertEqual(t, int64(123), person.ID())
-	
+
 }
 
 func TestSetDatastoreKeyToNilKey(t *testing.T) {
-	
+
 	people := CreateTestModel()
 	person := people.New()
 
@@ -32,9 +32,9 @@ func TestSetDatastoreKeyToNilKey(t *testing.T) {
 	assertEqual(t, int64(123), person.ID())
 
 	person.SetDatastoreKey(nil)
-	
+
 	assertEqual(t, NoIDValue, person.ID())
-	
+
 }
 
 func TestDatastoreKeyChangingIDInvalidatesCache(t *testing.T) {

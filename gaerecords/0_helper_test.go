@@ -5,6 +5,7 @@ import (
 )
 
 var NextTestMessage string = ""
+
 func withMessage(m string) {
 	NextTestMessage = m
 }
