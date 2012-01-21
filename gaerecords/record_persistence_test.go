@@ -11,6 +11,82 @@ import (
 	------------------------------------------------------------
 */
 
+func TestConfigureRecord(t *testing.T) {
+	
+	record := new(Record)
+	
+	record.needsPersisting = true
+	
+	model := CreateTestModelWithPropertyType("configureRecord")
+	key := model.NewKeyWithID(123)
+	
+	assertEqual(t, record, record.configureRecord(model, key))
+	
+	assertEqual(t, false, record.NeedsPersisting())
+	assertEqual(t, model, record.model)
+	assertEqual(t, key, record.datastoreKey)
+	
+}
+
+func TestNeedsPersisting(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("needsPersistingTestModel")
+	
+	// create a non-persisted record
+	record := model.New()
+	withMessage("NeedsPersisting should be true with New record")
+	assertEqual(t, true, record.NeedsPersisting())
+	
+	// save it
+	record.Put()
+	withMessage("NeedsPersisting should be false with record that was just Put")
+	assertEqual(t, false, record.NeedsPersisting())
+	
+	// load it again
+	record, _ = model.Find(record.ID())
+	withMessage("NeedsPersisting should be false with record that was just loaded (with Find)")
+	assertEqual(t, false, record.NeedsPersisting())
+
+	// change something
+	record.Set("name", "Mat")
+	withMessage("NeedsPersisting should be true after changing something with Set()")
+	assertEqual(t, true, record.NeedsPersisting())
+	
+	// load them all
+	records, _ := model.All()
+	record = records[0]
+	
+	withMessage("NeedsPersisting should be false after loading with All()")
+	assertEqual(t, false, record.NeedsPersisting())
+	
+	// change something (but don't actually change the value)
+	record.Set("name", "Mat").Put()
+	record.Set("name", "Mat")
+	
+	withMessage("NeedsPersisting should be false after changing something to the same value")
+	assertEqual(t, false, record.NeedsPersisting())
+	
+}
+
+func TestSetNeedsPersisting(t *testing.T) {
+	
+	model := CreateTestModelWithPropertyType("needsPersistingModel")
+	record := model.New()
+	withMessage("NeedsPersisting should be true with New record")
+	assertEqual(t, true, record.NeedsPersisting())
+	
+	assertEqual(t, record, record.SetNeedsPersisting(false))
+	
+	withMessage("NeedsPersisting should be false after SetNeedsPersisting(false)")
+	assertEqual(t, false, record.NeedsPersisting())
+	
+	assertEqual(t, record, record.SetNeedsPersisting(true))
+	
+	withMessage("NeedsPersisting should be false after SetNeedsPersisting(true)")
+	assertEqual(t, true, record.NeedsPersisting())
+	
+}
+
 func TestLoad(t *testing.T) {
 
 	record := CreateTestRecord()

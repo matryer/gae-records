@@ -23,6 +23,9 @@ type Record struct {
 
 	// an internal cache of the datastore.Key
 	datastoreKey *datastore.Key
+	
+	// whether the record needs persisting or not
+	needsPersisting bool
 
 	// internal storage of this record's ID
 	recordID int64
@@ -38,7 +41,9 @@ type Record struct {
 func NewRecord(model *Model) *Record {
 
 	// create and setup the record
-	record := new(Record).SetModel(model)
+	record := new(Record).
+							configureRecord(model, nil).
+							SetNeedsPersisting(true)
 
 	// trigger the event
 	model.AfterNew.Trigger(record)
@@ -104,6 +109,15 @@ func (r *Record) setID(id int64) *Record {
 	----------------------------------------------------------------------
 */
 
+func (r *Record) NeedsPersisting() bool {
+	return r.needsPersisting
+}
+
+func (r *Record) SetNeedsPersisting(value bool) *Record {
+	r.needsPersisting = value
+	return r
+}
+
 // CAUTION: This method does NOT load persisted records.  See Find().
 // PropertyLoadSaver.Load takes a channel of datastore.Property objects and
 // applies them to the internal Fields() object.
@@ -137,6 +151,17 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 	// no errors
 	return nil
+}
+
+// (Internal) Configures a Record after it has been found or created using means other than
+// model.New() or NewRecord(model).
+func (r *Record) configureRecord(model *Model, key *datastore.Key) *Record {
+	
+	return r.
+		SetModel(model).
+		SetDatastoreKey(key).
+		SetNeedsPersisting(false)
+
 }
 
 // Saves or updates this record.  Returns nil if successful, otherwise returns the os.Error
@@ -192,16 +217,25 @@ func (r *Record) DatastoreKey() *datastore.Key {
 // Sets the datastore Key and updates the records ID if needed
 func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 
-	// does the key have an ID?
-	if key.IntID() > 0 {
+	if key == nil {
+		 
+		r.setID(NoIDValue)
+		r.datastoreKey = nil
+		
+	} else {
 
-		// set the ID
-		r.setID(key.IntID())
+		// does the key have an ID?
+		if key.IntID() > 0 {
 
+			// set the ID
+			r.setID(key.IntID())
+
+		}
+
+		// set the key
+		r.datastoreKey = key
+	
 	}
-
-	// set the key
-	r.datastoreKey = key
 
 	// chain
 	return r
@@ -260,9 +294,15 @@ func (r *Record) Set(key string, value interface{}) *Record {
 	oldValue := fields[key]
 	fields[key] = value
 
-	// trigger the OnChanged event
-	r.model.OnChanged.Trigger(r, key, value, oldValue)
-
+	// trigger the OnChanged event if we need to
+	if r.model.OnChanged.HasCallbacks() {
+		r.model.OnChanged.Trigger(r, key, value, oldValue)
+	}
+	
+	if value != oldValue {
+		r.SetNeedsPersisting(true)
+	}
+	
 	return r
 }
 

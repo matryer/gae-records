@@ -16,7 +16,7 @@ func findAll(model *Model) ([]*Record, os.Error) {
 
 		// update the key for each loaded record
 		for index, record := range records {
-			record.SetModel(model).SetDatastoreKey(keys[index])
+			record.configureRecord(model, keys[index])
 			model.AfterFind.Trigger(record)
 		}
 
@@ -32,14 +32,14 @@ func findOneByID(model *Model, id int64) (*Record, os.Error) {
 
 	key := model.NewKeyWithID(id)
 
-	var record *Record = NewRecord(model)
+	var record *Record = new(Record)
 
 	err := datastore.Get(GetAppEngineContext(), key, datastore.PropertyLoadSaver(record))
 
 	if err == nil {
 
-		// set the key
-		record.SetDatastoreKey(key)
+		// setup the record object
+		record.configureRecord(model, key)
 
 		// raise the AfterFind event on the model
 		model.AfterFind.Trigger(record)
@@ -116,8 +116,8 @@ func putOne(record *Record) os.Error {
 
 		if err == nil {
 
-			// update the record key
-			record.SetDatastoreKey(newKey)
+			// update the record
+			record.SetDatastoreKey(newKey).SetNeedsPersisting(false)
 
 			// trigger the AfterPut event
 			record.Model().AfterPut.TriggerWithContext(context)
