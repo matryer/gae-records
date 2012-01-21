@@ -52,8 +52,10 @@ func (e *Event) Trigger(args ...interface{}) *EventContext {
 	var context *EventContext = new(EventContext)
 	context.Args = args
 	context.Cancel = false
-	
-	if !e.HasCallbacks() { return context }
+
+	if !e.HasCallbacks() {
+		return context
+	}
 
 	return e.TriggerWithContext(context)
 
@@ -76,7 +78,9 @@ func (e *Event) Trigger(args ...interface{}) *EventContext {
 // This allows other events (i.e. After*) to share the same context.
 func (e *Event) TriggerWithContext(context *EventContext) *EventContext {
 
-	if !e.HasCallbacks() { return context }
+	if !e.HasCallbacks() {
+		return context
+	}
 
 	for index, c := range e.Callbacks {
 

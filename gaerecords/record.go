@@ -36,13 +36,13 @@ type Record struct {
 // Creates a new record of the given Model type.  Not recommended.  Instead call the
 // New() method on the model object itself.
 func NewRecord(model *Model) *Record {
-	
+
 	// create and setup the record
 	record := new(Record).SetModel(model)
-	
+
 	// trigger the event
 	model.AfterNew.Trigger(record)
-	
+
 	// return the record
 	return record
 }
@@ -255,7 +255,14 @@ func (r *Record) Get(key string) interface{} {
 // type or another Record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
 func (r *Record) Set(key string, value interface{}) *Record {
-	r.Fields()[key] = value
+
+	fields := r.Fields()
+	oldValue := fields[key]
+	fields[key] = value
+
+	// trigger the OnChanged event
+	r.model.OnChanged.Trigger(r, key, value, oldValue)
+
 	return r
 }
 

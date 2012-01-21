@@ -175,7 +175,7 @@ func TestModelBeforeDeleteEvent(t *testing.T) {
 	})
 
 	recordID := record.ID()
-	
+
 	// do something that should trigger the event
 	record.Delete()
 
@@ -238,7 +238,7 @@ func TestModelAfterDelete(t *testing.T) {
 	if loadedRecord != nil {
 		t.Errorf("loadedRecord should return nil after delete")
 	}
-	
+
 	recordID := record.ID()
 
 	// do something that should trigger the event
@@ -297,7 +297,6 @@ func TestModelBeforePutEvent(t *testing.T) {
 	assertEqual(t, record.ID(), context.Args[0].(*Record).ID())
 
 }
-
 
 func TestModelBeforePutEvent_Cancellation(t *testing.T) {
 
@@ -377,24 +376,63 @@ func TestBeforeAndAfterPutEventsShareContext(t *testing.T) {
 
 }
 
-
 func TestAfterNewEvent(t *testing.T) {
-	
+
 	model := CreateTestModelWithPropertyType("afterNewEventModel")
-	
+
 	var called bool = false
 	var context *EventContext = nil
-	
-	model.AfterNew.Do(func(c *EventContext){
+
+	model.AfterNew.Do(func(c *EventContext) {
 		context = c
 		called = true
 	})
-	
+
 	newRecord := model.New()
-	
+
 	assertEqual(t, true, called)
 	if called {
 		assertEqual(t, newRecord, context.Args[0])
 	}
-	
+
+}
+
+func TestOnChangedEvent(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("onChangedEventModel")
+	record := model.New()
+
+	var called bool = false
+	var context *EventContext
+
+	// sign up to the OnChanged event
+	model.OnChanged.Do(func(c *EventContext) {
+		called = true
+		context = c
+	})
+
+	// change something
+	record.Set("name", "Mat")
+
+	assertEqual(t, true, called)
+	if called {
+		assertEqual(t, record, context.Args[0])
+		assertEqual(t, "name", context.Args[1])
+		assertEqual(t, "Mat", context.Args[2])
+		assertEqual(t, nil, context.Args[3])
+	}
+
+	// do it again - to check the 'old' argument
+	called = false
+
+	record.Set("name", "Laurie")
+
+	assertEqual(t, true, called)
+	if called {
+		assertEqual(t, record, context.Args[0])
+		assertEqual(t, "name", context.Args[1])
+		assertEqual(t, "Laurie", context.Args[2])
+		assertEqual(t, "Mat", context.Args[3])
+	}
+
 }

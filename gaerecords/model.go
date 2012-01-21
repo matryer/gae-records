@@ -65,6 +65,15 @@ type Model struct {
 	// 
 	AfterPut Event
 
+	// Event that gets triggered after a record field has been changed
+	// using one of the Set*() methods.
+	//
+	//   Args[0] - The record that changed
+	//   Args[1] - The key of the field that changed
+	//   Args[2] - The new value of the field
+	//   Args[3] - The old value of the field (or nil if it's a new field)
+	OnChanged Event
+
 	// internal string holding the 'type' of this model,
 	// or the kind of data this model works with
 	recordType string

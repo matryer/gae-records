@@ -66,7 +66,7 @@ func deleteOne(record *Record) os.Error {
 
 			// clean up the record
 			record.setID(NoIDValue)
-			
+
 			// trigger the AfterDeleteByID event
 			record.Model().AfterDelete.TriggerWithContext(context)
 
@@ -75,7 +75,7 @@ func deleteOne(record *Record) os.Error {
 		return err
 
 	}
-	
+
 	return ErrOperationCancelledByEventCallback
 
 }
