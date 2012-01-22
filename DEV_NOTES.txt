@@ -10,3 +10,7 @@ Documentation
   godoc -http=:6060 -path="/Users/matryer/Work/gae-records/gaerecords/"
   http://localhost:6060/pkg/gaerecords/
   
+  
+  Generate documentation:
+  
+  godoc -html=true "/Users/matryer/Work/gae-records/gaerecords" > doc/index.html
