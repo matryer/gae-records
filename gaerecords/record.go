@@ -222,7 +222,7 @@ func (r *Record) configureRecord(model *Model, key *datastore.Key) *Record {
 }
 
 // Saves or updates this record.  Returns nil if successful, otherwise returns the os.Error
-// that was retrned by appengime/datastore.
+// that was retrned by the datastore.
 //  record.Put()
 //
 // Raises events:
