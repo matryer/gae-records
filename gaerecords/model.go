@@ -3,6 +3,7 @@ package gaerecords
 import (
 	"os"
 	"fmt"
+	"reflect"
 	"appengine"
 	"appengine/datastore"
 )
@@ -156,7 +157,28 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 // Raises events:
 //   Model.AfterFind with Args(record)
 func (m *Model) Find(id int64) (*Record, os.Error) {
-	return findOneByID(m, id)
+
+	key := m.NewKeyWithID(id)
+
+	var record *Record = new(Record)
+
+	err := datastore.Get(GetAppEngineContext(), key, datastore.PropertyLoadSaver(record))
+
+	if err == nil {
+
+		// setup the record object
+		record.configureRecord(m, key)
+
+		// raise the AfterFind event on the model
+		m.AfterFind.Trigger(record)
+
+		// return the record
+		return record, nil
+
+	}
+
+	return nil, err
+
 }
 
 // Finds all records of this type.
@@ -166,7 +188,7 @@ func (m *Model) Find(id int64) (*Record, os.Error) {
 // Raises events for each record:
 //   Model.AfterFind with Args(record)
 func (m *Model) All() ([]*Record, os.Error) {
-	return findAll(m)
+	return m.FindByQuery(m.NewQuery())
 }
 
 // Deletes a single record of this type.  Returns nil if successful, otherwise
@@ -179,7 +201,96 @@ func (m *Model) All() ([]*Record, os.Error) {
 //   Model.AfterDelete with Args(id, nil)
 // Note: The Record will not be passed to the events.
 func (m *Model) Delete(id int64) os.Error {
-	return deleteOneByID(m, id)
+
+	// trigger the BeforeDeleteByID event
+	context := m.BeforeDelete.Trigger(id, nil)
+
+	if !context.Cancel {
+
+		err := datastore.Delete(GetAppEngineContext(), m.NewKeyWithID(id))
+
+		if err == nil {
+
+			// trigger the AfterDeleteByID event
+			m.AfterDelete.TriggerWithContext(context)
+
+		}
+
+		// return the error
+		return err
+
+	}
+
+	return ErrOperationCancelledByEventCallback
+
+}
+
+/*
+	Queries
+	----------------------------------------------------------------------
+*/
+
+// Creates a new datastore.Query for accessing records represented
+// by the model.  For advanced use only.  Consider instead one of the 
+// Find* methods.
+func (m *Model) NewQuery() *datastore.Query {
+	return datastore.NewQuery(m.RecordType())
+}
+
+// Finds Records handled by this Model.
+//
+// Returns an array of records as the first argument,
+// or an error as the second return argument.
+//
+// The queryOrFunc argument may be one of:
+//
+//   *datastore.Query
+// The specified query will be used to find records.
+//   func(*datastore.Query)
+// A new query will be created and the specified function will be
+// used to further configure the query.
+//
+// Example:
+//  model := NewModel("people")
+//  women, err := model.FindByQuery(func(q *datastore.Query){
+//	  q.Filter("sex=", "male")
+//  })
+func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
+
+	var query *datastore.Query
+
+	if reflect.TypeOf(queryOrFunc).Kind() == reflect.Func {
+
+		// create a new query
+		query = m.NewQuery()
+
+		// ask the func to configure the query
+		queryOrFunc.(func(*datastore.Query))(query)
+
+	} else {
+
+		// just use the query
+		query = queryOrFunc.(*datastore.Query)
+
+	}
+
+	var records []*Record
+	keys, err := query.GetAll(GetAppEngineContext(), &records)
+
+	if err == nil {
+
+		// update the key for each loaded record
+		for index, record := range records {
+			record.configureRecord(m, keys[index])
+			m.AfterFind.Trigger(record)
+		}
+
+		return records, nil
+
+	}
+
+	return nil, err
+
 }
 
 /*

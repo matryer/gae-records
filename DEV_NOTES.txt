@@ -7,7 +7,8 @@ Format
 Documentation
 =============
 
-  godoc -http=:6060 -path="/Users/matryer/Work/gae-records/gaerecords/"
+  godoc -http=:6060 -path="/Users/matryer/Work/lib/appengine-go:/Users/matryer/Work/gae-records/gaerecords/"
+  
   http://localhost:6060/pkg/gaerecords/
   
   

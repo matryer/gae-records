@@ -177,7 +177,32 @@ func (r *Record) configureRecord(model *Model, key *datastore.Key) *Record {
 //   Model.BeforePut with Args(record)
 //   Model.AfterPut with Args(record)
 func (r *Record) Put() os.Error {
-	return putOne(r)
+
+	// trigger the BeforePut event on the model
+	context := r.Model().BeforePut.Trigger(r)
+
+	if !context.Cancel {
+
+		newKey, err := datastore.Put(GetAppEngineContext(), r.DatastoreKey(), datastore.PropertyLoadSaver(r))
+
+		if err == nil {
+
+			// update the record
+			r.SetDatastoreKey(newKey).SetNeedsPersisting(false)
+
+			// trigger the AfterPut event
+			r.Model().AfterPut.TriggerWithContext(context)
+
+			return nil
+
+		}
+
+		return err
+
+	}
+
+	return ErrOperationCancelledByEventCallback
+
 }
 
 // Deletes this record.  Returns nil if successful, otherwise returns the os.Error
@@ -189,7 +214,30 @@ func (r *Record) Put() os.Error {
 //   Model.AfterDelete with Args(id, record)
 // Note: The Record will be passed to the events.
 func (r *Record) Delete() os.Error {
-	return deleteOne(r)
+
+	// trigger the BeforeDeleteByID event
+	context := r.Model().BeforeDelete.Trigger(r.ID(), r)
+
+	if !context.Cancel {
+
+		err := datastore.Delete(GetAppEngineContext(), r.DatastoreKey())
+
+		if err == nil {
+
+			// clean up the record
+			r.setID(NoIDValue)
+
+			// trigger the AfterDeleteByID event
+			r.Model().AfterDelete.TriggerWithContext(context)
+
+		}
+
+		return err
+
+	}
+
+	return ErrOperationCancelledByEventCallback
+
 }
 
 /*

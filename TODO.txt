@@ -1,0 +1,2 @@
+
+Add Get* and Set* funcs for each of the supported types: http://code.google.com/appengine/docs/go/datastore/reference.html
