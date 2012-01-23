@@ -133,27 +133,27 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 
 	// load the fields
 	for f := range c {
-		
+
 		if f.Multiple {
-		
+
 			// do we already have this value?
 			if r.Fields()[f.Name] == nil {
-				
+
 				// create a slice to hold these objects
 				r.Fields()[f.Name] = make([]interface{}, 0, 0)
-				
+
 			}
-			
+
 			// add this object to the slice
 			r.Fields()[f.Name] = reflect.Append(reflect.ValueOf(r.Fields()[f.Name]), reflect.ValueOf(f.Value)).Interface()
-			
+
 		} else {
-			
+
 			// load single value
 			r.Fields()[f.Name] = f.Value
-			
+
 		}
-		
+
 	}
 
 	// no errors
@@ -167,40 +167,40 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 	for k, v := range r.Fields() {
-		
+
 		if reflect.TypeOf(v).Kind() == reflect.Array || reflect.TypeOf(v).Kind() == reflect.Slice {
-			
+
 			// multiple values - iterate over each value
 			// and add them as seperate properties
-			
+
 			value := reflect.ValueOf(v)
 			l := value.Len()
-			
+
 			for i := 0; i < l; i++ {
-				
+
 				thisVal := value.Index(i)
-				
+
 				// create the property
 				c <- datastore.Property{
-					Name:  k,
-					Value: thisVal.Interface(),
+					Name:     k,
+					Value:    thisVal.Interface(),
 					Multiple: true,
 				}
-				
+
 			}
-			
+
 		} else {
-			
+
 			// single value
 			// create the property
 			c <- datastore.Property{
-				Name:  k,
-				Value: v,
+				Name:     k,
+				Value:    v,
 				Multiple: false,
 			}
-			
+
 		}
-		
+
 	}
 
 	// this channel is finished
@@ -396,6 +396,21 @@ func (r *Record) Get(key string) interface{} {
 }
 
 // Gets an []interface{} of the multiple values contained in a single property.
+// For example:
+//  // create a model
+//  model := NewModel("people")
+//
+//  // create an item with a 'tags' property containing a slice of strings
+//  // and Put this item
+//  item, _ := model.New().Set("tags", []string{"one", "two", "three"}).Put()
+// 
+//  // load the item again
+//  item = model(item.ID())
+//
+//  // get the tags
+//  for i, tag := range item.GetMultiple("tags") {
+//	  // cast tag and do soemthing with it
+//  }
 func (r *Record) GetMultiple(key string) []interface{} {
 	return r.Get(key).([]interface{})
 }

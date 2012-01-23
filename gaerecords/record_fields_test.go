@@ -155,7 +155,7 @@ func TestDifferentValueTypes(t *testing.T) {
 }
 
 func TestPersistingMultipleValues(t *testing.T) {
-	
+
 	people := CreateTestModel()
 	person := people.New()
 
@@ -163,24 +163,24 @@ func TestPersistingMultipleValues(t *testing.T) {
 		Set("many-strings", []string{"one", "two", "three"}).
 		Set("many-int64s", []int64{1, 2, 3, 4, 5}).
 		Set("many-float64s", []float64{float64(1.1), float64(2.2), float64(3.3), float64(4.4), float64(5.5)}).
-		Set("many-bools", []bool{ true, false, true, false }).
+		Set("many-bools", []bool{true, false, true, false}).
 		Put()
-		
+
 	if err != nil {
 		t.Errorf("Error when putting multiple values: %v", err)
 	}
-	
+
 	// load the record back out
 	loaded, err := people.Find(person.ID())
-		
+
 	if err != nil {
 		t.Errorf("Error when loading record with multiple values: %v", err)
 	}
-	
+
 	assertEqual(t, "one", loaded.GetMultiple("many-strings")[0])
 	assertEqual(t, "two", loaded.GetMultiple("many-strings")[1])
 	assertEqual(t, "three", loaded.GetMultiple("many-strings")[2])
-	
+
 	assertEqual(t, int64(1), loaded.GetMultiple("many-int64s")[0])
 	assertEqual(t, int64(2), loaded.GetMultiple("many-int64s")[1])
 	assertEqual(t, int64(3), loaded.GetMultiple("many-int64s")[2])
