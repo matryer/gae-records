@@ -10,7 +10,7 @@ import (
 // Creates a test appengine context object
 func UseTestAppEngineContext() {
 
-	appEngineContext, _ = appenginetesting.NewContext(nil)
+	AppEngineContext, _ = appenginetesting.NewContext(nil)
 
 }
 
@@ -53,6 +53,6 @@ func CreatePersistedRecord(t *testing.T, model *Model) (*Record, os.Error) {
 func TestSetup(t *testing.T) {
 
 	UseTestAppEngineContext()
-	t.Logf("<<< Test context created %v >>>", appEngineContext)
+	t.Logf("<<< Test context created %v >>>", AppEngineContext)
 
 }
