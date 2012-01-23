@@ -17,6 +17,7 @@ type Model struct {
 	// Useful for initializing Records.
 	//
 	//   Args[0] - The *Record that has been created
+	//
 	AfterNew Event
 
 	// Event that gets triggered after a record of this kind has been
@@ -74,6 +75,7 @@ type Model struct {
 	//   Args[1] - The key of the field that changed
 	//   Args[2] - The new value of the field
 	//   Args[3] - The old value of the field (or nil if it's a new field)
+	//
 	OnChanged Event
 
 	// internal string holding the 'type' of this model,
