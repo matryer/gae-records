@@ -3,6 +3,7 @@ package gaerecords
 import (
 	"os"
 	"fmt"
+	"appengine"
 	"appengine/datastore"
 )
 
@@ -77,6 +78,9 @@ type Model struct {
 	// internal string holding the 'type' of this model,
 	// or the kind of data this model works with
 	recordType string
+	
+	// internal storage of appengine context to use for this model.
+	specificAppengineContext appengine.Context
 }
 
 // Creates a new model for data classified by the specified recordType.
@@ -111,6 +115,33 @@ func (m *Model) RecordType() string {
 // Gets a human readable string representation of this model.
 func (m *Model) String() string {
 	return fmt.Sprintf("{Model:%v}", m.RecordType())
+}
+
+/*
+	AppEngine Context
+	----------------------------------------------------------------------
+*/
+
+func (m *Model) AppEngineContext() appengine.Context {
+	if m.specificAppengineContext == nil {
+		m.specificAppengineContext = AppEngineContext
+	}
+	return m.specificAppengineContext
+}
+
+func (m *Model) SetAppEngineContext(context appengine.Context) *Model {
+	m.specificAppengineContext = context
+	
+	// chain
+	return m
+}
+
+func (m *Model) UseGlobalAppEngineContext() *Model {
+	
+	m.SetAppEngineContext(nil)
+	
+	// chain
+	return m
 }
 
 /*
