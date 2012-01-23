@@ -2,6 +2,7 @@ package gaerecords
 
 import (
 	"testing"
+	"appengine"
 	"appengine/datastore"
 )
 
@@ -96,6 +97,19 @@ func TestGetAndSetTimeField(t *testing.T) {
 	assertEqual(t, person, person.SetTime("field", time))
 	assertEqual(t, time, person.Fields()["field"])
 	assertEqual(t, time, person.GetTime("field"))
+
+}
+
+func TestGetAndSetBlobKeyField(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	var key appengine.BlobKey = "blob"
+
+	assertEqual(t, person, person.SetBlobKey("field", key))
+	assertEqual(t, key, person.Fields()["field"])
+	assertEqual(t, key, person.GetBlobKey("field"))
 
 }
 
