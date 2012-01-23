@@ -127,24 +127,24 @@ func (m *Model) String() string {
 // If a specific one has been provided (via Model.SetAppEngineContext()) that 
 // context is used, otherwise the global AppEngineContext object is returned.
 func (m *Model) AppEngineContext() appengine.Context {
-	
+
 	// do we have a specific model context?
 	if m.specificAppengineContext == nil {
-		
+
 		// use the global one
 		return AppEngineContext
-		
+
 	}
-	
+
 	// use the specific one
 	return m.specificAppengineContext
-	
+
 }
 
 // Tells this model to use the specified appengine.Context instead of the global
 // AppEngineContext object for its interactions with the datastore.
 func (m *Model) SetAppEngineContext(context appengine.Context) *Model {
-	
+
 	// set the context
 	m.specificAppengineContext = context
 
