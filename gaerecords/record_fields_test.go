@@ -113,6 +113,19 @@ func TestGetAndSetBlobKeyField(t *testing.T) {
 
 }
 
+func TestGetAndSetBytes(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	var bytes []byte = []byte("This is a test value")
+
+	assertEqual(t, person, person.SetBytes("field", bytes))
+	assertEqual(t, string(bytes), string(person.Fields()["field"].([]byte)))
+	assertEqual(t, string(bytes), string(person.GetBytes("field")))
+
+}
+
 func TestDifferentValueTypes(t *testing.T) {
 
 	people := CreateTestModel()

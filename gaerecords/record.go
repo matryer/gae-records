@@ -420,6 +420,16 @@ func (r *Record) SetBlobKey(key string, value appengine.BlobKey) *Record {
 	return r.Set(key, value)
 }
 
+// Gets the []byte value of a field with the specified key.
+func (r *Record) GetBytes(key string) []byte {
+	return r.Get(key).([]byte)
+}
+
+// Sets the []byte value of a field with the specified key.
+func (r *Record) SetBytes(key string, value []byte) *Record {
+	return r.Set(key, value)
+}
+
 // Gets the datastore.Time value of a field with the specified key.
 func (r *Record) GetTime(key string) datastore.Time {
 	return r.Get(key).(datastore.Time)
