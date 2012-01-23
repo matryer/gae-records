@@ -415,7 +415,7 @@ func (r *Record) GetBlobKey(key string) appengine.BlobKey {
 	return r.Get(key).(appengine.BlobKey)
 }
 
-// Sets the *datastore.Key value of a field with the specified key.
+// Sets the appengine.BlobKey value of a field with the specified key.
 func (r *Record) SetBlobKey(key string, value appengine.BlobKey) *Record {
 	return r.Set(key, value)
 }
