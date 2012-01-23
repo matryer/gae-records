@@ -123,22 +123,41 @@ func (m *Model) String() string {
 	----------------------------------------------------------------------
 */
 
+// Gets the appengine.Context to use for datastore interactions for this model.
+// If a specific one has been provided (via Model.SetAppEngineContext()) that 
+// context is used, otherwise the global AppEngineContext object is returned.
 func (m *Model) AppEngineContext() appengine.Context {
+	
+	// do we have a specific model context?
 	if m.specificAppengineContext == nil {
-		m.specificAppengineContext = AppEngineContext
+		
+		// use the global one
+		return AppEngineContext
+		
 	}
+	
+	// use the specific one
 	return m.specificAppengineContext
+	
 }
 
+// Tells this model to use the specified appengine.Context instead of the global
+// AppEngineContext object for its interactions with the datastore.
 func (m *Model) SetAppEngineContext(context appengine.Context) *Model {
+	
+	// set the context
 	m.specificAppengineContext = context
 
 	// chain
 	return m
 }
 
+// Tells this model to use the global AppEngineContext object for its interactions with the datastore, 
+// instead of one provided by Model.SetAppEngineContext().
 func (m *Model) UseGlobalAppEngineContext() *Model {
 
+	// set the model specific context to nil so it uses the
+	// global one when Model.AppEngineContext() is called.
 	m.SetAppEngineContext(nil)
 
 	// chain
@@ -162,7 +181,7 @@ func (m *Model) Find(id int64) (*Record, os.Error) {
 
 	var record *Record = new(Record)
 
-	err := datastore.Get(GetAppEngineContext(), key, datastore.PropertyLoadSaver(record))
+	err := datastore.Get(m.AppEngineContext(), key, datastore.PropertyLoadSaver(record))
 
 	if err == nil {
 
@@ -207,7 +226,7 @@ func (m *Model) Delete(id int64) os.Error {
 
 	if !context.Cancel {
 
-		err := datastore.Delete(GetAppEngineContext(), m.NewKeyWithID(id))
+		err := datastore.Delete(m.AppEngineContext(), m.NewKeyWithID(id))
 
 		if err == nil {
 
@@ -275,7 +294,7 @@ func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
 	}
 
 	var records []*Record
-	keys, err := query.GetAll(GetAppEngineContext(), &records)
+	keys, err := query.GetAll(m.AppEngineContext(), &records)
 
 	if err == nil {
 
@@ -300,10 +319,10 @@ func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
 
 // Creates a new datastore Key for this kind of record.
 func (m *Model) NewKey() *datastore.Key {
-	return datastore.NewIncompleteKey(GetAppEngineContext(), m.recordType, nil)
+	return datastore.NewIncompleteKey(m.AppEngineContext(), m.recordType, nil)
 }
 
 // Creates a new datastore Key for this kind of record with the specified ID.
 func (m *Model) NewKeyWithID(id int64) *datastore.Key {
-	return datastore.NewKey(GetAppEngineContext(), m.recordType, "", int64(id), nil)
+	return datastore.NewKey(m.AppEngineContext(), m.recordType, "", int64(id), nil)
 }
