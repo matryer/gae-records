@@ -415,6 +415,18 @@ func (r *Record) GetMultiple(key string) []interface{} {
 	return r.Get(key).([]interface{})
 }
 
+// Gets the i'th item from an array or slice property.  If you plan to iterate over
+// all of the items, see GetMultiple() instead.
+func (r *Record) GetMultipleItem(key string, i int) interface{} {
+	return r.GetMultiple(key)[i]
+}
+
+// Gets the number of items in an array or slice property.  If you plan to iterate over
+// all of the items, see GetMultiple() instead.
+func (r *Record) GetMultipleLen(key string) int {
+	return len(r.GetMultiple(key))
+}
+
 /*
 	Setting
 	----------------------------------------------------------------------

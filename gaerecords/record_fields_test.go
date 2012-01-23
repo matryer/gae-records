@@ -154,6 +154,40 @@ func TestDifferentValueTypes(t *testing.T) {
 
 }
 
+func TestGetMultipleItem(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	person.
+		Set("many-strings", []string{"one", "two", "three"}).
+		Put()
+
+	person, _ = people.Find(person.ID())
+
+	assertEqual(t, "one", person.GetMultipleItem("many-strings", 0))
+	assertEqual(t, "two", person.GetMultipleItem("many-strings", 1))
+	assertEqual(t, "three", person.GetMultipleItem("many-strings", 2))
+
+}
+
+func TestGetMultipleLen(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	person.
+		Set("many-strings", []string{"one", "two", "three"}).
+		Set("many-float64s", []float64{float64(1.1), float64(2.2), float64(3.3), float64(4.4), float64(5.5)}).
+		Put()
+
+	person, _ = people.Find(person.ID())
+
+	assertEqual(t, 3, person.GetMultipleLen("many-strings"))
+	assertEqual(t, 5, person.GetMultipleLen("many-float64s"))
+
+}
+
 func TestPersistingMultipleValues(t *testing.T) {
 
 	people := CreateTestModel()
