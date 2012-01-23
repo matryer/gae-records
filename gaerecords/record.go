@@ -409,6 +409,16 @@ func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
 
+// Gets the datastore.Time value of a field with the specified key.
+func (r *Record) GetTime(key string) datastore.Time {
+	return r.Get(key).(datastore.Time)
+}
+
+// Sets the datastore.Timevalue of a field with the specified key.
+func (r *Record) SetTime(key string, value datastore.Time) *Record {
+	return r.Set(key, value)
+}
+
 /*
 	Errors
 	----------------------------------------------------------------------

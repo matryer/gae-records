@@ -86,6 +86,19 @@ func TestGetAndSetKeyField(t *testing.T) {
 
 }
 
+func TestGetAndSetTimeField(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	var time datastore.Time = 1
+
+	assertEqual(t, person, person.SetTime("field", time))
+	assertEqual(t, time, person.Fields()["field"])
+	assertEqual(t, time, person.GetTime("field"))
+
+}
+
 func TestDifferentValueTypes(t *testing.T) {
 
 	people := CreateTestModel()
@@ -104,7 +117,8 @@ func TestDifferentValueTypes(t *testing.T) {
 		//Set("10", float32(1.1)).   
 		Set("11", float64(1.1)).
 		//Set("12", complex64(1.1)). 
-		//Set("13", complex128(1.1))
+		//Set("13", complex128(1.1)).
+		Set("14", true).
 		Put()
 
 	if err != nil {
@@ -112,3 +126,21 @@ func TestDifferentValueTypes(t *testing.T) {
 	}
 
 }
+
+func TestMultipleValues(t *testing.T) {
+	
+	  //	- int64
+    //	- bool
+    //	- string
+    //	- float64
+    //	- *Key
+    //	- Time
+    //	- appengine.BlobKey
+    //	- []byte (up to 1 megabyte in length)
+    // This set is smaller than the set of valid struct field types that the
+  
+	
+	
+}
+
+
