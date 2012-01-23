@@ -3,6 +3,7 @@ package gaerecords
 import (
 	"os"
 	"fmt"
+	"reflect"
 	"appengine"
 	"appengine/datastore"
 )
@@ -132,7 +133,27 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 
 	// load the fields
 	for f := range c {
-		r.Fields()[f.Name] = f.Value
+		
+		if f.Multiple {
+		
+			// do we already have this value?
+			if r.Fields()[f.Name] == nil {
+				
+				// create a slice to hold these objects
+				r.Fields()[f.Name] = make([]interface{}, 0, 0)
+				
+			}
+			
+			// add this object to the slice
+			r.Fields()[f.Name] = reflect.Append(reflect.ValueOf(r.Fields()[f.Name]), reflect.ValueOf(f.Value)).Interface()
+			
+		} else {
+			
+			// load single value
+			r.Fields()[f.Name] = f.Value
+			
+		}
+		
 	}
 
 	// no errors
@@ -146,10 +167,40 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 	for k, v := range r.Fields() {
-		c <- datastore.Property{
-			Name:  k,
-			Value: v,
+		
+		if reflect.TypeOf(v).Kind() == reflect.Array || reflect.TypeOf(v).Kind() == reflect.Slice {
+			
+			// multiple values - iterate over each value
+			// and add them as seperate properties
+			
+			value := reflect.ValueOf(v)
+			l := value.Len()
+			
+			for i := 0; i < l; i++ {
+				
+				thisVal := value.Index(i)
+				
+				// create the property
+				c <- datastore.Property{
+					Name:  k,
+					Value: thisVal.Interface(),
+					Multiple: true,
+				}
+				
+			}
+			
+		} else {
+			
+			// single value
+			// create the property
+			c <- datastore.Property{
+				Name:  k,
+				Value: v,
+				Multiple: false,
+			}
+			
 		}
+		
 	}
 
 	// this channel is finished
@@ -328,6 +379,11 @@ func (r *Record) Fields() map[string]interface{} {
 
 }
 
+/*
+	Getting Fields
+	----------------------------------------------------------------------
+*/
+
 // Gets the value of a field in a record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
 func (r *Record) Get(key string) interface{} {
@@ -338,6 +394,16 @@ func (r *Record) Get(key string) interface{} {
 
 	return r.Fields()[key]
 }
+
+// Gets an []interface{} of the multiple values contained in a single property.
+func (r *Record) GetMultiple(key string) []interface{} {
+	return r.Get(key).([]interface{})
+}
+
+/*
+	Setting
+	----------------------------------------------------------------------
+*/
 
 // Sets a field in the record.  The value must be an acceptable datastore
 // type or another Record.  Strongly typed alternatives are provided and recommended
@@ -359,6 +425,11 @@ func (r *Record) Set(key string, value interface{}) *Record {
 
 	return r
 }
+
+/*
+	Strongly typed getters and setters
+	----------------------------------------------------------------------
+*/
 
 // Gets a string field
 func (r *Record) GetString(key string) string {
