@@ -76,6 +76,7 @@ func TestFindByQuery_WithFunc(t *testing.T) {
 
 }
 
+/*
 func TestFindByQuery_WithFilter(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("findByQueryWithFuncModel")
@@ -123,3 +124,4 @@ func TestFindByQuery_WithFilter(t *testing.T) {
 	}
 
 }
+*/
