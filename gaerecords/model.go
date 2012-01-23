@@ -78,7 +78,7 @@ type Model struct {
 	// internal string holding the 'type' of this model,
 	// or the kind of data this model works with
 	recordType string
-	
+
 	// internal storage of appengine context to use for this model.
 	specificAppengineContext appengine.Context
 }
@@ -131,15 +131,15 @@ func (m *Model) AppEngineContext() appengine.Context {
 
 func (m *Model) SetAppEngineContext(context appengine.Context) *Model {
 	m.specificAppengineContext = context
-	
+
 	// chain
 	return m
 }
 
 func (m *Model) UseGlobalAppEngineContext() *Model {
-	
+
 	m.SetAppEngineContext(nil)
-	
+
 	// chain
 	return m
 }
