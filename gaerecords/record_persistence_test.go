@@ -164,7 +164,7 @@ func TestPut_Create(t *testing.T) {
 	}
 
 	// reload the record
-	loadedRecord, err := findOneByID(model, record.ID())
+	loadedRecord, err := model.Find(record.ID())
 
 	if err != nil {
 		t.Errorf("findOneByID: %v", err)
@@ -208,7 +208,7 @@ func TestPut_Update(t *testing.T) {
 	}
 
 	// reload the record
-	loadedRecord, _ := findOneByID(model, record.ID())
+	loadedRecord, _ := model.Find(record.ID())
 
 	assertEqual(t, "Laurie", loadedRecord.GetString("name"))
 	assertEqual(t, false, loadedRecord.GetBool("dev"))
@@ -234,7 +234,7 @@ func TestRecordDelete(t *testing.T) {
 	assertEqual(t, NoIDValue, record.ID())
 
 	// try and load it
-	loadedRecord, err := findOneByID(model, recordId)
+	loadedRecord, err := model.Find(recordId)
 
 	if err == nil || loadedRecord != nil {
 		t.Errorf("Error expected when trying to findOneByID a deleted record. The loaded record is: %v", loadedRecord)

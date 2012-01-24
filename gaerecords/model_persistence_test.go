@@ -33,7 +33,7 @@ func TestModelDelete(t *testing.T) {
 	}
 
 	// try and load it
-	loadedRecord, err := findOneByID(model, recordId)
+	loadedRecord, err := model.Find(recordId)
 
 	if err == nil || loadedRecord != nil {
 		t.Errorf("Error expected when trying to findOneByID a deleted record. The loaded record is: %v", loadedRecord)
