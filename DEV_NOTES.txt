@@ -14,3 +14,17 @@ Documentation
   Generate documentation:
   
   godoc -html=true "/Users/matryer/Work/gae-records/gaerecords" > doc/index.html
+  
+  
+Working with the codebase
+=========================
+
+ - Clone this source code
+ - Install Google App Engine: http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Go
+ - Get this code: http://code.google.com/p/appengine-go/
+   do: gomake install (it will give error)
+ - Do this:
+      goinstall goprotobuf.googlecode.com/hg/proto
+ - do: gomake install again
+ - get http://code.google.com/p/gae-go-testing/
+ - do: gomake install
