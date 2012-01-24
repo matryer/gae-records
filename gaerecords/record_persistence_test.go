@@ -53,7 +53,7 @@ func TestNeedsPersisting(t *testing.T) {
 	assertEqual(t, true, record.NeedsPersisting())
 
 	// load them all
-	records, _ := model.All()
+	records, _ := model.FindAll()
 	record = records[0]
 
 	withMessage("NeedsPersisting should be false after loading with All()")

@@ -208,7 +208,7 @@ func (m *Model) Find(id int64) (*Record, os.Error) {
 //
 // Raises events for each record:
 //   Model.AfterFind with Args(record)
-func (m *Model) All() ([]*Record, os.Error) {
+func (m *Model) FindAll() ([]*Record, os.Error) {
 	return m.FindByQuery(m.NewQuery())
 }
 

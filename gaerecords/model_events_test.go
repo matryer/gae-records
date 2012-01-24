@@ -42,7 +42,7 @@ func TestModelAfterFindEvent_withFindAll(t *testing.T) {
 	})
 
 	// do something that should trigger the event
-	model.All()
+	model.FindAll()
 
 	assertEqual(t, 2, called)
 	assertNotNil(t, lastContext.Args[0], "context.Args[0]")

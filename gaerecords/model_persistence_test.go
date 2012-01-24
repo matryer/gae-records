@@ -41,7 +41,7 @@ func TestModelDelete(t *testing.T) {
 
 }
 
-func TestAll(t *testing.T) {
+func TestFindAll(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("modelAll")
 	record1, _ := CreatePersistedRecord(t, model)
@@ -50,10 +50,10 @@ func TestAll(t *testing.T) {
 	record4, _ := CreatePersistedRecord(t, model)
 	record5, _ := CreatePersistedRecord(t, model)
 
-	records, err := model.All()
+	records, err := model.FindAll()
 
 	if err != nil {
-		t.Errorf("Model.All: %v", err)
+		t.Errorf("Model.FindAll: %v", err)
 	} else {
 
 		// validate the records
