@@ -39,6 +39,9 @@ func TestGetAndSetString(t *testing.T) {
 	assertEqual(t, "Mat", person.Fields()["name"])
 	assertEqual(t, "Mat", person.GetString("name"))
 
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put: %v", err) }
+
 }
 
 func TestGetAndSetInt(t *testing.T) {
@@ -49,6 +52,9 @@ func TestGetAndSetInt(t *testing.T) {
 	assertEqual(t, person, person.SetInt64("age", 27))
 	assertEqual(t, int64(27), person.Fields()["age"])
 	assertEqual(t, int64(27), person.GetInt64("age"))
+
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put: %v", err) }
 
 }
 
@@ -61,6 +67,9 @@ func TestGetAndSetFloat64(t *testing.T) {
 	assertEqual(t, float64(27.5), person.Fields()["age"])
 	assertEqual(t, float64(27.5), person.GetFloat64("age"))
 
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put: %v", err) }
+
 }
 
 func TestGetAndSetBool(t *testing.T) {
@@ -71,6 +80,9 @@ func TestGetAndSetBool(t *testing.T) {
 	assertEqual(t, person, person.SetBool("field", true))
 	assertEqual(t, true, person.Fields()["field"])
 	assertEqual(t, true, person.GetBool("field"))
+
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put: %v", err) }
 
 }
 
@@ -85,6 +97,9 @@ func TestGetAndSetKeyField(t *testing.T) {
 	assertEqual(t, key, person.Fields()["field"])
 	assertEqual(t, key, person.GetKeyField("field"))
 
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put: %v", err) }
+
 }
 
 func TestGetAndSetTimeField(t *testing.T) {
@@ -97,6 +112,9 @@ func TestGetAndSetTimeField(t *testing.T) {
 	assertEqual(t, person, person.SetTime("field", time))
 	assertEqual(t, time, person.Fields()["field"])
 	assertEqual(t, time, person.GetTime("field"))
+
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put: %v", err) }
 
 }
 
@@ -111,8 +129,12 @@ func TestGetAndSetBlobKeyField(t *testing.T) {
 	assertEqual(t, key, person.Fields()["field"])
 	assertEqual(t, key, person.GetBlobKey("field"))
 
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put: %v", err) }
+
 }
 
+/*
 func TestGetAndSetBytes(t *testing.T) {
 
 	people := CreateTestModel()
@@ -124,9 +146,13 @@ func TestGetAndSetBytes(t *testing.T) {
 	assertEqual(t, string(bytes), string(person.Fields()["field"].([]byte)))
 	assertEqual(t, string(bytes), string(person.GetBytes("field")))
 
-}
+	err := person.Put()
+	if err != nil { t.Errorf("Failed to Put []byte: %v", err) }
 
-func TestDifferentValueTypes(t *testing.T) {
+}
+*/
+
+func TestDifferentNumbericalValueTypes(t *testing.T) {
 
 	people := CreateTestModel()
 	person := people.New()
@@ -233,3 +259,90 @@ func TestPersistingMultipleValues(t *testing.T) {
 	assertEqual(t, false, loaded.GetMultiple("many-bools")[3])
 
 }
+
+func TestSetMultiple_StronglyTypedVarients(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	key1 := people.NewKeyWithID(123)
+	key2 := people.NewKeyWithID(456)
+	key3 := people.NewKeyWithID(789)
+	var time1 datastore.Time = datastore.Time(10)
+	var time2 datastore.Time = datastore.Time(20)
+	var time3 datastore.Time = datastore.Time(30)
+	blobKey1 := appengine.BlobKey("one")
+	blobKey2 := appengine.BlobKey("one")
+	blobKey3 := appengine.BlobKey("one")
+
+	assertEqual(t, person, person.SetMultipleStrings("many-strings", []string{"one", "two", "three"}))
+	assertEqual(t, person, person.SetMultipleInt64s("many-int64s", []int64{1, 2, 3, 4, 5}))
+	assertEqual(t, person, person.SetMultipleFloat64s("many-float64s", []float64{float64(1.1), float64(2.2), float64(3.3), float64(4.4), float64(5.5)}))
+	assertEqual(t, person, person.SetMultipleBools("many-bools", []bool{true, false, true, false}))
+	assertEqual(t, person, person.SetMultipleKeys("many-keys", []*datastore.Key{key1, key2, key3}))
+	assertEqual(t, person, person.SetMultipleTimes("many-times", []datastore.Time{time1, time2, time3}))
+	assertEqual(t, person, person.SetMultipleBlobKeys("many-blob-keys", []appengine.BlobKey{blobKey1, blobKey2, blobKey3}))
+	
+	/*
+	bytes1 := []byte("one")
+	bytes2 := []byte("two")
+	bytes3 := []byte("three")
+	assertEqual(t, person, person.SetMultipleBytes("manybytes", [][]byte{bytes1, bytes2, bytes3}))
+	*/
+	
+	err := person.Put()
+
+	if err != nil {
+		t.Errorf("%v", err)
+	} else {
+
+		// reload the item
+		loaded, _ := people.Find(person.ID())
+
+		assertEqual(t, "one", loaded.GetMultiple("many-strings")[0])
+		assertEqual(t, "two", loaded.GetMultiple("many-strings")[1])
+		assertEqual(t, "three", loaded.GetMultiple("many-strings")[2])
+
+		assertEqual(t, int64(1), loaded.GetMultiple("many-int64s")[0])
+		assertEqual(t, int64(2), loaded.GetMultiple("many-int64s")[1])
+		assertEqual(t, int64(3), loaded.GetMultiple("many-int64s")[2])
+		assertEqual(t, int64(4), loaded.GetMultiple("many-int64s")[3])
+		assertEqual(t, int64(5), loaded.GetMultiple("many-int64s")[4])
+
+		assertEqual(t, float64(1.1), loaded.GetMultiple("many-float64s")[0])
+		assertEqual(t, float64(2.2), loaded.GetMultiple("many-float64s")[1])
+		assertEqual(t, float64(3.3), loaded.GetMultiple("many-float64s")[2])
+		assertEqual(t, float64(4.4), loaded.GetMultiple("many-float64s")[3])
+		assertEqual(t, float64(5.5), loaded.GetMultiple("many-float64s")[4])
+
+		assertEqual(t, true, loaded.GetMultiple("many-bools")[0])
+		assertEqual(t, false, loaded.GetMultiple("many-bools")[1])
+		assertEqual(t, true, loaded.GetMultiple("many-bools")[2])
+		assertEqual(t, false, loaded.GetMultiple("many-bools")[3])
+
+		assertEqual(t, key1.String(), loaded.GetMultiple("many-keys")[0].(*datastore.Key).String())
+		assertEqual(t, key2.String(), loaded.GetMultiple("many-keys")[1].(*datastore.Key).String())
+		assertEqual(t, key3.String(), loaded.GetMultiple("many-keys")[2].(*datastore.Key).String())
+
+		assertEqual(t, time1, loaded.GetMultiple("many-times")[0])
+		assertEqual(t, time2, loaded.GetMultiple("many-times")[1])
+		assertEqual(t, time3, loaded.GetMultiple("many-times")[2])
+
+		assertEqual(t, blobKey1, loaded.GetMultiple("many-blob-keys")[0])
+		assertEqual(t, blobKey2, loaded.GetMultiple("many-blob-keys")[1])
+		assertEqual(t, blobKey3, loaded.GetMultiple("many-blob-keys")[2])
+		
+		/*
+		assertEqual(t, bytes1, loaded.GetMultiple("manybytes")[0])
+		assertEqual(t, bytes2, loaded.GetMultiple("manybytes")[1])
+		assertEqual(t, bytes3, loaded.GetMultiple("manybytes")[2])
+		*/
+		
+	}
+
+}
+
+
+
+
+

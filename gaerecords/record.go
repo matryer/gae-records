@@ -468,6 +468,10 @@ func (r *Record) SetString(key string, value string) *Record {
 	return r.Set(key, value)
 }
 
+func (r *Record) SetMultipleStrings(key string, value []string) *Record {
+	return r.Set(key, value)
+}
+
 // Gets the int64 value of a field with the specified key.
 func (r *Record) GetInt64(key string) int64 {
 	return r.Get(key).(int64)
@@ -475,6 +479,10 @@ func (r *Record) GetInt64(key string) int64 {
 
 // Sets the int64 value of a field with the specified key.
 func (r *Record) SetInt64(key string, value int64) *Record {
+	return r.Set(key, value)
+}
+
+func (r *Record) SetMultipleInt64s(key string, value []int64) *Record {
 	return r.Set(key, value)
 }
 
@@ -488,6 +496,10 @@ func (r *Record) SetFloat64(key string, value float64) *Record {
 	return r.Set(key, value)
 }
 
+func (r *Record) SetMultipleFloat64s(key string, value []float64) *Record {
+	return r.Set(key, value)
+}
+
 // Gets the bool value of a field with the specified key.
 func (r *Record) GetBool(key string) bool {
 	return r.Get(key).(bool)
@@ -495,6 +507,10 @@ func (r *Record) GetBool(key string) bool {
 
 // Sets the bool value of a field with the specified key.
 func (r *Record) SetBool(key string, value bool) *Record {
+	return r.Set(key, value)
+}
+
+func (r *Record) SetMultipleBools(key string, value []bool) *Record {
 	return r.Set(key, value)
 }
 
@@ -508,6 +524,10 @@ func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
 
+func (r *Record) SetMultipleKeys(key string, value []*datastore.Key) *Record {
+	return r.Set(key, value)
+}
+
 // Gets the appengine.BlobKey value of a field with the specified key.
 func (r *Record) GetBlobKey(key string) appengine.BlobKey {
 	return r.Get(key).(appengine.BlobKey)
@@ -515,6 +535,10 @@ func (r *Record) GetBlobKey(key string) appengine.BlobKey {
 
 // Sets the appengine.BlobKey value of a field with the specified key.
 func (r *Record) SetBlobKey(key string, value appengine.BlobKey) *Record {
+	return r.Set(key, value)
+}
+
+func (r *Record) SetMultipleBlobKeys(key string, value []appengine.BlobKey) *Record {
 	return r.Set(key, value)
 }
 
@@ -528,6 +552,10 @@ func (r *Record) SetBytes(key string, value []byte) *Record {
 	return r.Set(key, value)
 }
 
+func (r *Record) SetMultipleBytes(key string, value [][]byte) *Record {
+	return r.Set(key, value)
+}
+
 // Gets the datastore.Time value of a field with the specified key.
 func (r *Record) GetTime(key string) datastore.Time {
 	return r.Get(key).(datastore.Time)
@@ -535,6 +563,10 @@ func (r *Record) GetTime(key string) datastore.Time {
 
 // Sets the datastore.Timevalue of a field with the specified key.
 func (r *Record) SetTime(key string, value datastore.Time) *Record {
+	return r.Set(key, value)
+}
+
+func (r *Record) SetMultipleTimes(key string, value []datastore.Time) *Record {
 	return r.Set(key, value)
 }
 
