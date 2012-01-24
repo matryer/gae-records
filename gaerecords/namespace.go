@@ -40,4 +40,6 @@
 //    - []Time
 //    - appengine.BlobKey
 //    - []appengine.BlobKey
+//
+// KNOWN BUG: []byte properties are not currently working.  See https://github.com/matryer/gae-records/issues/1
 package gaerecords
