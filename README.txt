@@ -2,9 +2,9 @@ gaerecords: Go package containing a high performance and lightweight wrapper aro
 
 Project status: Ready to use
 
----
 
-Examples:
+EXAMPLES
+--------
 
   // create a new model for 'People'
   People := gaerecords.NewModel("People")
@@ -51,7 +51,10 @@ Examples:
     person.SetTime("updatedAt", datastore.SecondsToTime(time.Seconds()))
   })
   
----
+  
+  
+DOCUMENTATION
+-------------
 
 Read the documentation by getting the source and running this command:
   
@@ -60,3 +63,9 @@ Read the documentation by getting the source and running this command:
 then visit:
 
   http://localhost:6060/pkg/gaerecords/
+  
+  
+CONTRIBUTING
+------------
+
+We are always keen on getting new people involved on our projects, if you have any ideas, issues or feature requests please get involved.
