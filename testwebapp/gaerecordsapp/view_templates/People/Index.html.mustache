@@ -1,0 +1,27 @@
+<h2>
+  People
+</h2>
+<ol>
+{{#People}}
+  <li>
+    <strong><a href="people/{{ID}}">{{name}}</a></strong> is <strong>{{age}}</strong> years old -
+    <a href="people/{{ID}}/edit">Edit</a> or
+    <a href="people/{{ID}}/confirm-delete">Delete</a>
+  </li>
+{{/People}}
+</ol>
+<h3>
+  Actions
+</h3>
+<ul>
+  <li>
+    <a href="/people/new">
+      Create new person
+    </a>
+  </li>
+  <li>
+    <a href="/_ah/admin/datastore?kind=people">
+      View these people in the admin console
+    </a>
+  </li>
+</ul>

@@ -1,0 +1,19 @@
+<h2>
+  <a href="/people">People</a> / <a href="/people/{{PersonID}}">{{#Person}}{{name}}{{/Person}}</a> / Edit
+</h2>
+<form action="/people/{{PersonID}}" method="post">
+  <input type="hidden" name="method" value="put">
+  <p>
+    <label>
+      Name: <input type="text" name="name" value="{{#Person}}{{name}}{{/Person}}">
+    </label>
+  </p>
+  <p>
+    <label>
+      Age: <input type="text" name="age" value="{{#Person}}{{age}}{{/Person}}">
+    </label>
+  </p>
+  <p>
+    <input type="submit" value="Save"> or <a href="/people/{{PersonID}}">Cancel</a>
+  </p>
+</form>
