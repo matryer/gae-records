@@ -1,7 +1,7 @@
 
   gaerecordsapp
   
-  Test app to show a Google App Engine using gaerecords to persist records
+  Test app to show a Google App Engine app using gaerecords to persist records
   in the datastore.
   
   ---
@@ -9,8 +9,8 @@
     This project uses:
     
       gaerecords        https://github.com/matryer/gae-records
-      goweb             http://goweb.googlecode.com/
-      mustache.go       https://github.com/hoisie/mustache.go
+      goweb             RESTful web framework - http://goweb.googlecode.com/
+      mustache.go       Web templating library - https://github.com/hoisie/mustache.go
     
   ---
   
