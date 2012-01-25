@@ -8,9 +8,17 @@ import (
 	"appengine/datastore"
 )
 
-// Represents a single model. A model is a class of data.
+// Represents a single model. A model is a class of data and a Model object is used
+// to interact with the datastore including reading and writing records of this type.
+//
+// The NewModel method creates a new model. 
+// The argument specified is a string description of the type of data, which is used
+// in the *datastore.Key for records of this kind.
 //  // create a new model for 'people'
-//  people := NewModel("people")
+//  People := NewModel("people")
+//
+//  // create a new model for 'books'
+//  Books := NewModel("books")
 type Model struct {
 
 	// Event that gets triggered after a record has been created.
