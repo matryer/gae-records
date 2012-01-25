@@ -48,3 +48,12 @@ Examples:
     person.SetTime("updatedAt", datastore.SecondsToTime(time.Seconds()))
   })
   
+---
+
+Read the documentation by getting the source and running this command:
+  
+  godoc -http=:6060 -path="path/to/gae-records/gaerecords/"
+  
+then visit:
+
+  http://localhost:6060/pkg/gaerecords/
