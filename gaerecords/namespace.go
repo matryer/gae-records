@@ -31,7 +31,7 @@
 //  
 //  // build your own query and use that
 //  var ageQuery *datastore.Query = People.NewQuery().
-//    .Limit(3).Order("-age")
+//    Limit(3).Order("-age")
 //  
 //  // use FindByQuery with a query object
 //  oldestThreePeople, _ := People.FindByQuery(ageQuery)
