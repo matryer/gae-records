@@ -28,6 +28,9 @@ Examples:
   // delete mat
   mat.Delete()
   
+  // delete user with ID 2
+  People.Delete(2)
+  
   // find the first three People by passing a func(*datastore.Query)
   // to the FindByQuery method
   firstThree, _ := People.FindByQuery(func(q *datastore.Query){
