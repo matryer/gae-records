@@ -124,7 +124,7 @@ func (cr *PeopleController) ReadMany(cx *goweb.Context) {
 	people, _ := People.All()
 	
 	// collect the fields as an array for the view
-	peopleData := make([]map[string]interface{}, len(people))
+	peopleData := make([]map[string]interface{}, 0)
 	for _, person := range people {
 		
 		// save the ID
