@@ -1,0 +1,19 @@
+<h2>
+  <a href="/people">People</a> / {{#Person}}{{name}}{{/Person}}
+</h2>
+<p>
+  {{#Person}}
+  <strong>{{name}}</strong> is <strong>{{age}}</strong> years old.
+  {{/Person}}
+</p>
+<p>
+  His unique ID is {{PersonID}}, which you can see in the URL.
+</p>
+<ul>
+  <li>
+    <a href="/people/{{PersonID}}/confirm-delete">Delete</a>
+    or
+    <a href="/people/{{PersonID}}/edit">Edit</a>
+    this person
+  </li>
+</ul>

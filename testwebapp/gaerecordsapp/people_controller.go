@@ -51,21 +51,96 @@ func (cr *PeopleController) Create(cx *goweb.Context) {
 	}
 	
 }
+func (cr *PeopleController) DeleteConfirm(id string, cx *goweb.Context) {
+
+	// create a new appengine context
+	gaerecords.CreateAppEngineContext(cx.Request)
+
+	// get the person ID from the URL
+	personID, _ := strconv.Atoi64(id)
+	
+	// load the person
+	person, _ := People.Find(personID)
+
+	// create the template data
+	data := map[string]interface{}{
+		"PersonID":id,
+		"PersonName":person.GetString("name"),
+	}
+
+	renderTemplate(cx.ResponseWriter, "People/Delete", data)
+	
+}
 func (cr *PeopleController) Delete(id string, cx *goweb.Context) {
-	cx.RespondWithNotImplemented()
+
+	// create a new appengine context
+	gaerecords.CreateAppEngineContext(cx.Request)
+
+	// get the person ID from the URL
+	personID, _ := strconv.Atoi64(id)
+	
+	// load the person
+	person, _ := People.Find(personID)
+	
+	// delete the person
+	person.Delete()
+	
+	// send them on their way
+	cx.RespondWithLocation("/people");
+
 }
 func (cr *PeopleController) DeleteMany(cx *goweb.Context) {
 	cx.RespondWithNotImplemented()
 }
 func (cr *PeopleController) Read(id string, cx *goweb.Context) {
 	
+	// create a new appengine context
+	gaerecords.CreateAppEngineContext(cx.Request)
 	
+	// get the person ID from the URL
+	personID, _ := strconv.Atoi64(id)
+	
+	// load the person
+	person, _ := People.Find(personID)
+	
+	// create the template data
+	data := map[string]interface{}{
+		"Person": person.Fields(),
+		"PersonID":id,
+	}
+	
+	// render the view
+	renderTemplate(cx.ResponseWriter, "People/View", data)
 	
 }
 
 // /people
 func (cr *PeopleController) ReadMany(cx *goweb.Context) {
-	cx.RespondWithNotImplemented()
+
+	// create a new appengine context
+	gaerecords.CreateAppEngineContext(cx.Request)
+	
+	// load all people
+	people, _ := People.All()
+	
+	// collect the fields as an array for the view
+	peopleData := make([]map[string]interface{}, len(people))
+	for _, person := range people {
+		
+		// save the ID
+		person.Set("ID", person.ID())
+		peopleData = append(peopleData, person.Fields())
+		
+	}
+
+	// create the template data
+	data := map[string]interface{}{
+		"People": peopleData,
+	}
+
+	// render the view
+	renderTemplate(cx.ResponseWriter, "People/Index", data)
+
 }
 func (cr *PeopleController) Update(id string, cx *goweb.Context) {
 	cx.RespondWithNotImplemented()

@@ -16,6 +16,9 @@ func mapGowebControllers() {
 	goweb.MapFunc("/people/new", func(c *goweb.Context){
 		peopleController.New(c)
 	})
+	goweb.MapFunc("/people/{id}/confirm-delete", func(c *goweb.Context){
+		peopleController.DeleteConfirm(c.PathParams["id"], c)
+	})
 	goweb.MapRest("/people", peopleController)
 	
 }
