@@ -57,11 +57,13 @@ Ready to use
 
     git clone git://github.com/matryer/gae-records.git
     cd gae-records/gaerecords
+    gomake install
+    
+## Testing
+
     gotest
     
-And if all is well (i.e. you get "PASS")
-    
-    gomake install
+To properly test the datastore, [gae-go-testing.googlecode.com/git/appenginetesting](http://code.google.com/p/gae-go-testing/) is required.
     
 ## License
 
