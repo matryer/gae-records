@@ -73,9 +73,9 @@ The [gae-go-testing.googlecode.com/git/appenginetesting](http://code.google.com/
 
 Follow these recommended patterns and practices:
 
-1. Have a test file with an 'early' name (i.e. 0\_setup\_test.go - to ensure the tests get run before others) that setup the expected state of your datastore.  appenginetesting does persist records across different runs, so be sure to delete any that you plan to create.
+1. Have a test file with an 'early' name (i.e. <code>0\_setup\_test.go</code> - to ensure the tests get run before others) that setup the expected state of your datastore.  appenginetesting does persist records across different runs, so be sure to delete any that you plan to create.
 1. Don't assume that the IDs will be consistent.  It is best practice to discover the ID of a newly created record if you plan to refer to that record later, instead of assuming it will have an ID of 1.
-1. Remember to Close() your appenginetesting context as per the documentation, otherwise you'll end up with lots of Python processes running in Terminal.  It is a good idea to do this in a 'late' test file (i.e. z\_cleanup\_test.go)
+1. Remember to Close() your appenginetesting context as per the documentation, otherwise you'll end up with lots of Python processes running in Terminal.  It is a good idea to do this in a 'late' test file (i.e. <code>z\_cleanup\_test.go</code>)
     
 ## License
 
