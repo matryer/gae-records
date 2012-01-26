@@ -40,7 +40,9 @@ func TestGetAndSetString(t *testing.T) {
 	assertEqual(t, "Mat", person.GetString("name"))
 
 	err := person.Put()
-	if err != nil { t.Errorf("Failed to Put: %v", err) }
+	if err != nil {
+		t.Errorf("Failed to Put: %v", err)
+	}
 
 }
 
@@ -54,7 +56,9 @@ func TestGetAndSetInt(t *testing.T) {
 	assertEqual(t, int64(27), person.GetInt64("age"))
 
 	err := person.Put()
-	if err != nil { t.Errorf("Failed to Put: %v", err) }
+	if err != nil {
+		t.Errorf("Failed to Put: %v", err)
+	}
 
 }
 
@@ -68,7 +72,9 @@ func TestGetAndSetFloat64(t *testing.T) {
 	assertEqual(t, float64(27.5), person.GetFloat64("age"))
 
 	err := person.Put()
-	if err != nil { t.Errorf("Failed to Put: %v", err) }
+	if err != nil {
+		t.Errorf("Failed to Put: %v", err)
+	}
 
 }
 
@@ -82,7 +88,9 @@ func TestGetAndSetBool(t *testing.T) {
 	assertEqual(t, true, person.GetBool("field"))
 
 	err := person.Put()
-	if err != nil { t.Errorf("Failed to Put: %v", err) }
+	if err != nil {
+		t.Errorf("Failed to Put: %v", err)
+	}
 
 }
 
@@ -98,7 +106,9 @@ func TestGetAndSetKeyField(t *testing.T) {
 	assertEqual(t, key, person.GetKeyField("field"))
 
 	err := person.Put()
-	if err != nil { t.Errorf("Failed to Put: %v", err) }
+	if err != nil {
+		t.Errorf("Failed to Put: %v", err)
+	}
 
 }
 
@@ -114,7 +124,9 @@ func TestGetAndSetTimeField(t *testing.T) {
 	assertEqual(t, time, person.GetTime("field"))
 
 	err := person.Put()
-	if err != nil { t.Errorf("Failed to Put: %v", err) }
+	if err != nil {
+		t.Errorf("Failed to Put: %v", err)
+	}
 
 }
 
@@ -130,7 +142,9 @@ func TestGetAndSetBlobKeyField(t *testing.T) {
 	assertEqual(t, key, person.GetBlobKey("field"))
 
 	err := person.Put()
-	if err != nil { t.Errorf("Failed to Put: %v", err) }
+	if err != nil {
+		t.Errorf("Failed to Put: %v", err)
+	}
 
 }
 
@@ -310,8 +324,3 @@ func TestSetMultiple_StronglyTypedVarients(t *testing.T) {
 	}
 
 }
-
-
-
-
-

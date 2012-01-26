@@ -56,7 +56,7 @@ Ready to use
 ## Installation
 
     git clone git://github.com/matryer/gae-records.git
-    cd gae-records
+    cd gae-records/gaerecords
     gomake install
     
 ## License
