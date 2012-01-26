@@ -77,6 +77,13 @@ We are always keen on getting new people involved on our projects, if you have a
 
 Please log defects and feature requests using the issue tracker on github.
 
+## Roadmap
+
+The following items are being considered for future effort (please get in touch if you have a view on these items, or would like other features including)
+
+ * Parent and child records (mirroring Parent and child keys in datastore)
+ * More shortcuts for common queries (like paging, first, last, etc.)
+
 ## About
 
 gaerecords was written by [Mat Ryer](http://matryer.com/), follow me on [Twitter](http://www.twitter.com/matryer)
