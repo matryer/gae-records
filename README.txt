@@ -1,7 +1,7 @@
 gaerecords: Go package containing a high performance and lightweight wrapper around appengine/datastore, providing Active Record and DBO style management of data.
 
 Project status: Ready to use
-
+Project documentation: http://matryer.com/go/gaerecords/doc.html
 
 EXAMPLES
 --------
@@ -56,7 +56,7 @@ EXAMPLES
 DOCUMENTATION
 -------------
 
-Read the documentation by getting the source and running this command:
+Read the latest documentation by getting the source and running this command:
   
   godoc -http=:6060 -path="path/to/gae-records/gaerecords/"
   
