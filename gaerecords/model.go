@@ -220,40 +220,6 @@ func (m *Model) FindAll() ([]*Record, os.Error) {
 	return m.FindByQuery(m.NewQuery())
 }
 
-// Deletes a single record of this type.  Returns nil if successful, otherwise
-// the datastore error that was returned.
-//   people := NewModel("people")
-//   people.Delete(1)
-//
-// Raises events:
-//   Model.BeforeDelete with Args(id, nil)
-//   Model.AfterDelete with Args(id, nil)
-// Note: The Record will not be passed to the events.
-func (m *Model) Delete(id int64) os.Error {
-
-	// trigger the BeforeDeleteByID event
-	context := m.BeforeDelete.Trigger(id, nil)
-
-	if !context.Cancel {
-
-		err := datastore.Delete(m.AppEngineContext(), m.NewKeyWithID(id))
-
-		if err == nil {
-
-			// trigger the AfterDeleteByID event
-			m.AfterDelete.TriggerWithContext(context)
-
-		}
-
-		// return the error
-		return err
-
-	}
-
-	return ErrOperationCancelledByEventCallback
-
-}
-
 /*
 	Queries
 	----------------------------------------------------------------------
@@ -319,6 +285,40 @@ func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
 	}
 
 	return nil, err
+
+}
+
+// Deletes a single record of this type.  Returns nil if successful, otherwise
+// the datastore error that was returned.
+//   people := NewModel("people")
+//   people.Delete(1)
+//
+// Raises events:
+//   Model.BeforeDelete with Args(id, nil)
+//   Model.AfterDelete with Args(id, nil)
+// Note: The Record will not be passed to the events.
+func (m *Model) Delete(id int64) os.Error {
+
+	// trigger the BeforeDeleteByID event
+	context := m.BeforeDelete.Trigger(id, nil)
+
+	if !context.Cancel {
+
+		err := datastore.Delete(m.AppEngineContext(), m.NewKeyWithID(id))
+
+		if err == nil {
+
+			// trigger the AfterDeleteByID event
+			m.AfterDelete.TriggerWithContext(context)
+
+		}
+
+		// return the error
+		return err
+
+	}
+
+	return ErrOperationCancelledByEventCallback
 
 }
 
