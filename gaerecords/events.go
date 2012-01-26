@@ -5,7 +5,7 @@ package gaerecords
 	----------------------------------------------------------------------
 */
 
-// Type that enables eventing on an object.
+// Event enables eventing on an object.
 //   // define a struct
 //   type MyObject struct {
 //
@@ -28,18 +28,18 @@ type Event struct {
 	Callbacks []func(*EventContext)
 }
 
-// Adds a callback func to this event.  When Trigger() is called, the func passed
+// Do adds a callback func to this event.  When Trigger() is called, the func passed
 // in will get called, provided no other funcs have cancelled the event beforehand.
 func (e *Event) Do(f func(*EventContext)) {
 	e.Callbacks = append(e.Callbacks, f)
 }
 
-// Gets whether the event has any registered callbacks or not.
+// HasCallbacks gets whether the event has any registered callbacks or not.
 func (e *Event) HasCallbacks() bool {
 	return len(e.Callbacks) > 0
 }
 
-// Triggers the event with the specified arguments. 
+// Trigger triggers the event with the specified arguments. 
 //
 // If any callbacks are registered, a new EventContext is created
 // and then TriggerWithContext() is called.
@@ -61,7 +61,7 @@ func (e *Event) Trigger(args ...interface{}) *EventContext {
 
 }
 
-// Triggers the event with an existing EventContext object.
+// TriggerWithContext triggers the event with an existing EventContext object.
 //
 // All funcs that have been registered with the Do() method will
 // be called.
@@ -106,7 +106,7 @@ func (e *Event) TriggerWithContext(context *EventContext) *EventContext {
 	----------------------------------------------------------------------
 */
 
-// Type that provides context to event callbacks.
+// EventContext provides context to event callbacks.
 type EventContext struct {
 
 	// Whether the event should be cancelled or not.  If set to true inside a 
@@ -122,7 +122,7 @@ type EventContext struct {
 	data map[string]interface{}
 }
 
-// Sets some data.
+// Set sets some data.
 func (c *EventContext) Set(key string, value interface{}) *EventContext {
 
 	// set the value
@@ -133,7 +133,7 @@ func (c *EventContext) Set(key string, value interface{}) *EventContext {
 
 }
 
-// Gets a map[string]interface{} of the data for this context.  Will return an
+// Data gets a map[string]interface{} of the data for this context.  Will return an
 // empty (but non-nil) map if no data has been provided.
 func (c *EventContext) Data() map[string]interface{} {
 	if c.data == nil {
