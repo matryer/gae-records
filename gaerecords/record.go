@@ -12,7 +12,7 @@ import (
 // will have no ID if it has not yet been saved, or if it has been deleted.
 var NoIDValue int64 = 0
 
-// Represents a single record of data (like a single row in a database, or a single resource
+// The Record type represents a single record of data (like a single row in a database, or a single resource
 // on a web server).  Synonymous with an Entity in appengine/datastore.
 type Record struct {
 
@@ -38,7 +38,7 @@ type Record struct {
 	----------------------------------------------------------------------
 */
 
-// Creates a new record of the given Model type.  Not recommended.  Instead call the
+// NewRecord creates a new record of the given Model type.  Not recommended.  Instead call the
 // New() method on the model object itself.
 func NewRecord(model *Model) *Record {
 
@@ -59,12 +59,12 @@ func NewRecord(model *Model) *Record {
 	----------------------------------------------------------------------
 */
 
-// Gets the current Model object representing the type of this record.
+// Model gets the current Model object representing the type of this record.
 func (r *Record) Model() *Model {
 	return r.model
 }
 
-// Sets the current Model object representing the type of this record.  It is recommended that
+// SetModel sets the current Model object representing the type of this record.  It is recommended that
 // you create records with model.New() or use NewRecord(*Model) instead of using this method
 // directly.
 func (r *Record) SetModel(model *Model) *Record {
@@ -72,7 +72,7 @@ func (r *Record) SetModel(model *Model) *Record {
 	return r
 }
 
-// Gets a human readable string representation of this record
+// String gets a human readable string representation of this record
 func (r *Record) String() string {
 
 	if r.IsPersisted() {
@@ -87,14 +87,14 @@ func (r *Record) String() string {
 	----------------------------------------------------------------------
 */
 
-// Gets the unique ID for this record.  A record will be assigned a unique ID
+// ID gets the unique ID for this record.  A record will be assigned a unique ID
 // only when it is persisted in the datastore.  Otherwise, the ID will be equal to NoIDValue.
 // Use IsPersisted() to check if a record has been persisted in the datastore or not.
 func (r *Record) ID() int64 {
 	return r.recordID
 }
 
-// Sets the ID for this record.  Used internally.
+// setID sets the ID for this record.  Used internally.
 func (r *Record) setID(id int64) *Record {
 
 	// set the record ID
@@ -111,7 +111,7 @@ func (r *Record) setID(id int64) *Record {
 	----------------------------------------------------------------------
 */
 
-// Gets whether this record needs persisting in the datastore or not.  If this
+// NeedsPersisting gets whether this record needs persisting in the datastore or not.  If this
 // record is synched with the datastore (as far as this record knows) it will
 // return false, otherwise, if something has changed or this is a new record, true
 // will be returned.
@@ -119,7 +119,7 @@ func (r *Record) NeedsPersisting() bool {
 	return r.needsPersisting
 }
 
-// Sets whether this record needs persisting or not.  Advanced use only.
+// SetNeedsPersisting sets whether this record needs persisting or not.  Advanced use only.
 func (r *Record) SetNeedsPersisting(value bool) *Record {
 	r.needsPersisting = value
 	return r
@@ -210,7 +210,7 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 	return nil
 }
 
-// (Internal) Configures a Record after it has been found or created using means other than
+// configureRecord (Internal) Configures a Record after it has been found or created using means other than
 // model.New() or NewRecord(model).
 func (r *Record) configureRecord(model *Model, key *datastore.Key) *Record {
 
@@ -221,7 +221,7 @@ func (r *Record) configureRecord(model *Model, key *datastore.Key) *Record {
 
 }
 
-// Saves or updates this record.  Returns nil if successful, otherwise returns the os.Error
+// Put saves or updates this record.  Returns nil if successful, otherwise returns the os.Error
 // that was retrned by the datastore.
 //  record.Put()
 //
@@ -257,7 +257,7 @@ func (r *Record) Put() os.Error {
 
 }
 
-// Deletes this record.  Returns nil if successful, otherwise returns the os.Error
+// Delete deletes this record.  Returns nil if successful, otherwise returns the os.Error
 // that was retrned by appengime/datastore.
 //   record.Delete()
 //
@@ -297,7 +297,7 @@ func (r *Record) Delete() os.Error {
 	----------------------------------------------------------------------
 */
 
-// Gets the appengine/datastore Key for this record.  If this record is persisted in the
+// DatastoreKey gets the appengine/datastore Key for this record.  If this record is persisted in the
 // datastore it wil be a complete key, otherwise, this method will return an incomplete key.
 func (r *Record) DatastoreKey() *datastore.Key {
 
@@ -319,7 +319,7 @@ func (r *Record) DatastoreKey() *datastore.Key {
 
 }
 
-// Sets the datastore Key and updates the records ID if needed
+// SetDatastoreKey sets the datastore Key and updates the records ID if needed
 func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 
 	if key == nil {
@@ -347,14 +347,14 @@ func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 
 }
 
-// Invalidates the internally cached datastore key for this
+// invalidateDatastoreKey invalidates the internally cached datastore key for this
 // record so that when it is next requested via DatastoreKey() it will
 // be regenerated to match the corrected state
 func (r *Record) invalidateDatastoreKey() {
 	r.datastoreKey = nil
 }
 
-// Whether this record has been persisted in the
+// IsPersisted gets whether this record has been persisted in the
 // datastore or not, i.e. record.ID != NoIDValue
 func (r *Record) IsPersisted() bool {
 	return r.recordID != NoIDValue
@@ -365,7 +365,7 @@ func (r *Record) IsPersisted() bool {
 	----------------------------------------------------------------------
 */
 
-// Gets the internal storage map (map[string]interface{}) that contains the
+// Fields gets the internal storage map (map[string]interface{}) that contains the
 // persistable fields for this record.  Instead of manipulating this object directly,
 // you should use the Get*() and Set*() methods.
 func (r *Record) Fields() map[string]interface{} {
@@ -384,7 +384,7 @@ func (r *Record) Fields() map[string]interface{} {
 	----------------------------------------------------------------------
 */
 
-// Gets the value of a field in a record.  Strongly typed alternatives are provided and recommended
+// Get gets the value of a field in a record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
 func (r *Record) Get(key string) interface{} {
 
@@ -395,7 +395,7 @@ func (r *Record) Get(key string) interface{} {
 	return r.Fields()[key]
 }
 
-// Gets an []interface{} of the multiple values contained in a single property.
+// GetMultiple gets an []interface{} of the multiple values contained in a single property.
 // For example:
 //  // create a model
 //  model := NewModel("people")
@@ -415,13 +415,13 @@ func (r *Record) GetMultiple(key string) []interface{} {
 	return r.Get(key).([]interface{})
 }
 
-// Gets the i'th item from an array or slice property.  If you plan to iterate over
+// GetMultipleItem gets the i'th item from an array or slice property.  If you plan to iterate over
 // all of the items, see GetMultiple() instead.
 func (r *Record) GetMultipleItem(key string, i int) interface{} {
 	return r.GetMultiple(key)[i]
 }
 
-// Gets the number of items in an array or slice property.  If you plan to iterate over
+// GetMultipleLen gets the number of items in an array or slice property.  If you plan to iterate over
 // all of the items, see GetMultiple() instead.
 func (r *Record) GetMultipleLen(key string) int {
 	return len(r.GetMultiple(key))
@@ -432,7 +432,7 @@ func (r *Record) GetMultipleLen(key string) int {
 	----------------------------------------------------------------------
 */
 
-// Sets a field in the record.  The value must be an acceptable datastore
+// Set sets a field in the record.  The value must be an acceptable datastore
 // type or another Record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
 //
@@ -460,124 +460,125 @@ func (r *Record) Set(key string, value interface{}) *Record {
 	----------------------------------------------------------------------
 */
 
-// Gets a string field
+// GetString gets a string field
 func (r *Record) GetString(key string) string {
 	return fmt.Sprint(r.Get(key))
 }
 
-// Sets the string value of a field
+// SetString sets the string value of a field
 func (r *Record) SetString(key string, value string) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleStrings sets multiple values in one field
 func (r *Record) SetMultipleStrings(key string, value []string) *Record {
 	return r.Set(key, value)
 }
 
-// Gets the int64 value of a field with the specified key.
+// GetInt64 gets the int64 value of a field with the specified key.
 func (r *Record) GetInt64(key string) int64 {
 	return r.Get(key).(int64)
 }
 
-// Sets the int64 value of a field with the specified key.
+// SetInt64 sets the int64 value of a field with the specified key.
 func (r *Record) SetInt64(key string, value int64) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleInt64s sets multiple values in one field
 func (r *Record) SetMultipleInt64s(key string, value []int64) *Record {
 	return r.Set(key, value)
 }
 
-// Gets the float64 value of a field with the specified key.
+// GetFloat64 gets the float64 value of a field with the specified key.
 func (r *Record) GetFloat64(key string) float64 {
 	return r.Get(key).(float64)
 }
 
-// Sets the float64 value of a field with the specified key.
+// SetFloat64 sets the float64 value of a field with the specified key.
 func (r *Record) SetFloat64(key string, value float64) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleFloat64s sets multiple values in one field
 func (r *Record) SetMultipleFloat64s(key string, value []float64) *Record {
 	return r.Set(key, value)
 }
 
-// Gets the bool value of a field with the specified key.
+// GetBool gets the bool value of a field with the specified key.
 func (r *Record) GetBool(key string) bool {
 	return r.Get(key).(bool)
 }
 
-// Sets the bool value of a field with the specified key.
+// SetBool sets the bool value of a field with the specified key.
 func (r *Record) SetBool(key string, value bool) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleBools sets multiple values in one field
 func (r *Record) SetMultipleBools(key string, value []bool) *Record {
 	return r.Set(key, value)
 }
 
-// Gets the *datastore.Key value of a field with the specified key.
+// GetKeyField gets the *datastore.Key value of a field with the specified key.
 func (r *Record) GetKeyField(key string) *datastore.Key {
 	return r.Get(key).(*datastore.Key)
 }
 
-// Sets the *datastore.Key value of a field with the specified key.
+// SetKeyField sets the *datastore.Key value of a field with the specified key.
 func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleKeys sets multiple values in one field
 func (r *Record) SetMultipleKeys(key string, value []*datastore.Key) *Record {
 	return r.Set(key, value)
 }
 
-// Gets the appengine.BlobKey value of a field with the specified key.
+// GetBlobKey gets the appengine.BlobKey value of a field with the specified key.
 func (r *Record) GetBlobKey(key string) appengine.BlobKey {
 	return r.Get(key).(appengine.BlobKey)
 }
 
-// Sets the appengine.BlobKey value of a field with the specified key.
+// SetBlobKey sets the appengine.BlobKey value of a field with the specified key.
 func (r *Record) SetBlobKey(key string, value appengine.BlobKey) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleBlobKeys sets multiple values in one field
 func (r *Record) SetMultipleBlobKeys(key string, value []appengine.BlobKey) *Record {
 	return r.Set(key, value)
 }
 
-// Gets the []byte value of a field with the specified key.
+// GetBytes gets the []byte value of a field with the specified key.
+// bug(matryer): Values of type []byte are currently not successfully persisted - see https://github.com/matryer/gae-records/issues/1
 func (r *Record) GetBytes(key string) []byte {
 	return r.Get(key).([]byte)
 }
 
-// Sets the []byte value of a field with the specified key.
+// SetBytes sets the []byte value of a field with the specified key.
+// bug(matryer): Values of type []byte are currently not successfully persisted - see https://github.com/matryer/gae-records/issues/1
 func (r *Record) SetBytes(key string, value []byte) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleBytes sets multiple values in one field
+// bug(matryer): Values of type []byte are currently not successfully persisted - see https://github.com/matryer/gae-records/issues/1
 func (r *Record) SetMultipleBytes(key string, value [][]byte) *Record {
 	return r.Set(key, value)
 }
 
-// Gets the datastore.Time value of a field with the specified key.
+// GetTime gets the datastore.Time value of a field with the specified key.
 func (r *Record) GetTime(key string) datastore.Time {
 	return r.Get(key).(datastore.Time)
 }
 
-// Sets the datastore.Timevalue of a field with the specified key.
+// SetTime sets the datastore.Timevalue of a field with the specified key.
 func (r *Record) SetTime(key string, value datastore.Time) *Record {
 	return r.Set(key, value)
 }
 
+// SetMultipleTimes sets multiple values in one field
 func (r *Record) SetMultipleTimes(key string, value []datastore.Time) *Record {
 	return r.Set(key, value)
-}
-
-/*
-	Errors
-	----------------------------------------------------------------------
-*/
-
-// Causes the record to panic
-func (r *Record) panic(message string) {
-
 }
