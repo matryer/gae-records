@@ -1,4 +1,4 @@
-// Package containing a high performance and lightweight wrapper around appengine/datastore,
+// gaerecords provides a high performance and lightweight wrapper around appengine/datastore,
 // providing Active Record and DBO style management of data.
 //
 //  // create a new model for 'People'
@@ -64,5 +64,5 @@
 //    - appengine.BlobKey
 //    - []appengine.BlobKey
 //
-// KNOWN BUG: []byte properties are not currently working.  See https://github.com/matryer/gae-records/issues/1
+// bug(matryer): []byte properties are not currently working.  See https://github.com/matryer/gae-records/issues/1
 package gaerecords
