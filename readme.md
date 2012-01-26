@@ -77,6 +77,4 @@ Please log defects and feature requests using the issue tracker on github.
 
 ## About
 
-gaerecords was written by [Mat Ryer](http://matryer.com/).
-
-Follow me on [Twitter](http://www.twitter.com/matryer)
+gaerecords was written by [Mat Ryer](http://matryer.com/), follow me on [Twitter](http://www.twitter.com/matryer)
