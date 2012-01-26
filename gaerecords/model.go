@@ -8,7 +8,7 @@ import (
 	"appengine/datastore"
 )
 
-// Represents a single model. A model is a class of data and a Model object is used
+// Model struct represents a single model. A model is a class of data and a Model object is used
 // to interact with the datastore including reading and writing records of this type.
 //
 // The NewModel method creates a new model. 
@@ -21,14 +21,14 @@ import (
 //  Books := NewModel("books")
 type Model struct {
 
-	// Event that gets triggered after a record has been created.
+	// AfterNew gets triggered after a record has been created.
 	// Useful for initializing Records.
 	//
 	//   Args[0] - The *Record that has been created
 	//
 	AfterNew Event
 
-	// Event that gets triggered after a record of this kind has been
+	// AfterFind gets triggered after a record of this kind has been
 	// found.  Useful for any processing of records after they have been loaded.
 	// For any operations that cause multiple finds (i.e. All() or FindByQuery()) this event
 	// will be triggered once for each record.
@@ -37,7 +37,7 @@ type Model struct {
 	//
 	AfterFind Event
 
-	// Event that gets triggered before a record is deleted. The Args will
+	// BeforeDelete gets triggered before a record is deleted. The Args will
 	// always contain the ID of the record being deleted, and depending on the
 	// operation, the second argument could be the *Record itself.
 	//
@@ -48,7 +48,7 @@ type Model struct {
 	//
 	BeforeDelete Event
 
-	// Event that gets triggered after a record has been deleted by ID. The Args will
+	// AfterDelete gets triggered after a record has been deleted by ID. The Args will
 	// always contain the ID of the record being deleted, and depending on the
 	// operation, the second argument could be the *Record itself.
 	///
@@ -59,7 +59,7 @@ type Model struct {
 	//
 	AfterDelete Event
 
-	// Event that gets triggered before a record gets Put into the datastore.
+	// BeforePut gets triggered before a record gets Put into the datastore.
 	// Use Args[0].(*Record).IsPersisted() to find out whether the record is being
 	// saved or updated.
 	//
@@ -69,14 +69,14 @@ type Model struct {
 	//
 	BeforePut Event
 
-	// Event that gets triggered after a record has been Put.
+	// AfterPut gets triggered after a record has been Put.
 	// The EventContext is the same one that was passed to BeforePut.
 	//
 	//   Args[0] - The *Record that was just Put
 	// 
 	AfterPut Event
 
-	// Event that gets triggered after a record field has been changed
+	// OnChanged gets triggered after a record field has been changed
 	// using one of the Set*() methods.
 	//
 	//   Args[0] - The record that changed
@@ -86,15 +86,15 @@ type Model struct {
 	//
 	OnChanged Event
 
-	// internal string holding the 'type' of this model,
+	// recordType is the internal string holding the 'type' of this model,
 	// or the kind of data this model works with
 	recordType string
 
-	// internal storage of appengine context to use for this model.
+	// specificAppengineContext is the internal storage of appengine context to use for this model.
 	specificAppengineContext appengine.Context
 }
 
-// Creates a new model for data classified by the specified recordType.
+// NewModel creates a new model for data classified by the specified recordType.
 // 
 // For example, the following code creates a new Model called 'people':
 //
@@ -109,7 +109,7 @@ func NewModel(recordType string) *Model {
 
 }
 
-// Creates a new record of this type.
+// New creates a new record of this type.
 //   people := NewModel("people")
 //   person1 := people.New()
 //   person2 := people.New()
@@ -117,13 +117,13 @@ func (m *Model) New() *Record {
 	return NewRecord(m)
 }
 
-// Gets the record type of the model as a string.  This is the string you specify
+// RecordType gets the record type of the model as a string.  This is the string you specify
 // when calling NewModel(string) and is used as the Kind in the datasource keys.
 func (m *Model) RecordType() string {
 	return m.recordType
 }
 
-// Gets a human readable string representation of this model.
+// String gets a human readable string representation of this model.
 func (m *Model) String() string {
 	return fmt.Sprintf("{Model:%v}", m.RecordType())
 }
@@ -133,7 +133,7 @@ func (m *Model) String() string {
 	----------------------------------------------------------------------
 */
 
-// Gets the appengine.Context to use for datastore interactions for this model.
+// AppEngineContext gets the appengine.Context to use for datastore interactions for this model.
 // If a specific one has been provided (via Model.SetAppEngineContext()) that 
 // context is used, otherwise the global AppEngineContext object is returned.
 func (m *Model) AppEngineContext() appengine.Context {
@@ -151,7 +151,7 @@ func (m *Model) AppEngineContext() appengine.Context {
 
 }
 
-// Tells this model to use the specified appengine.Context instead of the global
+// SetAppEngineContext tells this model to use the specified appengine.Context instead of the global
 // AppEngineContext object for its interactions with the datastore.
 func (m *Model) SetAppEngineContext(context appengine.Context) *Model {
 
@@ -162,7 +162,7 @@ func (m *Model) SetAppEngineContext(context appengine.Context) *Model {
 	return m
 }
 
-// Tells this model to use the global AppEngineContext object for its interactions with the datastore, 
+// UseGlobalAppEngineContext tells this model to use the global AppEngineContext object for its interactions with the datastore, 
 // instead of one provided by Model.SetAppEngineContext().
 func (m *Model) UseGlobalAppEngineContext() *Model {
 
@@ -179,7 +179,7 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 	----------------------------------------------------------------------
 */
 
-// Finds the record of this type with the specified id.
+// Find finds the record of this type with the specified id.
 //  people := NewModel("people")
 //  firstPerson := people.Find(1)
 //
@@ -210,7 +210,7 @@ func (m *Model) Find(id int64) (*Record, os.Error) {
 
 }
 
-// Finds all records of this type.
+// FindAll finds all records of this type.
 //   people := NewModel("people")
 //   everyone := people.All()
 //
@@ -225,14 +225,14 @@ func (m *Model) FindAll() ([]*Record, os.Error) {
 	----------------------------------------------------------------------
 */
 
-// Creates a new datastore.Query for accessing records represented
+// NewQuery creates a new datastore.Query for accessing records represented
 // by the model.  For advanced use only.  Consider instead one of the 
 // Find* methods.
 func (m *Model) NewQuery() *datastore.Query {
 	return datastore.NewQuery(m.RecordType())
 }
 
-// Finds Records handled by this Model.
+// FindByQuery finds Records handled by this Model.
 //
 // Returns an array of records as the first argument,
 // or an error as the second return argument.
@@ -290,7 +290,7 @@ func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
 
 }
 
-// Deletes a single record of this type.  Returns nil if successful, otherwise
+// Delete deletes a single record of this type.  Returns nil if successful, otherwise
 // the datastore error that was returned.
 //   people := NewModel("people")
 //   people.Delete(1)
@@ -329,12 +329,12 @@ func (m *Model) Delete(id int64) os.Error {
 	----------------------------------------------------------------------
 */
 
-// Creates a new datastore Key for this kind of record.
+// NewKey creates a new datastore Key for this kind of record.
 func (m *Model) NewKey() *datastore.Key {
 	return datastore.NewIncompleteKey(m.AppEngineContext(), m.recordType, nil)
 }
 
-// Creates a new datastore Key for this kind of record with the specified ID.
+// NewKeyWithID creates a new datastore Key for this kind of record with the specified ID.
 func (m *Model) NewKeyWithID(id int64) *datastore.Key {
 	return datastore.NewKey(m.AppEngineContext(), m.recordType, "", int64(id), nil)
 }
