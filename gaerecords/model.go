@@ -250,6 +250,8 @@ func (m *Model) NewQuery() *datastore.Query {
 //  women, err := model.FindByQuery(func(q *datastore.Query){
 //	  q.Filter("sex=", "male")
 //  })
+//
+// bug(matryer): Currently, filters on queries are not working. See https://github.com/matryer/gae-records/issues/2
 func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
 
 	var query *datastore.Query

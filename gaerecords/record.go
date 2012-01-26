@@ -435,6 +435,8 @@ func (r *Record) GetMultipleLen(key string) int {
 // Sets a field in the record.  The value must be an acceptable datastore
 // type or another Record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
+//
+// bug(matryer): Setting values of type []byte fails. See https://github.com/matryer/gae-records/issues/1
 func (r *Record) Set(key string, value interface{}) *Record {
 
 	fields := r.Fields()
