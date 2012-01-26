@@ -1,5 +1,4 @@
-// gaerecords provides a high performance and lightweight wrapper around appengine/datastore,
-// providing Active Record and DBO style management of data.
+// Package gaerecords provides a high performance and lightweight wrapper around appengine/datastore providing Active Record and DBO style management of data.
 //
 //  // create a new model for 'People'
 //  People := gaerecords.NewModel("People")
