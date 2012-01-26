@@ -19,7 +19,7 @@ Ready to use
      .Put()
 
     // load person with ID 1
-    person := People.Find(1)
+    person, _ := People.Find(1)
 
     // change some fields
     person.SetInt64("age", 29).Put()
