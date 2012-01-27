@@ -46,6 +46,9 @@ Ready to use
     // use FindByQuery with a query object
     oldestThreePeople, _ := People.FindByQuery(ageQuery)
 
+    // find all people that are 'active'
+    activePeople, _ := People.FindByFilter("Active=", true)
+
     // using events, make sure 'People' records always get
     // an 'updatedAt' value set before being put (created and updated)
     People.BeforePut.On(func(c *gaerecords.EventContext){
