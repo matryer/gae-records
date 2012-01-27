@@ -59,7 +59,8 @@ Ready to use
 ## Concepts
 
 gaerecords provides two main types that represent the different data for your project.
-A <code>Model</code> describes a type of data, and a <code>Record</code> is a single entity, or instance of that type.
+A <code>Model</code> describes a type of data, and a <code>Record</code> is a single entity
+or instance of that type.
 
 For example, a typical blogging application might define these models:
 
@@ -74,6 +75,24 @@ And to create a new blog post is as simple as:
             SetString("body", "My blog text goes here...")
     // save it
     newPost.Put()
+    
+### Model
+    
+<code>Model</code> objects allow you to perform operations on sets of data, such as create a 
+new record, find records etc.
+
+### Record
+
+<code>Record</code> objects allow to you perform operations on a specific entity, such as set fields,
+save changes, delete it.
+
+### Event
+
+The <code>Event</code> type (and its <code>EventContext</code> younger brother) allows you to bind your
+own callbacks to the lifecycle of records.  For example, before or after a <code>Record</code> gets <code>Put</code> (saved),
+or after a <code>Record</code> has been deleted.
+
+The <code>Model</code> has the events, but actions to records can cause the callbacks to get run.
     
 ## Installation
 
