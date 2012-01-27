@@ -148,6 +148,24 @@ func TestGetAndSetBlobKeyField(t *testing.T) {
 
 }
 
+func TestGetAndSetBytes(t *testing.T) {
+
+	people := CreateTestModel()
+	person := people.New()
+
+	var bytes []byte = []byte("This is a test value")
+
+	assertEqual(t, person, person.SetBytes("field", bytes))
+	assertEqual(t, string(bytes), string(person.Fields()["field"].([]byte)))
+	assertEqual(t, string(bytes), string(person.GetBytes("field")))
+
+	err := person.Put()
+	if err != nil {
+		t.Errorf("Failed to Put []byte: %v", err)
+	}
+
+}
+
 func TestDifferentNumbericalValueTypes(t *testing.T) {
 
 	people := CreateTestModel()
@@ -279,6 +297,11 @@ func TestSetMultiple_StronglyTypedVarients(t *testing.T) {
 	assertEqual(t, person, person.SetMultipleTimes("many-times", []datastore.Time{time1, time2, time3}))
 	assertEqual(t, person, person.SetMultipleBlobKeys("many-blob-keys", []appengine.BlobKey{blobKey1, blobKey2, blobKey3}))
 
+	bytes1 := []byte("A")
+	bytes2 := []byte("B")
+	bytes3 := []byte("C")
+	assertEqual(t, person, person.SetMultipleBytes("manybytes", [][]byte{bytes1, bytes2, bytes3}))
+
 	err := person.Put()
 
 	if err != nil {
@@ -320,6 +343,10 @@ func TestSetMultiple_StronglyTypedVarients(t *testing.T) {
 		assertEqual(t, blobKey1, loaded.GetMultiple("many-blob-keys")[0])
 		assertEqual(t, blobKey2, loaded.GetMultiple("many-blob-keys")[1])
 		assertEqual(t, blobKey3, loaded.GetMultiple("many-blob-keys")[2])
+
+		assertEqual(t, bytes1[0], loaded.GetMultiple("manybytes")[0].([]byte)[0])
+		assertEqual(t, bytes2[0], loaded.GetMultiple("manybytes")[1].([]byte)[0])
+		assertEqual(t, bytes3[0], loaded.GetMultiple("manybytes")[2].([]byte)[0])
 
 	}
 

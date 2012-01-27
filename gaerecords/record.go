@@ -168,7 +168,7 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 	for k, v := range r.Fields() {
 
-		if reflect.TypeOf(v).Kind() == reflect.Array || reflect.TypeOf(v).Kind() == reflect.Slice {
+		if (reflect.TypeOf(v) != reflect.TypeOf(([]byte)(nil))) && (reflect.TypeOf(v).Kind() == reflect.Array || reflect.TypeOf(v).Kind() == reflect.Slice) {
 
 			// multiple values - iterate over each value
 			// and add them as seperate properties
@@ -178,14 +178,9 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 			for i := 0; i < l; i++ {
 
-				thisVal := value.Index(i)
+				thisVal := value.Index(i).Interface()
 
-				// create the property
-				c <- datastore.Property{
-					Name:     k,
-					Value:    thisVal.Interface(),
-					Multiple: true,
-				}
+				c <- fieldToProperty(k, thisVal, true)
 
 			}
 
@@ -193,11 +188,7 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 			// single value
 			// create the property
-			c <- datastore.Property{
-				Name:     k,
-				Value:    v,
-				Multiple: false,
-			}
+			c <- fieldToProperty(k, v, false)
 
 		}
 
@@ -208,6 +199,27 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 	// no errors
 	return nil
+}
+
+// fieldToProperty turns a field and returns a datastore.Proprty
+func fieldToProperty(key string, value interface{}, multiple bool) datastore.Property {
+
+	var noindex bool = false
+
+	// []byte fields cannot be indexed
+	if reflect.TypeOf(value) == reflect.TypeOf(([]byte)(nil)) {
+		noindex = true
+	}
+
+	// single value
+	// create the property
+	return datastore.Property{
+		Name:     key,
+		Value:    value,
+		Multiple: multiple,
+		NoIndex:  noindex,
+	}
+
 }
 
 // configureRecord (Internal) Configures a Record after it has been found or created using means other than
