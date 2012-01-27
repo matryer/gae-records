@@ -53,6 +53,25 @@ Ready to use
       person.SetTime("updatedAt", datastore.SecondsToTime(time.Seconds()))
     })
     
+## Concepts
+
+gaerecords provides two main types that represent the different data for your project.
+A <code>Model</code> describes a type of data, and a <code>Record</code> is a single entity, or instance of that type.
+
+For example, a typical blogging application might define these models:
+
+    Authors := gaerecords.NewModel("Author")
+    Posts := gaerecords.NewModel("Post")
+    Comments := gaerecords.NewModel("Comment")
+    
+And to create a new blog post is as simple as:
+
+    newPost := Posts.New()
+    newPost.SetString("title", "My Blog Post").
+            SetString("body", "My blog text goes here...")
+    // save it
+    newPost.Put()
+    
 ## Installation
 
     git clone git://github.com/matryer/gae-records.git
