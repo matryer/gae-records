@@ -130,6 +130,7 @@ func TestFindByQuery_WithFilter_ThroughFunc(t *testing.T) {
 	}
 
 }
+
 func TestFindByQuery_WithFilter_Directly(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("findByQueryDirectlyModel")
@@ -155,6 +156,55 @@ func TestFindByQuery_WithFilter_Directly(t *testing.T) {
 	record5.Put()
 
 	query := model.NewQuery().Filter("Style=", "A")
+	records, err := model.FindByQuery(query)
+
+	if err != nil {
+		t.Errorf("%v", err)
+	} else {
+
+		assertEqual(t, 3, len(records))
+
+		if len(records) != 3 {
+
+			t.Errorf("3 records expected, not %v.", len(records))
+
+		} else {
+
+			assertEqual(t, record1.ID(), records[0].ID())
+			assertEqual(t, record3.ID(), records[1].ID())
+			assertEqual(t, record5.ID(), records[2].ID())
+
+		}
+
+	}
+
+}
+
+func TestFindByQuery_WithFilter_WithLowercaseValues(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("findByQueryDirectlyWithLowercaseValuesModel")
+
+	record1, _ := CreatePersistedRecord(t, model)
+	record2, _ := CreatePersistedRecord(t, model)
+	record3, _ := CreatePersistedRecord(t, model)
+	record4, _ := CreatePersistedRecord(t, model)
+	record5, _ := CreatePersistedRecord(t, model)
+
+	// set some fields
+	record1.SetString("style", "A")
+	record2.SetString("style", "B")
+	record3.SetString("style", "A")
+	record4.SetString("style", "B")
+	record5.SetString("style", "A")
+
+	// save the new states
+	record1.Put()
+	record2.Put()
+	record3.Put()
+	record4.Put()
+	record5.Put()
+
+	query := model.NewQuery().Filter("style=", "A")
 	records, err := model.FindByQuery(query)
 
 	if err != nil {

@@ -220,6 +220,34 @@ func (m *Model) FindAll() ([]*Record, os.Error) {
 	return m.FindByQuery(m.NewQuery())
 }
 
+// FindByField finds records of this Model's type where the filterString (e.g. FieldName=) matches
+// the specified value.  To add multiple filters, use FindByQuery() instead.
+//
+// You can pass an optional query modifier func (of type func(*datastore.Query)) that will be called
+// before the query is run to allow you to add additional properties to the query.
+//
+// For valid filter strings, see http://code.google.com/appengine/docs/go/datastore/reference.html#Query.Filter
+//
+//  // get everyone over 60 years old
+//  oldPeople, _ := People.FindByField("Age>", 60)
+//
+//  // get one person over 60
+//  oldMan, _ := People.FindByField("Age>", 60, func(q *datastore.Query){
+//	  q.Limit(1)
+//  })
+func (m *Model) FindByField(filterString string, value interface{}, queryModifier ...func(*datastore.Query)) ([]*Record, os.Error) {
+
+	query := m.NewQuery().Filter(filterString, value)
+
+	// let the modifier do its work if there is one
+	if len(queryModifier) == 1 {
+		queryModifier[0](query)
+	}
+
+	return m.FindByQuery(query)
+
+}
+
 /*
 	Queries
 	----------------------------------------------------------------------
