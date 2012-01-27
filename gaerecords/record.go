@@ -8,9 +8,12 @@ import (
 	"appengine/datastore"
 )
 
-// The ID value of a record that indicates there is no ID.  A record
+// NoIDValue is the ID value of a record that indicates there is no ID.  A record
 // will have no ID if it has not yet been saved, or if it has been deleted.
 var NoIDValue int64 = 0
+
+// IDFieldKey is the field key used to store the record ID in the Fields map.
+var IDFieldKey string = "ID"
 
 // The Record type represents a single record of data (like a single row in a database, or a single resource
 // on a web server).  Synonymous with an Entity in appengine/datastore.
@@ -29,8 +32,6 @@ type Record struct {
 	// whether the record needs persisting or not
 	needsPersisting bool
 
-	// internal storage of this record's ID
-	recordID int64
 }
 
 /*
@@ -91,14 +92,14 @@ func (r *Record) String() string {
 // only when it is persisted in the datastore.  Otherwise, the ID will be equal to NoIDValue.
 // Use IsPersisted() to check if a record has been persisted in the datastore or not.
 func (r *Record) ID() int64 {
-	return r.recordID
+	return r.Fields()[IDFieldKey].(int64)
 }
 
 // setID sets the ID for this record.  Used internally.
 func (r *Record) setID(id int64) *Record {
 
 	// set the record ID
-	r.recordID = id
+	r.Fields()[IDFieldKey] = id
 
 	r.invalidateDatastoreKey()
 
@@ -168,6 +169,12 @@ func (r *Record) Save(c chan<- datastore.Property) os.Error {
 
 	for k, v := range r.Fields() {
 
+		// skip the ID
+		if k == IDFieldKey {
+			continue
+		}
+
+		// if this is an array or slice (but not []byte)
 		if (reflect.TypeOf(v) != reflect.TypeOf(([]byte)(nil))) && (reflect.TypeOf(v).Kind() == reflect.Array || reflect.TypeOf(v).Kind() == reflect.Slice) {
 
 			// multiple values - iterate over each value
@@ -369,7 +376,7 @@ func (r *Record) invalidateDatastoreKey() {
 // IsPersisted gets whether this record has been persisted in the
 // datastore or not, i.e. record.ID != NoIDValue
 func (r *Record) IsPersisted() bool {
-	return r.recordID != NoIDValue
+	return r.ID() != NoIDValue
 }
 
 /*
