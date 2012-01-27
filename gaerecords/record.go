@@ -31,7 +31,6 @@ type Record struct {
 
 	// whether the record needs persisting or not
 	needsPersisting bool
-
 }
 
 /*
