@@ -62,6 +62,8 @@ gaerecords provides two main types that represent the different data for your pr
 A <code>Model</code> describes a type of data, and a <code>Record</code> is a single entity
 or instance of that type.
 
+Creating models is as easy as calling the <code>gaerecords.NewModel</code> method.
+
 For example, a typical blogging application might define these models:
 
     Authors := gaerecords.NewModel("Author")
@@ -75,7 +77,21 @@ And to create a new blog post is as simple as:
             SetString("body", "My blog text goes here...")
     // save it
     newPost.Put()
-    
+
+<code>Model</code>'s also support events for when interesting things happen to records, and you
+can bind to these by providing an additional initializer func(*Model) to the <code>NewModel</code> method.
+
+    People := gaerecords.NewModel("people", func(model *gaerecords.Model){
+      
+      // bind to the BeforePut event
+      model.BeforePut.On(func(e *gaerecords.EventContext){
+        
+        // do something before records are saved
+        
+      })
+      
+    })
+
 ### Model
     
 <code>Model</code> objects allow you to perform operations on sets of data, such as create a 
