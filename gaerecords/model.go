@@ -94,16 +94,35 @@ type Model struct {
 	specificAppengineContext appengine.Context
 }
 
-// NewModel creates a new model for data classified by the specified recordType.
+// NewModel creates a new model for data classified by the specified recordType.  You may also
+// provide an optional initializer func(*Model) that will be called after the model is created,
+// before it is returned, to allow you an opportunity to bind to any events, or perform any other
+// initialization.
 // 
 // For example, the following code creates a new Model called 'people':
 //
-//   people := NewModel("people")
-func NewModel(recordType string) *Model {
+//   People := NewModel("people")
+//
+// The following code creates a 'people' model, and binds to the 'BeforePut' event
+//   People := NewModel("people", func(m *Model){
+//	   m.BeforePut.On(func(e *EventContext){
+//		   // do something to records just before they are
+//		   // persisted in the datastore
+//	   })
+//	 })
+func NewModel(recordType string, initializer ...func(*Model)) *Model {
 
 	model := new(Model)
 
 	model.recordType = recordType
+
+	// do we have an initializer?
+	if len(initializer) == 1 {
+
+		// let it initialize the model
+		initializer[0](model)
+
+	}
 
 	return model
 

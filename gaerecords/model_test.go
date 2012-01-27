@@ -12,6 +12,23 @@ func TestNewModel(t *testing.T) {
 
 }
 
+func TestNewModelWithFunc(t *testing.T) {
+
+	var called bool = false
+	var lastModel *Model = nil
+
+	model := NewModel("kind", func(m *Model) {
+
+		called = true
+		lastModel = m
+
+	})
+
+	assertEqual(t, true, called)
+	assertEqual(t, model, lastModel)
+
+}
+
 func TestNew(t *testing.T) {
 
 	model := CreateTestModel()
