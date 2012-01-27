@@ -60,8 +60,9 @@
 //    - []*datastore.Key
 //    - Time
 //    - []Time
+//    - []byte
+//    - [][]byte
 //    - appengine.BlobKey
 //    - []appengine.BlobKey
 //
-// bug(matryer): []byte properties are not currently working.  See https://github.com/matryer/gae-records/issues/1
 package gaerecords

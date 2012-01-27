@@ -447,8 +447,6 @@ func (r *Record) GetMultipleLen(key string) int {
 // Set sets a field in the record.  The value must be an acceptable datastore
 // type or another Record.  Strongly typed alternatives are provided and recommended
 // to use where possible.
-//
-// bug(matryer): Setting values of type []byte fails. See https://github.com/matryer/gae-records/issues/1
 func (r *Record) Set(key string, value interface{}) *Record {
 
 	fields := r.Fields()
@@ -563,19 +561,16 @@ func (r *Record) SetMultipleBlobKeys(key string, value []appengine.BlobKey) *Rec
 }
 
 // GetBytes gets the []byte value of a field with the specified key.
-// bug(matryer): Values of type []byte are currently not successfully persisted - see https://github.com/matryer/gae-records/issues/1
 func (r *Record) GetBytes(key string) []byte {
 	return r.Get(key).([]byte)
 }
 
 // SetBytes sets the []byte value of a field with the specified key.
-// bug(matryer): Values of type []byte are currently not successfully persisted - see https://github.com/matryer/gae-records/issues/1
 func (r *Record) SetBytes(key string, value []byte) *Record {
 	return r.Set(key, value)
 }
 
 // SetMultipleBytes sets multiple values in one field
-// bug(matryer): Values of type []byte are currently not successfully persisted - see https://github.com/matryer/gae-records/issues/1
 func (r *Record) SetMultipleBytes(key string, value [][]byte) *Record {
 	return r.Set(key, value)
 }
