@@ -158,4 +158,4 @@ The following items are being considered for future effort (please get in touch 
 
 ## About
 
-gaerecords was written by [Mat Ryer](http://matryer.com/), follow me on [Twitter](http://www.twitter.com/matryer)
+gaerecords was written by Mat Ryer, follow me on [Twitter](http://www.twitter.com/matryer)
