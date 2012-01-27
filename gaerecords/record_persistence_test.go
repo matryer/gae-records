@@ -141,6 +141,9 @@ func TestSave(t *testing.T) {
 	assertEqual(t, 27, savedProperties["age"])
 	assertEqual(t, true, savedProperties["dev"])
 
+	// ensure it DIDN'T save the ID
+	assertEqual(t, nil, savedProperties["ID"])
+	
 }
 
 func TestPut_Create(t *testing.T) {
