@@ -61,6 +61,16 @@ Ready to use
     // get the number of pages if we have 10 records per page
     totalPages = People.LoadPagingInfo(10, 1).TotalPages
 
+    // get the details for page 2 (with 10 records per page)
+    pagingInfo := People.LoadPagingInfo(10, 2)
+
+    // is there a page 3?
+    if pagingInfo.HasNextPage {
+      // yes
+    } else {
+      // no
+    }
+
 ### Finding records by querying
 
     // find the first three People by passing a func(*datastore.Query)
