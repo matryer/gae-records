@@ -48,7 +48,7 @@ func NewRecord(model *Model) *Record {
 		SetNeedsPersisting(true)
 
 	// trigger the event
-	if (model.AfterNew.HasCallbacks()) {
+	if model.AfterNew.HasCallbacks() {
 		model.AfterNew.Trigger(record)
 	}
 
@@ -263,10 +263,10 @@ func (r *Record) Put() os.Error {
 			r.SetDatastoreKey(newKey).SetNeedsPersisting(false)
 
 			// trigger the AfterPut event
-			if (r.model.AfterPut.HasCallbacks()) {
+			if r.model.AfterPut.HasCallbacks() {
 				r.model.AfterPut.TriggerWithContext(context)
 			}
-			
+
 			return nil
 
 		}
@@ -302,7 +302,7 @@ func (r *Record) Delete() os.Error {
 			r.setID(NoIDValue)
 
 			// trigger the AfterDeleteByID event
-			if (r.model.AfterDelete.HasCallbacks()) {
+			if r.model.AfterDelete.HasCallbacks() {
 				r.model.AfterDelete.TriggerWithContext(context)
 			}
 

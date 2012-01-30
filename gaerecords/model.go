@@ -268,7 +268,7 @@ func (m *Model) Find(id int64) (*Record, os.Error) {
 		record.configureRecord(m, key)
 
 		// raise the AfterFind event on the model
-		if (m.AfterFind.HasCallbacks()) {
+		if m.AfterFind.HasCallbacks() {
 			m.AfterFind.Trigger(record)
 		}
 
@@ -411,13 +411,13 @@ func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
 
 		// configure each loaded record
 		for index, record := range records {
-			
+
 			record.configureRecord(m, keys[index])
-			
-			if (m.AfterFind.HasCallbacks()) {
+
+			if m.AfterFind.HasCallbacks() {
 				m.AfterFind.Trigger(record)
 			}
-			
+
 		}
 
 		return records, nil
@@ -449,10 +449,10 @@ func (m *Model) Delete(id int64) os.Error {
 		if err == nil {
 
 			// trigger the AfterDeleteByID event
-			if (m.AfterDelete.HasCallbacks()) {
+			if m.AfterDelete.HasCallbacks() {
 				m.AfterDelete.TriggerWithContext(context)
 			}
-			
+
 		}
 
 		// return the error
