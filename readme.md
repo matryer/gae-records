@@ -8,6 +8,8 @@ Ready to use
 
 ## Usage examples
 
+### Creating records
+
     // create a new model for 'People'
     People := gaerecords.NewModel("People")
 
@@ -18,20 +20,28 @@ Ready to use
      SetInt64("age", 28)
      .Put()
 
-    // load person with ID 1
-    person, _ := People.Find(1)
+### Changing records
 
-    // change some fields
+    // change some fields and Put it
     person.SetInt64("age", 29).Put()
 
-    // load all People
-    peeps, _ := People.FindAll()
+### Deleting records
 
     // delete mat
     mat.Delete()
 
     // delete user with ID 2
     People.Delete(2)
+
+### Finding records
+
+    // load person with ID 1
+    person, _ := People.Find(1)
+
+    // load all People
+    peeps, _ := People.FindAll()
+    
+### Counting records
     
     // get the total number of people
     total, _ := People.Count()
@@ -41,13 +51,17 @@ Ready to use
       q.Filter("IsMale=", true)
     })
     
+### Working with pages of records
+    
     // get three pages of people with 10 records on each page
     peoplePageOne, _ := People.FindByPage(1, 10)
     peoplePageTwo, _ := People.FindByPage(2, 10)
     peoplePageThree, _ := People.FindByPage(3, 10)
 
     // get the number of pages if we have 10 records per page
-    totalPages, _ := People.TotalPages(10)
+    totalPages = People.LoadPageInfo(10).TotalPages
+
+### Finding records by querying
 
     // find the first three People by passing a func(*datastore.Query)
     // to the FindByQuery method
@@ -64,6 +78,8 @@ Ready to use
 
     // find all people that are 'active'
     activePeople, _ := People.FindByFilter("Active=", true)
+
+### Binding to model events
 
     // using events, make sure 'People' records always get
     // an 'updatedAt' value set before being put (created and updated)
