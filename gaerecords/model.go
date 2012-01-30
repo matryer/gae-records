@@ -224,7 +224,9 @@ func (m *Model) Count(queryModifier ...func(*datastore.Query)) (int, os.Error) {
 // that will be called before the query is run to allow you to modify the 
 // records being counted.  If you do not provide this argument, all records of this
 // type will be counted.
-func (m *Model) LoadPageInfo(recordsPerPage int, queryModifier ...func(*datastore.Query)) (*PageInfo, os.Error) {
+//
+// This method panics if an error occurs when counting records.
+func (m *Model) LoadPageInfo(recordsPerPage int, queryModifier ...func(*datastore.Query)) *PageInfo {
 
 	var count int
 	var err os.Error
@@ -236,10 +238,10 @@ func (m *Model) LoadPageInfo(recordsPerPage int, queryModifier ...func(*datastor
 	}
 
 	if err != nil {
-		return nil, err
+		panic(fmt.Sprintf("gaerecords: LaodPageInfo: %v", err))
 	}
 
-	return NewPageInfo(count, recordsPerPage), nil
+	return NewPageInfo(count, recordsPerPage)
 
 }
 

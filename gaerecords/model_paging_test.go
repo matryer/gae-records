@@ -15,7 +15,7 @@ func TestPageInfo(t *testing.T) {
 	}
 
 	var info *PageInfo
-	info, _ = model.LoadPageInfo(10)
+	info = model.LoadPageInfo(10)
 
 	withMessage("TotalRecords")
 	assertEqual(t, 50, info.TotalRecords)
