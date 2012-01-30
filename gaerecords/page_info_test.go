@@ -6,41 +6,50 @@ import (
 
 func TestNewPageInfo(t *testing.T) {
 
-	info := NewPageInfo(50, 10)
+	var info PageInfo
 
-	withMessage("TotalRecords")
+	// exact number of records
+	info = NewPageInfo(50, 10, 2)
 	assertEqual(t, 50, info.TotalRecords)
 	assertEqual(t, 5, info.TotalPages)
 	assertEqual(t, 10, info.RecordsPerPage)
+	assertEqual(t, 10, info.RecordsOnLastPage)
+	assertEqual(t, 1, info.FirstPage)
+	assertEqual(t, 5, info.LastPage)
+	assertEqual(t, true, info.HasNextPage)
+	assertEqual(t, true, info.HasPreviousPage)
 
-	assertEqual(t, true, info.HasNextPage(1))
-	assertEqual(t, true, info.HasNextPage(2))
-	assertEqual(t, true, info.HasNextPage(3))
-	assertEqual(t, true, info.HasNextPage(4))
-	assertEqual(t, false, info.HasNextPage(5))
+	// un-even number of records
+	info = NewPageInfo(45, 10, 2)
+	assertEqual(t, 45, info.TotalRecords)
+	assertEqual(t, 5, info.TotalPages)
+	assertEqual(t, 10, info.RecordsPerPage)
+	assertEqual(t, 5, info.RecordsOnLastPage)
+	assertEqual(t, 1, info.FirstPage)
+	assertEqual(t, 5, info.LastPage)
+	assertEqual(t, true, info.HasNextPage)
+	assertEqual(t, true, info.HasPreviousPage)
 
-	assertEqual(t, false, info.HasPreviousPage(1))
-	assertEqual(t, true, info.HasPreviousPage(2))
-	assertEqual(t, true, info.HasPreviousPage(3))
-	assertEqual(t, true, info.HasPreviousPage(4))
-	assertEqual(t, true, info.HasPreviousPage(5))
+	// less than 1 page worth of records
+	info = NewPageInfo(6, 10, 1)
+	assertEqual(t, 6, info.TotalRecords)
+	assertEqual(t, 1, info.TotalPages)
+	assertEqual(t, 10, info.RecordsPerPage)
+	assertEqual(t, 6, info.RecordsOnLastPage)
+	assertEqual(t, 1, info.FirstPage)
+	assertEqual(t, 1, info.LastPage)
+	assertEqual(t, false, info.HasNextPage)
+	assertEqual(t, false, info.HasPreviousPage)
 
-	assertEqual(t, 1, info.FirstPage())
-	assertEqual(t, 5, info.LastPage())
-
-	info = NewPageInfo(95, 10)
-	assertEqual(t, 5, info.RecordsOnLastPage())
-
-	info = NewPageInfo(96, 10)
-	assertEqual(t, 6, info.RecordsOnLastPage())
-
-	info = NewPageInfo(91, 10)
-	assertEqual(t, 1, info.RecordsOnLastPage())
-
-	info = NewPageInfo(90, 10)
-	assertEqual(t, 10, info.RecordsOnLastPage())
-
-	info = NewPageInfo(100, 10)
-	assertEqual(t, 10, info.RecordsOnLastPage())
+	// no records
+	info = NewPageInfo(0, 10, 1)
+	assertEqual(t, 0, info.TotalRecords)
+	assertEqual(t, 1, info.TotalPages)
+	assertEqual(t, 10, info.RecordsPerPage)
+	assertEqual(t, 0, info.RecordsOnLastPage)
+	assertEqual(t, 1, info.FirstPage)
+	assertEqual(t, 1, info.LastPage)
+	assertEqual(t, false, info.HasNextPage)
+	assertEqual(t, false, info.HasPreviousPage)
 
 }

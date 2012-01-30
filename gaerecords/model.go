@@ -220,13 +220,16 @@ func (m *Model) Count(queryModifier ...func(*datastore.Query)) (int, os.Error) {
 
 // LoadPageInfo gets the paging information in a PageInfo object, for records of this type.
 //
+//   recordsPerPage - the number of records per page
+//   currentPage - the current page number
+//
 // You can pass an optional query modifier func (of type func(*datastore.Query)) 
 // that will be called before the query is run to allow you to modify the 
 // records being counted.  If you do not provide this argument, all records of this
 // type will be counted.
 //
 // This method panics if an error occurs when counting records.
-func (m *Model) LoadPageInfo(recordsPerPage int, queryModifier ...func(*datastore.Query)) *PageInfo {
+func (m *Model) LoadPageInfo(recordsPerPage, currentPage int, queryModifier ...func(*datastore.Query)) PageInfo {
 
 	var count int
 	var err os.Error
@@ -241,7 +244,7 @@ func (m *Model) LoadPageInfo(recordsPerPage int, queryModifier ...func(*datastor
 		panic(fmt.Sprintf("gaerecords: LaodPageInfo: %v", err))
 	}
 
-	return NewPageInfo(count, recordsPerPage)
+	return NewPageInfo(count, recordsPerPage, currentPage)
 
 }
 
@@ -325,7 +328,7 @@ func (m *Model) FindByField(filterString string, value interface{}, queryModifie
 // If you alter the Limit or Offset properties of the Query the paging behaviour will not work as
 // expected.
 //
-// Useful when used in conjunction with the TotalPages() method.
+// Useful when used in conjunction with LoadPageInfo().
 func (m *Model) FindByPage(pageNumber, recordsPerPage int, queryModifier ...func(*datastore.Query)) ([]*Record, os.Error) {
 
 	query := m.NewQuery().
