@@ -16,3 +16,5 @@ gaerecords/_go_.6
 gaerecords/_obj/gaerecords.a
 
 .DS_Store
+
+gaerecords/_test/github.com/matryer/gae-records/gaerecords.a

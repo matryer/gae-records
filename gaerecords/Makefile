@@ -1,6 +1,6 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=gaerecords
+TARG=github.com/matryer/gae-records/gaerecords
 GOFILES=\
   doc.go \
   errors.go \
