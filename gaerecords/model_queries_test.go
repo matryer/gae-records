@@ -14,6 +14,59 @@ func TestNewQuery(t *testing.T) {
 
 }
 
+func TestCount(t *testing.T) {
+
+	count := 14
+
+	model := CreateTestModelWithPropertyType("countModel")
+
+	// create some records
+	for i := 0; i < count; i++ {
+		CreatePersistedRecord(t, model)
+	}
+
+	returnedCount, err := model.Count()
+
+	if err != nil {
+		t.Errorf("%v", err)
+	} else {
+		assertEqual(t, count, returnedCount)
+	}
+
+}
+
+func TestCount_WithQueryModifier(t *testing.T) {
+
+	count := 14
+
+	model := CreateTestModelWithPropertyType("countModel")
+
+	// create some records
+	for i := 0; i < count*2; i++ {
+		record, _ := CreatePersistedRecord(t, model)
+
+		if i%2 == 0 {
+			record.SetBool("IsEven", true)
+		} else {
+			record.SetBool("IsEven", false)
+		}
+
+		record.Put()
+
+	}
+
+	returnedCount, err := model.Count(func(q *datastore.Query) {
+		q.Filter("IsEven=", true)
+	})
+
+	if err != nil {
+		t.Errorf("%v", err)
+	} else {
+		assertEqual(t, count, returnedCount)
+	}
+
+}
+
 func TestFindByQuery_WithQuery(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("findByQueryModel")

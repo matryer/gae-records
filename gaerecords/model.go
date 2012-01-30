@@ -198,6 +198,26 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 	----------------------------------------------------------------------
 */
 
+// Count returns the number of records in the datastore for this model type.
+//
+// You can pass an optional query modifier func (of type func(*datastore.Query)) 
+// that will be called before the query is run to allow you to modify the 
+// records being counted.  If you do not provide this argument, all records of this
+// type will be counted.
+func (m *Model) Count(queryModifier ...func(*datastore.Query)) (int, os.Error) {
+
+	// create a query
+	query := m.NewQuery()
+
+	// let the modifier do its work if there is one
+	if len(queryModifier) == 1 {
+		queryModifier[0](query)
+	}
+
+	return query.Count(m.AppEngineContext())
+
+}
+
 // Find finds the record of this type with the specified id.
 //  people := NewModel("people")
 //  firstPerson := people.Find(1)
