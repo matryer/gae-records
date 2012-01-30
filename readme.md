@@ -6,7 +6,7 @@ gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
 
 Ready to use
 
-## Usage
+## Usage examples
 
     // create a new model for 'People'
     People := gaerecords.NewModel("People")
@@ -45,6 +45,9 @@ Ready to use
     peoplePageOne, _ := People.FindByPage(1, 10)
     peoplePageTwo, _ := People.FindByPage(2, 10)
     peoplePageThree, _ := People.FindByPage(3, 10)
+
+    // get the number of pages if we have 10 records per page
+    totalPages, _ := People.TotalPages(10)
 
     // find the first three People by passing a func(*datastore.Query)
     // to the FindByQuery method
