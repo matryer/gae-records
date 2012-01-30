@@ -1,6 +1,6 @@
 # gaerecords
 
-gaerecords is a high performance and lightweight wrapper around [appengine/datastore](http://code.google.com/appengine/docs/go/overview.html), providing Active Record and DBO style management of data.
+gaerecords is a lightweight wrapper around [appengine/datastore](http://code.google.com/appengine/docs/go/overview.html), providing Active Record and DBO style management of data.
 
 ## Project status
 
