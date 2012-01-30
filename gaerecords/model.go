@@ -304,6 +304,9 @@ func (m *Model) FindAll() ([]*Record, os.Error) {
 //  oldMan, _ := People.FindByField("Age>", 60, func(q *datastore.Query){
 //	  q.Limit(1)
 //  })
+//
+// Raises events for each record:
+//   Model.AfterFind with Args(record)
 func (m *Model) FindByField(filterString string, value interface{}, queryModifier ...func(*datastore.Query)) ([]*Record, os.Error) {
 
 	query := m.NewQuery().Filter(filterString, value)
@@ -329,6 +332,9 @@ func (m *Model) FindByField(filterString string, value interface{}, queryModifie
 // expected.
 //
 // Useful when used in conjunction with LoadPagingInfo().
+//
+// Raises events for each record:
+//   Model.AfterFind with Args(record)
 func (m *Model) FindByPage(pageNumber, recordsPerPage int, queryModifier ...func(*datastore.Query)) ([]*Record, os.Error) {
 
 	query := m.NewQuery().
@@ -374,6 +380,9 @@ func (m *Model) NewQuery() *datastore.Query {
 //  women, err := model.FindByQuery(func(q *datastore.Query){
 //	  q.Filter("sex=", "male")
 //  })
+//
+// Raises events for each record:
+//   Model.AfterFind with Args(record)
 func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
 
 	var query *datastore.Query
