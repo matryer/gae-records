@@ -10,6 +10,8 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
  * *Familiar:* Make using the datastore feel the same as in other OO languages
  * *Full control:* Does not get in the way (i.e. can always get at the underlying queries) allowing advanced users to make the most of both worlds
  * *Focus:* Solve only the common datastore problems and not try to reinvent the wheel
+ * *Performance:* Must be as quick as using the datastore APIs directly (within reason)
+ * *Quota aware:* Must not abuse the datastore, being totally aware of the cost of storing and interacting with data
 
 ## Project status
 
