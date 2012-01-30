@@ -172,7 +172,7 @@ or after a <code>Record</code> has been deleted.
 
 The <code>Model</code> has the events, but actions to records can cause the callbacks to get run.
 
-## PagingInfo
+### PagingInfo
 
 The <code>PagingInfo</code> object contains paging information about groups of records.
 
