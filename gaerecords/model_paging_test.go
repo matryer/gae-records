@@ -5,17 +5,17 @@ import (
 	"appengine/datastore"
 )
 
-func TestPageInfo(t *testing.T) {
+func TestPagingInfo(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("pageInfo")
+	model := CreateTestModelWithPropertyType("PagingInfo")
 
 	// create some records
 	for i := 0; i < 50; i++ {
 		CreatePersistedRecord(t, model)
 	}
 
-	var info PageInfo
-	info = model.LoadPageInfo(10, 1)
+	var info PagingInfo
+	info = model.LoadPagingInfo(10, 1)
 
 	withMessage("TotalRecords")
 	assertEqual(t, 50, info.TotalRecords)

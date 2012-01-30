@@ -4,12 +4,12 @@ import (
 	"testing"
 )
 
-func TestNewPageInfo(t *testing.T) {
+func TestNewPagingInfo(t *testing.T) {
 
-	var info PageInfo
+	var info PagingInfo
 
 	// exact number of records
-	info = NewPageInfo(50, 10, 2)
+	info = NewPagingInfo(50, 10, 2)
 	assertEqual(t, 50, info.TotalRecords)
 	assertEqual(t, 5, info.TotalPages)
 	assertEqual(t, 10, info.RecordsPerPage)
@@ -20,7 +20,7 @@ func TestNewPageInfo(t *testing.T) {
 	assertEqual(t, true, info.HasPreviousPage)
 
 	// un-even number of records
-	info = NewPageInfo(45, 10, 2)
+	info = NewPagingInfo(45, 10, 2)
 	assertEqual(t, 45, info.TotalRecords)
 	assertEqual(t, 5, info.TotalPages)
 	assertEqual(t, 10, info.RecordsPerPage)
@@ -31,7 +31,7 @@ func TestNewPageInfo(t *testing.T) {
 	assertEqual(t, true, info.HasPreviousPage)
 
 	// less than 1 page worth of records
-	info = NewPageInfo(6, 10, 1)
+	info = NewPagingInfo(6, 10, 1)
 	assertEqual(t, 6, info.TotalRecords)
 	assertEqual(t, 1, info.TotalPages)
 	assertEqual(t, 10, info.RecordsPerPage)
@@ -42,7 +42,7 @@ func TestNewPageInfo(t *testing.T) {
 	assertEqual(t, false, info.HasPreviousPage)
 
 	// no records
-	info = NewPageInfo(0, 10, 1)
+	info = NewPagingInfo(0, 10, 1)
 	assertEqual(t, 0, info.TotalRecords)
 	assertEqual(t, 1, info.TotalPages)
 	assertEqual(t, 10, info.RecordsPerPage)

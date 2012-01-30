@@ -3,11 +3,11 @@ package gaerecords
 // Internal value for the first page
 var firstPage int = 1
 
-// PageInfo is a struct that holds details about paging for a model.  Best practice is to
-// load this object directly from the model using the model.LoadPageInfo() method.
+// PagingInfo is a struct that holds details about paging for a model.  Best practice is to
+// load this object directly from the model using the model.LoadPagingInfo() method.
 //
-// You can use this object without a model by using the NewPageInfo method.
-type PageInfo struct {
+// You can use this object without a model by using the NewPagingInfo method.
+type PagingInfo struct {
 
 	// TotalPages represents the total number of pages
 	TotalPages int
@@ -37,15 +37,15 @@ type PageInfo struct {
 	RecordsOnLastPage int
 }
 
-// NewPageInfo creates a new PageInfo instance containing the paging details for
+// NewPagingInfo creates a new PagingInfo instance containing the paging details for
 // the specified values.
 //
 //   totalRecords - the total number of records
 //   recordsPerPage - the number of records per page
 //   currentPage - the current page number
-func NewPageInfo(totalRecords, recordsPerPage, currentPage int) PageInfo {
+func NewPagingInfo(totalRecords, recordsPerPage, currentPage int) PagingInfo {
 
-	var info PageInfo
+	var info PagingInfo
 
 	info.TotalRecords = totalRecords
 	info.RecordsPerPage = recordsPerPage

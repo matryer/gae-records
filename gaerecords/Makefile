@@ -7,7 +7,7 @@ GOFILES=\
   events.go \
   appengine_context.go \
   record.go \
-  page_info.go \
+  paging_info.go \
   model.go
 
 include $(GOROOT)/src/Make.pkg

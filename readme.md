@@ -59,7 +59,7 @@ Ready to use
     peoplePageThree, _ := People.FindByPage(3, 10)
 
     // get the number of pages if we have 10 records per page
-    totalPages = People.LoadPageInfo(10).TotalPages
+    totalPages = People.LoadPagingInfo(10, 1).TotalPages
 
 ### Finding records by querying
 
