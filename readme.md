@@ -207,7 +207,6 @@ The following items are being considered for future effort (please get in touch 
  * Parent and child records (mirroring Parent and child keys in datastore)
  * Strongly typed records
  * Better handling of relationships (i.e. Record or []Record as field value)
- * More shortcuts for common queries (like paging, first, last, etc.)
 
 ## About
 
