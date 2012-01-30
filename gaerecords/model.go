@@ -218,15 +218,13 @@ func (m *Model) Count(queryModifier ...func(*datastore.Query)) (int, os.Error) {
 
 }
 
-// TotalPages gets the number of pages for records if there are recordsPerPage on each page.
+// LoadPageInfo gets the paging information in a PageInfo object, for records of this type.
 //
 // You can pass an optional query modifier func (of type func(*datastore.Query)) 
 // that will be called before the query is run to allow you to modify the 
-// records being included.  If you do not provide this argument, all records of this
+// records being counted.  If you do not provide this argument, all records of this
 // type will be counted.
-//
-// Useful when used in conjunction with the FindByPage() method.
-func (m *Model) TotalPages(recordsPerPage int, queryModifier ...func(*datastore.Query)) (int, os.Error) {
+func (m *Model) LoadPageInfo(recordsPerPage int, queryModifier ...func(*datastore.Query)) (*PageInfo, os.Error) {
 
 	var count int
 	var err os.Error
@@ -238,10 +236,10 @@ func (m *Model) TotalPages(recordsPerPage int, queryModifier ...func(*datastore.
 	}
 
 	if err != nil {
-		return -1, err
+		return nil, err
 	}
 
-	return count / recordsPerPage, nil
+	return NewPageInfo(count, recordsPerPage), nil
 
 }
 
