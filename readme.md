@@ -50,26 +50,6 @@ Ready to use
     totalMen, _ := People.Count(func(q *datastore.Query){
       q.Filter("IsMale=", true)
     })
-    
-### Working with pages of records
-    
-    // get three pages of people with 10 records on each page
-    peoplePageOne, _ := People.FindByPage(1, 10)
-    peoplePageTwo, _ := People.FindByPage(2, 10)
-    peoplePageThree, _ := People.FindByPage(3, 10)
-
-    // get the number of pages if we have 10 records per page
-    totalPages = People.LoadPagingInfo(10, 1).TotalPages
-
-    // get the details for page 2 (with 10 records per page)
-    pagingInfo := People.LoadPagingInfo(10, 2)
-
-    // is there a page 3?
-    if pagingInfo.HasNextPage {
-      // yes
-    } else {
-      // no
-    }
 
 ### Finding records by querying
 
@@ -88,6 +68,26 @@ Ready to use
 
     // find all people that are 'active'
     activePeople, _ := People.FindByFilter("Active=", true)
+
+### Working with pages of records
+
+    // get three pages of people with 10 records on each page
+    peoplePageOne, _ := People.FindByPage(1, 10)
+    peoplePageTwo, _ := People.FindByPage(2, 10)
+    peoplePageThree, _ := People.FindByPage(3, 10)
+
+    // get the number of pages if we have 10 records per page
+    totalPages = People.LoadPagingInfo(10, 1).TotalPages
+
+    // get the details for page 2 (with 10 records per page)
+    pagingInfo := People.LoadPagingInfo(10, 2)
+
+    // is there a page 3?
+    if pagingInfo.HasNextPage {
+      // yes
+    } else {
+      // no
+    }
 
 ### Binding to model events
 
