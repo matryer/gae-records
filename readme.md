@@ -32,6 +32,11 @@ Ready to use
 
     // delete user with ID 2
     People.Delete(2)
+    
+    // get three pages of people with 10 records on each page
+    peoplePageOne, _ := People.FindByPage(1, 10)
+    peoplePageTwo, _ := People.FindByPage(2, 10)
+    peoplePageThree, _ := People.FindByPage(3, 10)
 
     // find the first three People by passing a func(*datastore.Query)
     // to the FindByQuery method
