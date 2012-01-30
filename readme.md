@@ -177,7 +177,7 @@ The <code>Model</code> has the events, but actions to records can cause the call
 The <code>PagingInfo</code> object contains paging information about groups of records.
 
   // TotalPages represents the total number of pages
-	TotalPages int
+  TotalPages int
 
 	// TotalRecords represents the total number of records
 	TotalRecords int
