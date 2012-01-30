@@ -267,6 +267,31 @@ func (m *Model) FindByField(filterString string, value interface{}, queryModifie
 
 }
 
+// FindByPage finds records a page at a time.
+//
+// pageNumber int - The page number to get (with 1 being the first page)
+// recordsPerPage int - The number of records per page.  Usually this is the number of records returned
+// unless you reach the end of the set.
+// queryModifier func(*datastore.Query) - You can pass an optional query modifier func (of type func(*datastore.Query)) 
+// that will be called before the query is run to allow you to add additional properties to the query.
+//
+// If you alter the Limit or Offset properties of the Query the paging behaviour will not work as
+// expected.
+func (m *Model) FindByPage(pageNumber, recordsPerPage int, queryModifier ...func(*datastore.Query)) ([]*Record, os.Error) {
+
+	query := m.NewQuery().
+		Limit(recordsPerPage).
+		Offset((pageNumber - 1) * recordsPerPage)
+
+	// let the modifier do its work if there is one
+	if len(queryModifier) == 1 {
+		queryModifier[0](query)
+	}
+
+	return m.FindByQuery(query)
+
+}
+
 /*
 	Queries
 	----------------------------------------------------------------------
