@@ -174,9 +174,9 @@ The <code>Model</code> has the events, but actions to records can cause the call
 
 ### PagingInfo
 
-The <code>PagingInfo</code> object contains paging information about groups of records and is obtained by calling the Model.LoadPagingInfo() method.  The fields can then be used in code (or in a template) to provide paging controls for data.
+The <code>PagingInfo</code> object contains paging information about groups of records and is obtained by calling the <code>Model.LoadPagingInfo</code> method.  The fields can then be used in code (or in a template) to provide paging controls for data.
 
-The Model.FindByPage method can then be used to load pages of data at a time.
+The <code>Model.FindByPage</code> method can then be used to load pages of data at a time.
 
 The fields provided by <code>PagingInfo</code> are:
 
