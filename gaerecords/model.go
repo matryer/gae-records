@@ -218,6 +218,33 @@ func (m *Model) Count(queryModifier ...func(*datastore.Query)) (int, os.Error) {
 
 }
 
+// TotalPages gets the number of pages for records if there are recordsPerPage on each page.
+//
+// You can pass an optional query modifier func (of type func(*datastore.Query)) 
+// that will be called before the query is run to allow you to modify the 
+// records being included.  If you do not provide this argument, all records of this
+// type will be counted.
+//
+// Useful when used in conjunction with the FindByPage() method.
+func (m *Model) TotalPages(recordsPerPage int, queryModifier ...func(*datastore.Query)) (int, os.Error) {
+
+	var count int
+	var err os.Error
+
+	if len(queryModifier) == 1 {
+		count, err = m.Count(queryModifier[0])
+	} else {
+		count, err = m.Count()
+	}
+
+	if err != nil {
+		return -1, err
+	}
+
+	return count / recordsPerPage, nil
+
+}
+
 // Find finds the record of this type with the specified id.
 //  people := NewModel("people")
 //  firstPerson := people.Find(1)
@@ -297,6 +324,8 @@ func (m *Model) FindByField(filterString string, value interface{}, queryModifie
 //
 // If you alter the Limit or Offset properties of the Query the paging behaviour will not work as
 // expected.
+//
+// Useful when used in conjunction with the TotalPages() method.
 func (m *Model) FindByPage(pageNumber, recordsPerPage int, queryModifier ...func(*datastore.Query)) ([]*Record, os.Error) {
 
 	query := m.NewQuery().

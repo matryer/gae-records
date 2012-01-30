@@ -39,7 +39,7 @@ func TestCount_WithQueryModifier(t *testing.T) {
 
 	count := 14
 
-	model := CreateTestModelWithPropertyType("countModel")
+	model := CreateTestModelWithPropertyType("countWithModifierModel")
 
 	// create some records
 	for i := 0; i < count*2; i++ {
@@ -63,6 +63,55 @@ func TestCount_WithQueryModifier(t *testing.T) {
 		t.Errorf("%v", err)
 	} else {
 		assertEqual(t, count, returnedCount)
+	}
+
+}
+
+func TestTotalPages(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("totalPagesModel")
+
+	// create some records
+	for i := 0; i < 100; i++ {
+		CreatePersistedRecord(t, model)
+	}
+
+	returnedCount, err := model.TotalPages(10)
+
+	if err != nil {
+		t.Errorf("%v", err)
+	} else {
+		assertEqual(t, 10, returnedCount)
+	}
+
+}
+
+func TestTotalPages_WithQueryModifier(t *testing.T) {
+
+	model := CreateTestModelWithPropertyType("totalPagesWithModifierModel")
+
+	// create some records
+	for i := 0; i < 100; i++ {
+		record, _ := CreatePersistedRecord(t, model)
+
+		if i%2 == 0 {
+			record.SetBool("IsEven", true)
+		} else {
+			record.SetBool("IsEven", false)
+		}
+
+		record.Put()
+
+	}
+
+	returnedCount, err := model.TotalPages(10, func(q *datastore.Query) {
+		q.Filter("IsEven=", true)
+	})
+
+	if err != nil {
+		t.Errorf("%v", err)
+	} else {
+		assertEqual(t, 5, returnedCount)
 	}
 
 }
