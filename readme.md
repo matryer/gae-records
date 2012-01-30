@@ -98,6 +98,17 @@ Ready to use
       person.SetTime("updatedAt", datastore.SecondsToTime(time.Seconds()))
     })
     
+### Getting keys only from a query
+
+    // create a new query of People
+    query := People.NewQuery()
+    
+    // tune the query
+    query.Limit(10).Order("-age")
+    
+    // get the keys
+    keys, _ := query.KeysOnly().GetAll(m.AppEngineContext(), nil)
+    
 ## Concepts
 
 gaerecords provides two main types that represent the different data for your project.
