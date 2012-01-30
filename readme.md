@@ -171,7 +171,11 @@ own callbacks to the lifecycle of records.  For example, before or after a <code
 or after a <code>Record</code> has been deleted.
 
 The <code>Model</code> has the events, but actions to records can cause the callbacks to get run.
-    
+
+## PagingInfo
+
+The <code>PagingInfo</code> object contains paging information about groups of records.
+
 ## Installation
 
     git clone git://github.com/matryer/gae-records.git
