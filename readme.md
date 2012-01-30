@@ -176,6 +176,33 @@ The <code>Model</code> has the events, but actions to records can cause the call
 
 The <code>PagingInfo</code> object contains paging information about groups of records.
 
+  // TotalPages represents the total number of pages
+	TotalPages int
+
+	// TotalRecords represents the total number of records
+	TotalRecords int
+
+	// RecordsPerPage represents the number of records per page
+	RecordsPerPage int
+
+	// CurrentPage represents the current page number
+	CurrentPage int
+
+	// HasPreviousPage gets whether there are any pages before the CurrentPage
+	HasPreviousPage bool
+
+	// HasNextPage gets whether there are any pages after the CurrentPage
+	HasNextPage bool
+
+	// FirstPage gets the page number of the first page (always 1)
+	FirstPage int
+
+	// LastPage gets the page number of the last page
+	LastPage int
+
+	// RecordsOnLastPage gets the number of records on the last page
+	RecordsOnLastPage int
+
 ## Installation
 
     git clone git://github.com/matryer/gae-records.git
