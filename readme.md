@@ -4,7 +4,7 @@
 
 Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.google.com/appengine/docs/go/overview.html), providing Active Record and DBO style management of data.
 
-### Objectives
+### Project objectives
 
  * *Simple for beginners:* Make it easy to start using the datastore for beginners
  * *Familiar:* Make using the datastore feel the same as in other OO languages
@@ -13,7 +13,7 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
 
 ## Project status
 
-Ready to use
+ * Ready to use - scroll down for examples, and instructions of how to get started
 
 ## Usage examples
 
