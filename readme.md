@@ -33,6 +33,14 @@ Ready to use
     // delete user with ID 2
     People.Delete(2)
     
+    // get the total number of people
+    total, _ := People.Count()
+    
+    // get the total number of male people
+    totalMen, _ := People.Count(func(q *datastore.Query){
+      q.Filter("IsMale=", true)
+    })
+    
     // get three pages of people with 10 records on each page
     peoplePageOne, _ := People.FindByPage(1, 10)
     peoplePageTwo, _ := People.FindByPage(2, 10)
