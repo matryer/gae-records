@@ -250,7 +250,7 @@ Please log defects and feature requests using the issue tracker on github.
 
 The following items are being considered for future effort (please get in touch if you have a view on these items, or would like other features including)
 
- * Parent and child records (mirroring Parent and child keys in datastore)
+ * Parent and child records (mirroring Parent and child keys in datastore) (see the "sub-records" branch)
  * Strongly typed records
  * Better handling of relationships (i.e. <code>Record</code> or <code>[]Record</code> as field value)
  * A series of Quick* methods that ignore errors (i.e. <code>QuickFind</code> would return nil if no record could be found) and return only the objects being interacted with (i.e. no <code>err</code> arguments) for a simpler interface
