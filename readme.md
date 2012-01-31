@@ -253,6 +253,7 @@ The following items are being considered for future effort (please get in touch 
  * Parent and child records (mirroring Parent and child keys in datastore)
  * Strongly typed records
  * Better handling of relationships (i.e. Record or []Record as field value)
+ * A series of Quick* methods that ignore errors (i.e. <code>QuickFind</code> would return nil if no record could be found)
 
 ## About
 
