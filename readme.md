@@ -124,7 +124,8 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
 
 gaerecords provides two main types that represent the different data for your project.
 A <code>Model</code> describes a type of data, and a <code>Record</code> is a single entity
-or instance of that type.
+or instance of that type.  In a traditional relational database world, think of a <code>Model</code> as a table,
+and a <code>Record</code> as a row in that table.
 
 Creating models is as easy as calling the <code>gaerecords.NewModel</code> method.
 
