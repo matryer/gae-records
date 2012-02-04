@@ -206,6 +206,7 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 
 /*
 	Relationships
+	----------------------------------------------------------------------
 */
 
 // HasMany creates and returns a new sub-model with the specified childRecordType.
