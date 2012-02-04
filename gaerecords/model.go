@@ -20,6 +20,17 @@ import (
 //  // create a new model for 'books'
 //  Books := NewModel("books")
 type Model struct {
+	
+	/*
+		Fields
+	*/
+	
+	// parentModel is the internal storage for the parent model
+	parentModel *Model
+	
+	/*
+		Events
+	*/
 
 	// AfterNew gets triggered after a record has been created.
 	// Useful for initializing Records.
@@ -191,6 +202,41 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 
 	// chain
 	return m
+}
+
+/*
+	Relationships
+*/
+
+// HasMany creates and returns a new sub-model with the specified childRecordType.
+func (m *Model) HasMany(childRecordType string) *Model {
+	
+	childModel := NewModel(childRecordType)
+	childModel.SetParentModel(m)
+	
+	return childModel
+}
+
+// HasParentModel gets whether this model has a parent model or not.
+func (m *Model) HasParentModel() bool {
+	return m.parentModel != nil
+}
+
+// ParentModel gets this models parent, or returns nil if this model has no parent.
+func (m *Model) ParentModel() *Model {
+	return m.parentModel
+}
+
+// SetParentModel sets the parent model.  All records of this kind must specify
+// their parent record in order to make them valid.
+func (m *Model) SetParentModel(model *Model) *Model {
+	
+	// set the model
+	m.parentModel = model
+	
+	// chain
+	return m
+	
 }
 
 /*
