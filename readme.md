@@ -27,8 +27,8 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
     // create a new person
     mat := People.New()
     mat.
-     SetString("name", "Mat")
-     SetInt64("age", 28)
+     SetString("name", "Mat").
+     SetInt64("age", 28).
      .Put()
 
 ### Changing records
