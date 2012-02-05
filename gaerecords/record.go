@@ -622,7 +622,7 @@ func (r *Record) GetRecordField(key string) (*Record, os.Error) {
 		datastoreKey := r.GetKeyField(fmt.Sprint(key, SubRecordFieldKeySuffix))
 
 		// loop-up the model
-		model := getModelByRecordType(datastoreKey.Kind())
+		model := GetModelByRecordType(datastoreKey.Kind())
 
 		// load the record
 		record, err := model.Find(datastoreKey.IntID())

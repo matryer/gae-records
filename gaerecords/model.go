@@ -8,8 +8,10 @@ import (
 	"appengine/datastore"
 )
 
+// models is a map containing all the defined models
 var models map[string]*Model
 
+// ValidatorFunc is a func that acts as a validator for records.
 type ValidatorFunc func(*Model, *Record) os.Error
 
 // addModel adds the model to the internal cache.  Panics if a model with that
@@ -26,8 +28,8 @@ func addModel(m *Model) {
 
 }
 
-// getModelByRecordType gets the model by record type, or panics if it cannot be found.
-func getModelByRecordType(recordType string) *Model {
+// GetModelByRecordType gets the model by record type, or panics if it cannot be found.
+func GetModelByRecordType(recordType string) *Model {
 
 	if models == nil || models[recordType] == nil {
 		panic(fmt.Sprintf("gaerecords: Could not find Model for type \"%v\".", recordType))
