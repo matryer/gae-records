@@ -15,6 +15,11 @@ var NoIDValue int64 = 0
 // IDFieldKey is the field key used to store the record ID in the Fields map.
 var IDFieldKey string = "ID"
 
+// SubRecordFieldKeySuffix is the string suffix that gets added to the end of
+// the field name that indicates that the DatastoreKey is being stored, and not
+// the whole Record object.
+var SubRecordFieldKeySuffix string = "_key"
+
 // The Record type represents a single record of data (like a single row in a database, or a single resource
 // on a web server).  Synonymous with an Entity in appengine/datastore.
 type Record struct {
@@ -581,7 +586,7 @@ func (r *Record) GetRecordField(model *Model, key string) (*Record, os.Error) {
 	if r.cachedSubRecords[key] == nil {
 		
 		// load the record
-		datastoreKey := r.GetKeyField(fmt.Sprint(key, "_key"))
+		datastoreKey := r.GetKeyField(fmt.Sprint(key, SubRecordFieldKeySuffix))
 		record, err := model.Find(datastoreKey.IntID())
 		
 		if err != nil {
@@ -601,7 +606,7 @@ func (r *Record) GetRecordField(model *Model, key string) (*Record, os.Error) {
 // SetRecordField sets a sub-record as a field for this record.  The sub record
 // should already be persisted in order for its DatastoreKey to be used.
 func (r *Record) SetRecordField(key string, value *Record) *Record {
-	return r.SetKeyField(fmt.Sprint(key, "_key"), value.DatastoreKey())
+	return r.SetKeyField(fmt.Sprint(key, SubRecordFieldKeySuffix), value.DatastoreKey())
 }
 
 // SetMultipleKeys sets multiple values in one field
