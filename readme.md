@@ -80,6 +80,59 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
     // find all people that are 'active'
     activePeople, _ := People.FindByFilter("Active=", true)
 
+### Using other records as fields
+
+    // create a model for People
+    People := gaerecords.NewModel("People")
+    
+    // create a model for relationships
+    Relationships := gaerecords.NewModel("Relationships")
+    
+    // create mat
+    mat := People.New()
+    mat.SetString("name", "Mat")
+    mat.Put()
+    
+    // create laurie
+    laurie := People.New()
+    laurie.SetString("name", "Laurie")
+    laurie.Put()
+    
+    // now create a relationship
+    matAndLaurieRel := Relationships.New()
+    matAndLaurieRel.SetRecordField("wife", laurie)
+    matAndLaurieRel.SetRecordField("husband", mat)
+    matAndLaurieRel.Put()
+    
+    // load a relationship
+    rel := Relationships.Find(1)
+    
+    // get the people
+    husband := rel.GetRecordField("husband")
+    wife := rel.GetRecordField("wife")
+
+### Creating sub-records
+
+NOTE: This functionality is still in design phase - it is not yet ready for use.
+
+    // create a People model
+    People := gaerecords.NewModel("People")
+    
+    // people have many books
+    Books := People.HasMany("Books")
+    
+    // create a new person
+    darwin := People.New()
+    
+    // create a new book for darwin
+    originOfSpecies := Books.New(darwin)
+
+    // save the book
+    originOfSpecies.Put()
+    
+    //... and the person
+    darwin.Put()
+
 ### Working with pages of records
 
     // get three pages of people with 10 records on each page

@@ -148,7 +148,7 @@ func TestSave(t *testing.T) {
 
 func TestPut_Create(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("modelthree")
+	model := CreateTestModelWithPropertyType("modelthree1")
 	record := model.New()
 
 	record.
@@ -181,7 +181,7 @@ func TestPut_Create(t *testing.T) {
 
 func TestPut_Update(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("modelthree")
+	model := CreateTestModelWithPropertyType("modelthree2")
 	record := model.New()
 
 	assertEqual(t, false, record.IsPersisted())

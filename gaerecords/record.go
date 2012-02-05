@@ -15,12 +15,20 @@ var NoIDValue int64 = 0
 // IDFieldKey is the field key used to store the record ID in the Fields map.
 var IDFieldKey string = "ID"
 
+// SubRecordFieldKeySuffix is the string suffix that gets added to the end of
+// the field name that indicates that the DatastoreKey is being stored, and not
+// the whole Record object.
+var SubRecordFieldKeySuffix string = "_key"
+
 // The Record type represents a single record of data (like a single row in a database, or a single resource
 // on a web server).  Synonymous with an Entity in appengine/datastore.
 type Record struct {
 
 	// internal storage of record field data.
 	fields map[string]interface{}
+
+	// internal storage of sub-records
+	cachedSubRecords map[string]*Record
 
 	// a reference to the model describing the
 	// type of this record.
@@ -29,8 +37,14 @@ type Record struct {
 	// an internal cache of the datastore.Key
 	datastoreKey *datastore.Key
 
+	// this records parent record ID (or NoIDValue if no parent)
+	parentID int64
+
 	// whether the record needs persisting or not
 	needsPersisting bool
+
+	// internal collection of errors
+	errors []os.Error
 }
 
 /*
@@ -403,6 +417,11 @@ func (r *Record) Fields() map[string]interface{} {
 
 }
 
+// HasField gets whether this record has a field with the specified key.
+func (r *Record) HasField(key string) bool {
+	return r.Fields()[key] != nil
+}
+
 /*
 	Getting Fields
 	----------------------------------------------------------------------
@@ -550,6 +569,49 @@ func (r *Record) GetKeyField(key string) *datastore.Key {
 // SetKeyField sets the *datastore.Key value of a field with the specified key.
 func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
+}
+
+// GetRecordField loads a sub-record by the given key.
+//
+// Will panic if the key kind doesn't match any known Models.
+//
+// GetRecordField caches the record so can safely be called multiple times while only
+// causing one datastore read operation.
+func (r *Record) GetRecordField(key string) (*Record, os.Error) {
+
+	if r.cachedSubRecords == nil {
+		r.cachedSubRecords = make(map[string]*Record)
+	}
+
+	if r.cachedSubRecords[key] == nil {
+
+		// get the key
+		datastoreKey := r.GetKeyField(fmt.Sprint(key, SubRecordFieldKeySuffix))
+
+		// loop-up the model
+		model := getModelByRecordType(datastoreKey.Kind())
+
+		// load the record
+		record, err := model.Find(datastoreKey.IntID())
+
+		if err != nil {
+			// if we have an error - return it
+			return nil, err
+		} else {
+			// keep this in the cache for next time
+			r.cachedSubRecords[key] = record
+		}
+
+	}
+
+	return r.cachedSubRecords[key], nil
+
+}
+
+// SetRecordField sets a sub-record as a field for this record.  The sub record
+// should already be persisted in order for its DatastoreKey to be used.
+func (r *Record) SetRecordField(key string, value *Record) *Record {
+	return r.SetKeyField(fmt.Sprint(key, SubRecordFieldKeySuffix), value.DatastoreKey())
 }
 
 // SetMultipleKeys sets multiple values in one field

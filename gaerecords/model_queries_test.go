@@ -103,7 +103,7 @@ func TestFindByQuery_WithQuery(t *testing.T) {
 
 func TestFindByQuery_WithFunc(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("findByQueryWithFuncModel")
+	model := CreateTestModelWithPropertyType("findByQueryWithFuncModel1")
 
 	// create 5 records
 	CreatePersistedRecord(t, model)
@@ -131,7 +131,7 @@ func TestFindByQuery_WithFunc(t *testing.T) {
 
 func TestFindByQuery_WithFilter_ThroughFunc(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("findByQueryWithFuncModel")
+	model := CreateTestModelWithPropertyType("findByQueryWithFuncModel2")
 
 	record1, _ := CreatePersistedRecord(t, model)
 	record2, _ := CreatePersistedRecord(t, model)

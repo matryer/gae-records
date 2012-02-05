@@ -2,10 +2,13 @@ package gaerecords
 
 import (
 	"os"
+	"fmt"
 	"testing"
 	"appengine/datastore"
 	"gae-go-testing.googlecode.com/git/appenginetesting"
 )
+
+var modelIndex int = 1
 
 // Creates a test appengine context object
 func UseTestAppEngineContext() {
@@ -19,7 +22,8 @@ func CreateTestRecord() *Record {
 }
 
 func CreateTestModel() *Model {
-	return NewModel("model")
+	modelIndex++
+	return NewModel(fmt.Sprint("model-", modelIndex))
 }
 func CreateTestModelWithPropertyType(kind string) *Model {
 	return NewModel(kind)

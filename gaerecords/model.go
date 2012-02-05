@@ -8,6 +8,33 @@ import (
 	"appengine/datastore"
 )
 
+var models map[string]*Model
+
+// addModel adds the model to the internal cache.  Panics if a model with that
+// type has already been added.
+func addModel(m *Model) {
+
+	if models == nil {
+		models = make(map[string]*Model)
+	} else if models[m.recordType] != nil {
+		panic(fmt.Sprintf("gaerecords: Model for \"%v\" already exists.", m.recordType))
+	}
+
+	models[m.recordType] = m
+
+}
+
+// getModelByRecordType gets the model by record type, or panics if it cannot be found.
+func getModelByRecordType(recordType string) *Model {
+
+	if models == nil || models[recordType] == nil {
+		panic(fmt.Sprintf("gaerecords: Could not find Model for type \"%v\".", recordType))
+	}
+
+	return models[recordType]
+
+}
+
 // Model struct represents a single model. A model is a class of data and a Model object is used
 // to interact with the datastore including reading and writing records of this type.
 //
@@ -20,6 +47,17 @@ import (
 //  // create a new model for 'books'
 //  Books := NewModel("books")
 type Model struct {
+
+	/*
+		Fields
+	*/
+
+	// parentModel is the internal storage for the parent model
+	parentModel *Model
+
+	/*
+		Events
+	*/
 
 	// AfterNew gets triggered after a record has been created.
 	// Useful for initializing Records.
@@ -124,6 +162,9 @@ func NewModel(recordType string, initializer ...func(*Model)) *Model {
 
 	}
 
+	// add the model
+	addModel(model)
+
 	return model
 
 }
@@ -194,6 +235,42 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 }
 
 /*
+	Relationships
+	----------------------------------------------------------------------
+*/
+
+// HasMany creates and returns a new sub-model with the specified childRecordType.
+func (m *Model) HasMany(childRecordType string) *Model {
+
+	childModel := NewModel(childRecordType)
+	childModel.SetParentModel(m)
+
+	return childModel
+}
+
+// HasParentModel gets whether this model has a parent model or not.
+func (m *Model) HasParentModel() bool {
+	return m.parentModel != nil
+}
+
+// ParentModel gets this models parent, or returns nil if this model has no parent.
+func (m *Model) ParentModel() *Model {
+	return m.parentModel
+}
+
+// SetParentModel sets the parent model.  All records of this kind must specify
+// their parent record in order to make them valid.
+func (m *Model) SetParentModel(model *Model) *Model {
+
+	// set the model
+	m.parentModel = model
+
+	// chain
+	return m
+
+}
+
+/*
 	Persistence
 	----------------------------------------------------------------------
 */
@@ -257,7 +334,6 @@ func (m *Model) LoadPagingInfo(recordsPerPage, currentPage int, queryModifier ..
 func (m *Model) Find(id int64) (*Record, os.Error) {
 
 	key := m.NewKeyWithID(id)
-
 	var record *Record = new(Record)
 
 	err := datastore.Get(m.AppEngineContext(), key, datastore.PropertyLoadSaver(record))

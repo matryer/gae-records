@@ -7,7 +7,7 @@ import (
 
 func TestModelAfterFindEvent(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterFindEventModel")
+	model := CreateTestModelWithPropertyType("afterFindEventModel4")
 	record, _ := CreatePersistedRecord(t, model)
 
 	var called bool = false
@@ -52,7 +52,7 @@ func TestModelAfterFindEvent_withFindAll(t *testing.T) {
 
 func TestModelBeforeDeleteByIDEvent(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("beforeDeleteEventModel")
+	model := CreateTestModelWithPropertyType("beforeDeleteEventModel2")
 	record, _ := CreatePersistedRecord(t, model)
 	var loadedRecord *Record
 
@@ -78,7 +78,7 @@ func TestModelBeforeDeleteByIDEvent(t *testing.T) {
 
 func TestModelBeforeDeleteByIDEvent_Cancellation(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("beforeDeleteEventCancelModel")
+	model := CreateTestModelWithPropertyType("beforeDeleteEventCancelModel1")
 	record, _ := CreatePersistedRecord(t, model)
 
 	var called bool = false
@@ -108,7 +108,7 @@ func TestModelBeforeDeleteByIDEvent_Cancellation(t *testing.T) {
 
 func TestModelAfterDeleteByID(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterDeleteByIDModel")
+	model := CreateTestModelWithPropertyType("afterDeleteByIDModel1")
 	record, _ := CreatePersistedRecord(t, model)
 	var err os.Error = nil
 	var loadedRecord *Record = nil
@@ -138,7 +138,7 @@ func TestModelAfterDeleteByID(t *testing.T) {
 
 func TestBeforeAndAfterDeleteByIDEventsShareContext(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterDeleteByIDModel")
+	model := CreateTestModelWithPropertyType("afterDeleteByIDModel2")
 	record, _ := CreatePersistedRecord(t, model)
 
 	var context1 *EventContext = nil
@@ -161,7 +161,7 @@ func TestBeforeAndAfterDeleteByIDEventsShareContext(t *testing.T) {
 
 func TestModelBeforeDeleteEvent(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("beforeDeleteEventModel")
+	model := CreateTestModelWithPropertyType("beforeDeleteEventModel1")
 	record, _ := CreatePersistedRecord(t, model)
 	var loadedRecord *Record
 
@@ -189,7 +189,7 @@ func TestModelBeforeDeleteEvent(t *testing.T) {
 
 func TestModelBeforeDeleteEvent_Cancellation(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("beforeDeleteEventCancelModel")
+	model := CreateTestModelWithPropertyType("beforeDeleteEventCancelModel2")
 	record, _ := CreatePersistedRecord(t, model)
 
 	var called bool = false
@@ -221,7 +221,7 @@ func TestModelBeforeDeleteEvent_Cancellation(t *testing.T) {
 
 func TestModelAfterDelete(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterDeleteByIDModel")
+	model := CreateTestModelWithPropertyType("afterDeleteByIDModel3")
 	record, _ := CreatePersistedRecord(t, model)
 	var err os.Error = nil
 	var loadedRecord *Record = nil
@@ -253,7 +253,7 @@ func TestModelAfterDelete(t *testing.T) {
 
 func TestBeforeAndAfterDeleteEventsShareContext(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterDeleteByIDModel")
+	model := CreateTestModelWithPropertyType("afterDeleteByIDModel4")
 	record, _ := CreatePersistedRecord(t, model)
 
 	var context1 *EventContext = nil
@@ -276,7 +276,7 @@ func TestBeforeAndAfterDeleteEventsShareContext(t *testing.T) {
 
 func TestModelBeforePutEvent(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterFindEventModel")
+	model := CreateTestModelWithPropertyType("afterFindEventModel1")
 	record := model.New().Set("something", "something")
 
 	var called bool = false
@@ -300,7 +300,7 @@ func TestModelBeforePutEvent(t *testing.T) {
 
 func TestModelBeforePutEvent_Cancellation(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterFindEventModel")
+	model := CreateTestModelWithPropertyType("afterFindEventModel2")
 	record := model.New().Set("something", "something")
 
 	var called bool = false
@@ -331,7 +331,7 @@ func TestModelBeforePutEvent_Cancellation(t *testing.T) {
 
 func TestModelAfterPutEvent(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("afterFindEventModel")
+	model := CreateTestModelWithPropertyType("afterFindEventModel3")
 	record := model.New().Set("something", "something")
 
 	var called bool = false
