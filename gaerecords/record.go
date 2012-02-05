@@ -141,7 +141,8 @@ func (r *Record) SetNeedsPersisting(value bool) *Record {
 	return r
 }
 
-// CAUTION: This method does NOT load persisted records.  See Find().
+// CAUTION: This method does NOT load persisted records.  See the Find*() methods.
+//
 // PropertyLoadSaver.Load takes a channel of datastore.Property objects and
 // applies them to the internal Fields() object.
 // Used internally by the datastore.
@@ -177,6 +178,7 @@ func (r *Record) Load(c <-chan datastore.Property) os.Error {
 }
 
 // CAUTION: This method does NOT persist records.  See Put().
+//
 // PropertyLoadSaver.Save writes datastore.Property objects and
 // representing the Fields() of this record to the specified channel.
 // Used internally by the datastore to persist the values.
@@ -608,8 +610,10 @@ func (r *Record) GetRecordField(key string) (*Record, os.Error) {
 
 }
 
-// SetRecordField sets a sub-record as a field for this record.  The sub record
-// should already be persisted in order for its DatastoreKey to be used.
+// SetRecordField sets a sub-record as a field for this record.
+//
+// The DatastoreKey of the sub-record is what gets persisted. The sub record
+// should therefore already be persisted in order for its DatastoreKey to be used.
 func (r *Record) SetRecordField(key string, value *Record) *Record {
 	return r.SetKeyField(fmt.Sprint(key, SubRecordFieldKeySuffix), value.DatastoreKey())
 }
