@@ -20,6 +20,8 @@ var IDFieldKey string = "ID"
 // the whole Record object.
 var SubRecordFieldKeySuffix string = "_key"
 
+type ValidatorFunc func(*Record) os.Error
+
 // The Record type represents a single record of data (like a single row in a database, or a single resource
 // on a web server).  Synonymous with an Entity in appengine/datastore.
 type Record struct {
@@ -29,6 +31,8 @@ type Record struct {
 
 	// internal storage of sub-records
 	cachedSubRecords map[string]*Record
+
+	validators []ValidatorFunc
 
 	// a reference to the model describing the
 	// type of this record.
@@ -398,6 +402,45 @@ func (r *Record) invalidateDatastoreKey() {
 // datastore or not, i.e. record.ID != NoIDValue
 func (r *Record) IsPersisted() bool {
 	return r.ID() != NoIDValue
+}
+
+/*
+	Validators
+	----------------------------------------------------------------------
+*/
+
+// IsValid gets whether this record is valid or not.  Any errors describing
+// why this record is not valid are returned as the second argument.
+func (r *Record) IsValid() (bool, []os.Error) {
+
+	var errors []os.Error
+
+	if len(r.validators) > 0 {
+
+		var err os.Error
+		for _, validator := range r.validators {
+
+			err = validator(r)
+
+			if err != nil {
+				errors = append(errors, err)
+			}
+
+		}
+
+	}
+
+	return len(errors) == 0, errors
+
+}
+
+// AddValidator adds a new ValidatorFunc to this record, that will get
+// called when testing whether this record is valid or not.
+func (r *Record) AddValidator(f ValidatorFunc) *Record {
+
+	r.validators = append(r.validators, f)
+
+	return r
 }
 
 /*
