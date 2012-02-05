@@ -113,7 +113,7 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
 
 ### Creating sub-records
 
-NOTE: This functionality is still in design phase
+NOTE: This functionality is still in design phase - it is not yet ready for use.
 
     // create a People model
     People := gaerecords.NewModel("People")
