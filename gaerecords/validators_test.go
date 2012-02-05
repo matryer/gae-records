@@ -14,19 +14,20 @@ func TestModelValidators(t *testing.T) {
 	var calledWithRecord *Record
 
 	// add a validator
-	assertEqual(t, model.AddValidator(func(m *Model, r *Record) os.Error {
+	assertEqual(t, model.AddValidator(func(m *Model, r *Record) []os.Error {
 
 		called = true
 		calledWithRecord = r
 
-		return os.NewError("Oops, something went wrong")
+		return []os.Error{os.NewError("Error One"), os.NewError("Error Two")}
 
 	}), model)
 
 	valid, errors := record.IsValid()
 
 	assertEqual(t, false, valid)
-	assertEqual(t, "Oops, something went wrong", errors[0].String())
+	assertEqual(t, "Error One", errors[0].String())
+	assertEqual(t, "Error Two", errors[1].String())
 	assertEqual(t, true, called)
 	assertEqual(t, record, calledWithRecord)
 

@@ -413,13 +413,15 @@ func (r *Record) IsValid() (bool, []os.Error) {
 
 	if len(r.model.validators) > 0 {
 
-		var err os.Error
+		var theseErrs []os.Error
 		for _, validator := range r.model.validators {
 
-			err = validator(r.model, r)
+			theseErrs = validator(r.model, r)
 
-			if err != nil {
-				errors = append(errors, err)
+			if len(theseErrs) > 0 {
+				for _, err := range theseErrs {
+					errors = append(errors, err)
+				}
 			}
 
 		}

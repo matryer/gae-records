@@ -11,8 +11,9 @@ import (
 // models is a map containing all the defined models
 var models map[string]*Model
 
-// ValidatorFunc is a func that acts as a validator for records.
-type ValidatorFunc func(*Model, *Record) os.Error
+// ValidatorFunc is a func that acts as a validator for records.  It takes the model and record,
+// and returns an array of errors that are returned when Record.IsValid() is called.
+type ValidatorFunc func(*Model, *Record) []os.Error
 
 // addModel adds the model to the internal cache.  Panics if a model with that
 // type has already been added.
@@ -58,7 +59,7 @@ type Model struct {
 
 	// parentModel is the internal storage for the parent model
 	parentModel *Model
-	
+
 	validators []ValidatorFunc
 
 	/*
@@ -242,7 +243,7 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 
 /*
 	Validation
-	
+
 */
 
 // AddValidator adds a new ValidatorFunc to this model, that will get
