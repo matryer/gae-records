@@ -21,6 +21,9 @@ type Record struct {
 
 	// internal storage of record field data.
 	fields map[string]interface{}
+	
+	// internal storage of sub-records
+	cachedSubRecords map[string]*Record
 
 	// a reference to the model describing the
 	// type of this record.
@@ -563,11 +566,40 @@ func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
 
+// GetRecordField loads a sub-record by the given key.
+//
+// You must provide the Model of the type of record in order to use the returned Record properly.
+//
+// GetRecordField caches the record so can safely be called multiple times while only
+// causing one datastore read operation.
 func (r *Record) GetRecordField(model *Model, key string) (*Record, os.Error) {
-	datastoreKey := r.GetKeyField(fmt.Sprint(key, "_key"))
-	return model.Find(datastoreKey.IntID())
+	
+	if r.cachedSubRecords == nil {
+		r.cachedSubRecords = make(map[string]*Record)
+	}
+	
+	if r.cachedSubRecords[key] == nil {
+		
+		// load the record
+		datastoreKey := r.GetKeyField(fmt.Sprint(key, "_key"))
+		record, err := model.Find(datastoreKey.IntID())
+		
+		if err != nil {
+			// if we have an error - return it
+			return nil, err
+		} else {
+			// keep this in the cache for next time
+			r.cachedSubRecords[key] = record
+		}
+		
+	}
+	
+	return r.cachedSubRecords[key], nil
+	
 }
 
+// SetRecordField sets a sub-record as a field for this record.  The sub record
+// should already be persisted in order for its DatastoreKey to be used.
 func (r *Record) SetRecordField(key string, value *Record) *Record {
 	return r.SetKeyField(fmt.Sprint(key, "_key"), value.DatastoreKey())
 }
