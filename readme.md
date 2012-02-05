@@ -108,8 +108,8 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
     rel := Relationships.Find(1)
     
     // get the people
-    husband := rel.GetRecordField(People, "husband")
-    wife := rel.GetRecordField(People, "wife")
+    husband := rel.GetRecordField("husband")
+    wife := rel.GetRecordField("wife")
 
 ### Creating sub-records
 

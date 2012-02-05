@@ -13,26 +13,26 @@ var models map[string]*Model
 // addModel adds the model to the internal cache.  Panics if a model with that
 // type has already been added.
 func addModel(m *Model) {
-	
+
 	if models == nil {
 		models = make(map[string]*Model)
 	} else if models[m.recordType] != nil {
 		panic(fmt.Sprintf("gaerecords: Model for \"%v\" already exists.", m.recordType))
 	}
-	
+
 	models[m.recordType] = m
-	
+
 }
 
 // getModelByRecordType gets the model by record type, or panics if it cannot be found.
 func getModelByRecordType(recordType string) *Model {
-	
+
 	if models == nil || models[recordType] == nil {
 		panic(fmt.Sprintf("gaerecords: Could not find Model for type \"%v\".", recordType))
 	}
-	
+
 	return models[recordType]
-	
+
 }
 
 // Model struct represents a single model. A model is a class of data and a Model object is used
@@ -47,14 +47,14 @@ func getModelByRecordType(recordType string) *Model {
 //  // create a new model for 'books'
 //  Books := NewModel("books")
 type Model struct {
-	
+
 	/*
 		Fields
 	*/
-	
+
 	// parentModel is the internal storage for the parent model
 	parentModel *Model
-	
+
 	/*
 		Events
 	*/
@@ -241,10 +241,10 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 
 // HasMany creates and returns a new sub-model with the specified childRecordType.
 func (m *Model) HasMany(childRecordType string) *Model {
-	
+
 	childModel := NewModel(childRecordType)
 	childModel.SetParentModel(m)
-	
+
 	return childModel
 }
 
@@ -261,13 +261,13 @@ func (m *Model) ParentModel() *Model {
 // SetParentModel sets the parent model.  All records of this kind must specify
 // their parent record in order to make them valid.
 func (m *Model) SetParentModel(model *Model) *Model {
-	
+
 	// set the model
 	m.parentModel = model
-	
+
 	// chain
 	return m
-	
+
 }
 
 /*
