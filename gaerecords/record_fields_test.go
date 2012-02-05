@@ -6,6 +6,19 @@ import (
 	"appengine/datastore"
 )
 
+func TestHasField(t *testing.T) {
+	
+	people := CreateTestModel()
+	person := people.New()
+	
+	assertEqual(t, false, person.HasField("name"))
+	
+	person.SetString("name", "Laurie")
+	
+	assertEqual(t, true, person.HasField("name"))
+	
+}
+
 func TestSet(t *testing.T) {
 
 	people := CreateTestModel()

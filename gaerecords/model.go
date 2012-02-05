@@ -304,7 +304,6 @@ func (m *Model) LoadPagingInfo(recordsPerPage, currentPage int, queryModifier ..
 func (m *Model) Find(id int64) (*Record, os.Error) {
 
 	key := m.NewKeyWithID(id)
-
 	var record *Record = new(Record)
 
 	err := datastore.Get(m.AppEngineContext(), key, datastore.PropertyLoadSaver(record))

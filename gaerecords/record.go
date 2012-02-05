@@ -28,9 +28,15 @@ type Record struct {
 
 	// an internal cache of the datastore.Key
 	datastoreKey *datastore.Key
+	
+	// this records parent record ID (or NoIDValue if no parent)
+	parentID int64
 
 	// whether the record needs persisting or not
 	needsPersisting bool
+	
+	// internal collection of errors
+	errors []os.Error
 }
 
 /*
@@ -403,6 +409,11 @@ func (r *Record) Fields() map[string]interface{} {
 
 }
 
+// HasField gets whether this record has a field with the specified key.
+func (r *Record) HasField(key string) bool {
+	return r.Fields()[key] != nil
+}
+
 /*
 	Getting Fields
 	----------------------------------------------------------------------
@@ -550,6 +561,15 @@ func (r *Record) GetKeyField(key string) *datastore.Key {
 // SetKeyField sets the *datastore.Key value of a field with the specified key.
 func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
+}
+
+func (r *Record) GetRecordField(model *Model, key string) (*Record, os.Error) {
+	datastoreKey := r.GetKeyField(fmt.Sprint(key, "_key"))
+	return model.Find(datastoreKey.IntID())
+}
+
+func (r *Record) SetRecordField(key string, value *Record) *Record {
+	return r.SetKeyField(fmt.Sprint(key, "_key"), value.DatastoreKey())
 }
 
 // SetMultipleKeys sets multiple values in one field
