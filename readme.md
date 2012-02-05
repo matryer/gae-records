@@ -111,28 +111,6 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
     husband := rel.GetRecordField("husband")
     wife := rel.GetRecordField("wife")
 
-### Creating sub-records
-
-NOTE: This functionality is still in design phase - it is not yet ready for use.
-
-    // create a People model
-    People := gaerecords.NewModel("People")
-    
-    // people have many books
-    Books := People.HasMany("Books")
-    
-    // create a new person
-    darwin := People.New()
-    
-    // create a new book for darwin
-    originOfSpecies := Books.New(darwin)
-
-    // save the book
-    originOfSpecies.Put()
-    
-    //... and the person
-    darwin.Put()
-
 ### Working with pages of records
 
     // get three pages of people with 10 records on each page
