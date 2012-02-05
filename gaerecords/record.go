@@ -360,6 +360,7 @@ func (r *Record) DatastoreKey() *datastore.Key {
 }
 
 // SetDatastoreKey sets the datastore Key and updates the records ID if needed.
+// Advanced use only.
 func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 
 	if key == nil {
@@ -436,7 +437,7 @@ func (r *Record) Get(key string) interface{} {
 	if r == nil {
 		panic(fmt.Sprintf("gaerecords: Cannot Get(\"%v\") property from a nil Record", key))
 	}
-
+	
 	return r.Fields()[key]
 }
 
@@ -573,7 +574,7 @@ func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 	return r.Set(key, value)
 }
 
-// GetRecordField loads a sub-record by the given key.
+// GetRecordField loads a single sub-record by the given key.
 //
 // Will panic if the key kind doesn't match any known Models.
 //
@@ -611,7 +612,7 @@ func (r *Record) GetRecordField(key string) (*Record, os.Error) {
 
 }
 
-// SetRecordField sets a sub-record as a field for this record.
+// SetRecordField sets a single sub-record as a field for this record.
 //
 // The DatastoreKey of the sub-record is what gets persisted. The sub record
 // should therefore already be persisted in order for its DatastoreKey to be used.
