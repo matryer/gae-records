@@ -10,6 +10,8 @@ import (
 
 var models map[string]*Model
 
+type ValidatorFunc func(*Model, *Record) os.Error
+
 // addModel adds the model to the internal cache.  Panics if a model with that
 // type has already been added.
 func addModel(m *Model) {
@@ -54,6 +56,8 @@ type Model struct {
 
 	// parentModel is the internal storage for the parent model
 	parentModel *Model
+	
+	validators []ValidatorFunc
 
 	/*
 		Events
@@ -231,6 +235,20 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 	m.SetAppEngineContext(nil)
 
 	// chain
+	return m
+}
+
+/*
+	Validation
+	
+*/
+
+// AddValidator adds a new ValidatorFunc to this model, that will get
+// called when testing whether this record is valid or not.
+func (m *Model) AddValidator(f ValidatorFunc) *Model {
+
+	m.validators = append(m.validators, f)
+
 	return m
 }
 

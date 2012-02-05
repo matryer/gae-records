@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func TestRecordValidators(t *testing.T) {
+func TestModelValidators(t *testing.T) {
 
 	model := CreateTestModelWithPropertyType("TestRecordValidators")
 	record := model.New()
@@ -14,14 +14,14 @@ func TestRecordValidators(t *testing.T) {
 	var calledWithRecord *Record
 
 	// add a validator
-	assertEqual(t, record.AddValidator(func(r *Record) os.Error {
+	assertEqual(t, model.AddValidator(func(m *Model, r *Record) os.Error {
 
 		called = true
 		calledWithRecord = r
 
 		return os.NewError("Oops, something went wrong")
 
-	}), record)
+	}), model)
 
 	valid, errors := record.IsValid()
 
