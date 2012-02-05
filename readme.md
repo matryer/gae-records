@@ -80,6 +80,37 @@ Gaerecords is a lightweight wrapper around [appengine/datastore](http://code.goo
     // find all people that are 'active'
     activePeople, _ := People.FindByFilter("Active=", true)
 
+### Using other records as fields
+
+    // create a model for People
+    People := gaerecords.NewModel("People")
+    
+    // create a model for relationships
+    Relationships := gaerecords.NewModel("Relationships")
+    
+    // create mat
+    mat := People.New()
+    mat.SetString("name", "Mat")
+    mat.Put()
+    
+    // create laurie
+    laurie := People.New()
+    laurie.SetString("name", "Laurie")
+    laurie.Put()
+    
+    // now create a relationship
+    matAndLaurieRel := Relationships.New()
+    matAndLaurieRel.SetRecordField("wife", laurie)
+    matAndLaurieRel.SetRecordField("husband", mat)
+    matAndLaurieRel.Put()
+    
+    // load a relationship
+    rel := Relationships.Find(1)
+    
+    // get the people
+    husband := rel.GetRecordField(People, "husband")
+    wife := rel.GetRecordField(People, "wife")
+
 ### Creating sub-records
 
 NOTE: This functionality is still in design phase
