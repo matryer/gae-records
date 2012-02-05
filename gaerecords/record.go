@@ -359,7 +359,7 @@ func (r *Record) DatastoreKey() *datastore.Key {
 
 }
 
-// SetDatastoreKey sets the datastore Key and updates the records ID if needed
+// SetDatastoreKey sets the datastore Key and updates the records ID if needed.
 func (r *Record) SetDatastoreKey(key *datastore.Key) *Record {
 
 	if key == nil {
@@ -578,7 +578,8 @@ func (r *Record) SetKeyField(key string, value *datastore.Key) *Record {
 // Will panic if the key kind doesn't match any known Models.
 //
 // GetRecordField caches the record so can safely be called multiple times while only
-// causing one datastore read operation.
+// causing one datastore read operation.  But if the record changes between calls, only
+// the first state will be loaded.
 func (r *Record) GetRecordField(key string) (*Record, os.Error) {
 
 	if r.cachedSubRecords == nil {
