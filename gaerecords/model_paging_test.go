@@ -30,7 +30,7 @@ func TestPagingInfo(t *testing.T) {
 
 func TestFindByPage(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("findByPageModel")
+	model := CreateTestModelWithPropertyType("findByPageModel1")
 
 	var records []*Record = make([]*Record, 95)
 
@@ -112,7 +112,7 @@ func TestFindByPage(t *testing.T) {
 
 func TestFindByPage_WithQueryModifier(t *testing.T) {
 
-	model := CreateTestModelWithPropertyType("findByPageModel")
+	model := CreateTestModelWithPropertyType("findByPageModel2")
 
 	var records []*Record = make([]*Record, 95)
 

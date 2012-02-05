@@ -6,7 +6,7 @@ import (
 
 func TestParentModel(t *testing.T) {
 	
-	Parent := NewModel("parent")
+	Parent := NewModel("parent1")
 	
 	if Parent.ParentModel() != nil {
 		t.Error("ParentModel should be nil")
@@ -25,7 +25,7 @@ func TestParentModel(t *testing.T) {
 
 func TestModelHasMany(t *testing.T) {
 	
-	Parent := NewModel("parent")
+	Parent := NewModel("parent2")
 	Child := Parent.HasMany("children")
 
 	if assertNotNil(t, Child, "Child") {

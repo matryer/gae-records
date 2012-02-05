@@ -6,9 +6,9 @@ import (
 
 func TestNewModel(t *testing.T) {
 
-	model := NewModel("kind")
+	model := NewModel("kind1")
 
-	assertEqual(t, model.RecordType(), "kind")
+	assertEqual(t, model.RecordType(), "kind1")
 
 }
 
@@ -17,7 +17,7 @@ func TestNewModelWithFunc(t *testing.T) {
 	var called bool = false
 	var lastModel *Model = nil
 
-	model := NewModel("kind", func(m *Model) {
+	model := NewModel("kind2", func(m *Model) {
 
 		called = true
 		lastModel = m

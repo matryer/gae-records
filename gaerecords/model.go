@@ -8,6 +8,33 @@ import (
 	"appengine/datastore"
 )
 
+var models map[string]*Model
+
+// addModel adds the model to the internal cache.  Panics if a model with that
+// type has already been added.
+func addModel(m *Model) {
+	
+	if models == nil {
+		models = make(map[string]*Model)
+	} else if models[m.recordType] != nil {
+		panic(fmt.Sprintf("gaerecords: Model for \"%v\" already exists.", m.recordType))
+	}
+	
+	models[m.recordType] = m
+	
+}
+
+// getModelByRecordType gets the model by record type, or panics if it cannot be found.
+func getModelByRecordType(recordType string) *Model {
+	
+	if models == nil || models[recordType] == nil {
+		panic(fmt.Sprintf("gaerecords: Could not find Model for type \"%v\".", recordType))
+	}
+	
+	return models[recordType]
+	
+}
+
 // Model struct represents a single model. A model is a class of data and a Model object is used
 // to interact with the datastore including reading and writing records of this type.
 //
@@ -134,6 +161,9 @@ func NewModel(recordType string, initializer ...func(*Model)) *Model {
 		initializer[0](model)
 
 	}
+
+	// add the model
+	addModel(model)
 
 	return model
 
