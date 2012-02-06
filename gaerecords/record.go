@@ -402,6 +402,38 @@ func (r *Record) IsPersisted() bool {
 }
 
 /*
+	Validators
+	----------------------------------------------------------------------
+*/
+
+// IsValid gets whether this record is valid or not.  Any errors describing
+// why this record is not valid are returned as the second argument.
+func (r *Record) IsValid() (bool, []os.Error) {
+
+	var errors []os.Error
+
+	if len(r.model.validators) > 0 {
+
+		var theseErrs []os.Error
+		for _, validator := range r.model.validators {
+
+			theseErrs = validator(r.model, r)
+
+			if len(theseErrs) > 0 {
+				for _, err := range theseErrs {
+					errors = append(errors, err)
+				}
+			}
+
+		}
+
+	}
+
+	return len(errors) == 0, errors
+
+}
+
+/*
 	Fields
 	----------------------------------------------------------------------
 */
@@ -593,7 +625,7 @@ func (r *Record) GetRecordField(key string) (*Record, os.Error) {
 		datastoreKey := r.GetKeyField(fmt.Sprint(key, SubRecordFieldKeySuffix))
 
 		// loop-up the model
-		model := getModelByRecordType(datastoreKey.Kind())
+		model := GetModelByRecordType(datastoreKey.Kind())
 
 		// load the record
 		record, err := model.Find(datastoreKey.IntID())

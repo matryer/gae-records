@@ -8,7 +8,12 @@ import (
 	"appengine/datastore"
 )
 
+// models is a map containing all the defined models
 var models map[string]*Model
+
+// ValidatorFunc is a func that acts as a validator for records.  It takes the model and record,
+// and returns an array of errors that are returned when Record.IsValid() is called.
+type ValidatorFunc func(*Model, *Record) []os.Error
 
 // addModel adds the model to the internal cache.  Panics if a model with that
 // type has already been added.
@@ -24,8 +29,8 @@ func addModel(m *Model) {
 
 }
 
-// getModelByRecordType gets the model by record type, or panics if it cannot be found.
-func getModelByRecordType(recordType string) *Model {
+// GetModelByRecordType gets the model by record type, or panics if it cannot be found.
+func GetModelByRecordType(recordType string) *Model {
 
 	if models == nil || models[recordType] == nil {
 		panic(fmt.Sprintf("gaerecords: Could not find Model for type \"%v\".", recordType))
@@ -54,6 +59,8 @@ type Model struct {
 
 	// parentModel is the internal storage for the parent model
 	parentModel *Model
+
+	validators []ValidatorFunc
 
 	/*
 		Events
@@ -231,6 +238,20 @@ func (m *Model) UseGlobalAppEngineContext() *Model {
 	m.SetAppEngineContext(nil)
 
 	// chain
+	return m
+}
+
+/*
+	Validation
+
+*/
+
+// AddValidator adds a new ValidatorFunc to this model, that will get
+// called when testing whether this record is valid or not.
+func (m *Model) AddValidator(f ValidatorFunc) *Model {
+
+	m.validators = append(m.validators, f)
+
 	return m
 }
 

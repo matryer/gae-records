@@ -32,9 +32,9 @@ func TestGetModelByRecordType(t *testing.T) {
 	model2 := NewModel("TestGetModelByRecordType-Model2")
 	model3 := NewModel("TestGetModelByRecordType-Model3")
 
-	assertEqual(t, model1, getModelByRecordType("TestGetModelByRecordType-Model1"))
-	assertEqual(t, model2, getModelByRecordType("TestGetModelByRecordType-Model2"))
-	assertEqual(t, model3, getModelByRecordType("TestGetModelByRecordType-Model3"))
+	assertEqual(t, model1, GetModelByRecordType("TestGetModelByRecordType-Model1"))
+	assertEqual(t, model2, GetModelByRecordType("TestGetModelByRecordType-Model2"))
+	assertEqual(t, model3, GetModelByRecordType("TestGetModelByRecordType-Model3"))
 
 }
 
