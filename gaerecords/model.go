@@ -57,9 +57,11 @@ type Model struct {
 		Fields
 	*/
 
-	// parentModel is the internal storage for the parent model
+	// parentModel is the internal storage for the parent model.
 	parentModel *Model
 
+	// validators is the internal list of validator functions for this
+	// record.
 	validators []ValidatorFunc
 
 	/*
