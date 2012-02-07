@@ -459,6 +459,12 @@ func (r *Record) HasParent() bool {
 }
 
 func (r *Record) Parent() *Record {
+	
+	if r.parentRecord == nil && r.DatastoreKey().Parent() != nil {
+		// load the parent
+		r.parentRecord, _ = r.model.ParentModel().Find(r.DatastoreKey().Parent().IntID())
+	}
+	
 	return r.parentRecord
 }
 

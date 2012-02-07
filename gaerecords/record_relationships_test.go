@@ -205,3 +205,32 @@ func TestHasManyRecord_ValidOnlyWithParent(t *testing.T) {
 	assertEqual(t, 0, len(validErrors))
 	
 }
+
+func TestLoadChildRecord_ThenGetParent(t *testing.T) {
+	
+	Authors := NewModel("TestHasManyRecord_ValidOnlyWithParent_Authors5")
+	Books := Authors.HasMany("TestHasManyRecord_ValidOnlyWithParent_Books5")
+
+	darwin := Authors.New()
+	darwin.SetString("name", "Charles")
+	darwin.Put()
+	
+	originOfSpecies := Books.New().SetParent(darwin)
+	originOfSpecies.Put()
+	
+	loadedRecords, _ := Books.FindAll()
+	loaded := loadedRecords[0]
+	
+	parent := loaded.Parent()
+	
+	if parent == nil {
+		t.Errorf(".Parent() of loaded record (with parent) shouldn't be nil")
+	} else {
+	
+		assertEqual(t, darwin.ID(), parent.ID())
+		assertEqual(t, darwin.GetString("name"), parent.GetString("name"))
+		
+	}
+	
+}
+
