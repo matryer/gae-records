@@ -455,7 +455,7 @@ func (r *Record) IsValid() (bool, []os.Error) {
 */
 
 func (r *Record) HasParent() bool {
-	return r.parentRecord != nil
+	return r.parentRecord != nil || (r.datastoreKey != nil && r.datastoreKey.Parent() != nil)
 }
 
 func (r *Record) Parent() *Record {

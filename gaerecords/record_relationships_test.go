@@ -20,6 +20,18 @@ func TestRecordParent(t *testing.T) {
 	
 }
 
+func TestHasParent_WithKeyOnly(t *testing.T) {
+	
+	parentKey := datastore.NewIncompleteKey(GetAppEngineContext(), "kind", nil)
+	key := datastore.NewIncompleteKey(GetAppEngineContext(), "kind", parentKey)
+	
+	record := new(Record)
+	record.datastoreKey = key
+	
+	assertEqual(t, true, record.HasParent())
+	
+}
+
 func TestParentRecordDatastoreKey(t *testing.T) {
 	
 	ParentRecords := NewModel("TestParentRecordDatastoreKey_Parents")
