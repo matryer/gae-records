@@ -6,6 +6,7 @@ GOFILES=\
   errors.go \
   events.go \
   appengine_context.go \
+  validators.go \
   record.go \
   paging_info.go \
   model.go

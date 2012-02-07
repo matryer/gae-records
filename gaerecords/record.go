@@ -37,8 +37,11 @@ type Record struct {
 	// an internal cache of the datastore.Key
 	datastoreKey *datastore.Key
 
-	// this records parent record ID (or NoIDValue if no parent)
+	// this record's parent record ID (or NoIDValue if no parent)
 	parentID int64
+	
+	// this record's parent record (or nil for no record)
+	parentRecord *Record
 
 	// whether the record needs persisting or not
 	needsPersisting bool
@@ -434,6 +437,25 @@ func (r *Record) IsValid() (bool, []os.Error) {
 }
 
 /*
+	Relationships
+	----------------------------------------------------------------------
+*/
+
+func (r *Record) HasParent() bool {
+	return r.parentRecord != nil
+}
+
+func (r *Record) Parent() *Record {
+	return r.parentRecord
+}
+
+func (r *Record) SetParent(parent *Record) *Record {
+	r.parentRecord = parent
+	return r
+}
+
+
+/*
 	Fields
 	----------------------------------------------------------------------
 */
@@ -467,7 +489,7 @@ func (r *Record) HasField(key string) bool {
 func (r *Record) Get(key string) interface{} {
 
 	if r == nil {
-		panic(fmt.Sprintf("gaerecords: Cannot Get(\"%v\") property from a nil Record", key))
+		Panic(fmt.Sprintf("Cannot Get(\"%v\") property from a nil Record", key))
 	}
 	
 	return r.Fields()[key]

@@ -31,7 +31,7 @@ func CreateAppEngineContext(request *http.Request) appengine.Context {
 func GetAppEngineContext() appengine.Context {
 
 	if AppEngineContext == nil {
-		panic("gaerecords: Be sure to call CreateAppEngineContext(*http.Request) before using gaerecords capabilities")
+		Panic("Be sure to call CreateAppEngineContext(*http.Request) before using gaerecords capabilities")
 	}
 
 	return AppEngineContext

@@ -11,10 +11,6 @@ import (
 // models is a map containing all the defined models
 var models map[string]*Model
 
-// ValidatorFunc is a func that acts as a validator for records.  It takes the model and record,
-// and returns an array of errors that are returned when Record.IsValid() is called.
-type ValidatorFunc func(*Model, *Record) []os.Error
-
 // addModel adds the model to the internal cache.  Panics if a model with that
 // type has already been added.
 func addModel(m *Model) {
@@ -22,7 +18,7 @@ func addModel(m *Model) {
 	if models == nil {
 		models = make(map[string]*Model)
 	} else if models[m.recordType] != nil {
-		panic(fmt.Sprintf("gaerecords: Model for \"%v\" already exists.", m.recordType))
+		Panic(fmt.Sprintf("Model for \"%v\" already exists.", m.recordType))
 	}
 
 	models[m.recordType] = m
@@ -33,7 +29,7 @@ func addModel(m *Model) {
 func GetModelByRecordType(recordType string) *Model {
 
 	if models == nil || models[recordType] == nil {
-		panic(fmt.Sprintf("gaerecords: Could not find Model for type \"%v\".", recordType))
+		Panic(fmt.Sprintf("Could not find Model for type \"%v\".", recordType))
 	}
 
 	return models[recordType]
@@ -268,6 +264,10 @@ func (m *Model) HasMany(childRecordType string) *Model {
 	childModel := NewModel(childRecordType)
 	childModel.SetParentModel(m)
 
+	// add a validator to ensure records of this type always
+	// specify a valid parent
+	childModel.AddValidator(ValidParentRecordValidator)
+
 	return childModel
 }
 
@@ -341,7 +341,7 @@ func (m *Model) LoadPagingInfo(recordsPerPage, currentPage int, queryModifier ..
 	}
 
 	if err != nil {
-		panic(fmt.Sprintf("gaerecords: LaodPagingInfo: %v", err))
+		Panic(fmt.Sprintf("LaodPagingInfo: %v", err))
 	}
 
 	return NewPagingInfo(count, recordsPerPage, currentPage)
