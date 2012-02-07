@@ -2,6 +2,8 @@ package gaerecords
 
 import (
 	"testing"
+	"os"
+	"appengine/datastore"
 )
 
 func TestRecordParent(t *testing.T) {
@@ -25,8 +27,8 @@ func TestParentRecordDatastoreKey(t *testing.T) {
 	
 	parent := ParentRecords.New()
 	parent.Put()
+	
 	child := ChildRecords.New().SetParent(parent)
-	child.Put()
 	
 	key := child.DatastoreKey()
 	parentKey := key.Parent()
@@ -41,6 +43,111 @@ func TestParentRecordDatastoreKey(t *testing.T) {
 		assertEqual(t, ChildRecords.RecordType(), key.Kind())
 	
 	}
+	
+	putErr := child.Put()
+	if putErr != nil {
+		t.Errorf("Couldn't put: %v", putErr)
+	}
+	
+	// reload it
+	var err os.Error
+	child, err = parent.Find(ChildRecords, child.ID())
+	
+	if err != nil {
+		t.Errorf("Couldn't find child record after Put(): %v", err)
+	} else {
+		
+		key = child.DatastoreKey()
+		parentKey = key.Parent()
+	
+		if parentKey == nil {
+			t.Errorf("key.Parent() should not be nil when SetParent() is called")
+		} else {
+	
+			assertEqual(t, parent.ID(), parentKey.IntID())
+			assertEqual(t, ParentRecords.RecordType(), parentKey.Kind())
+			assertEqual(t, child.ID(), key.IntID())
+			assertEqual(t, ChildRecords.RecordType(), key.Kind())
+	
+		}
+	
+	}
+	
+}
+
+func TestRecordFind(t *testing.T) {
+	
+	ParentRecords := NewModel("TestParentRecordDatastoreKey_Parents2")
+	ChildRecords := ParentRecords.HasMany("TestParentRecordDatastoreKey_Children2")
+	
+	parent := ParentRecords.New()
+	parent.Put()
+	
+	child := ChildRecords.New().SetParent(parent)
+	child.SetString("name", "Timmy")
+	child.Put()
+	
+	// load it back
+	loadedChild, _ := parent.Find(ChildRecords, child.ID())
+	
+	assertEqual(t, child.ID(), loadedChild.ID())
+	assertEqual(t, "Timmy", loadedChild.GetString("name"))
+	
+}
+
+func TestRecordFindByQuery_WithQuery(t *testing.T) {
+	
+	ParentRecords := NewModel("TestParentRecordDatastoreKey_Parents3")
+	ChildRecords := ParentRecords.HasMany("TestParentRecordDatastoreKey_Children3")
+	
+	parent := ParentRecords.New()
+	parent.Put()
+	
+	child1 := ChildRecords.New().SetParent(parent)
+	child1.SetString("name", "Timmy")
+	child1.Put()
+
+	child2 := ChildRecords.New().SetParent(parent)
+	child2.SetString("name", "Tommy")
+	child2.Put()
+
+	// load them
+	query := datastore.NewQuery(ChildRecords.RecordType())
+	children, _ := ChildRecords.FindByQuery(query)
+	
+	assertEqual(t, child1.ID(), children[0].ID())
+	assertEqual(t, "Timmy", children[0].GetString("name"))
+	assertEqual(t, child2.ID(), children[1].ID())
+	assertEqual(t, "Tommy", children[1].GetString("name"))
+	
+}
+
+func TestRecordFindByQuery_WithQueryFunc(t *testing.T) {
+	
+	ParentRecords := NewModel("TestParentRecordDatastoreKey_Parents4")
+	ChildRecords := ParentRecords.HasMany("TestParentRecordDatastoreKey_Children4")
+	
+	parent := ParentRecords.New()
+	parent.Put()
+	
+	child1 := ChildRecords.New().SetParent(parent)
+	child1.SetString("name", "Timmy")
+	child1.Put()
+
+	child2 := ChildRecords.New().SetParent(parent)
+	child2.SetString("name", "Tommy")
+	child2.Put()
+
+	// load them
+	var query *datastore.Query
+	children, _ := ChildRecords.FindByQuery(func(q *datastore.Query){
+		query = q
+	})
+		
+	assertEqual(t, child1.ID(), children[0].ID())
+	assertEqual(t, "Timmy", children[0].GetString("name"))
+	assertEqual(t, child2.ID(), children[1].ID())
+	assertEqual(t, "Tommy", children[1].GetString("name"))
 	
 }
 

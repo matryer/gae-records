@@ -3,7 +3,6 @@ package gaerecords
 import (
 	"os"
 	"fmt"
-	"reflect"
 	"appengine"
 	"appengine/datastore"
 )
@@ -355,29 +354,12 @@ func (m *Model) LoadPagingInfo(recordsPerPage, currentPage int, queryModifier ..
 // Raises events:
 //   Model.AfterFind with Args(record)
 func (m *Model) Find(id int64) (*Record, os.Error) {
-
-	key := m.NewKeyWithID(id)
-	var record *Record = new(Record)
-
-	err := datastore.Get(m.AppEngineContext(), key, datastore.PropertyLoadSaver(record))
-
-	if err == nil {
-
-		// setup the record object
-		record.configureRecord(m, key)
-
-		// raise the AfterFind event on the model
-		if m.AfterFind.HasCallbacks() {
-			m.AfterFind.Trigger(record)
-		}
-
-		// return the record
-		return record, nil
-
+	
+	if m.HasParentModel() {
+		Panic("Cannot use Find on a model when the child records have parents.")
 	}
-
-	return nil, err
-
+	
+	return FindRecord(m, id)
 }
 
 // FindAll finds all records of this type.
@@ -485,46 +467,7 @@ func (m *Model) NewQuery() *datastore.Query {
 // Raises events for each record:
 //   Model.AfterFind with Args(record)
 func (m *Model) FindByQuery(queryOrFunc interface{}) ([]*Record, os.Error) {
-
-	var query *datastore.Query
-
-	if reflect.TypeOf(queryOrFunc).Kind() == reflect.Func {
-
-		// create a new query
-		query = m.NewQuery()
-
-		// ask the func to configure the query
-		queryOrFunc.(func(*datastore.Query))(query)
-
-	} else {
-
-		// just use the query
-		query = queryOrFunc.(*datastore.Query)
-
-	}
-
-	var records []*Record
-	keys, err := query.GetAll(m.AppEngineContext(), &records)
-
-	if err == nil {
-
-		// configure each loaded record
-		for index, record := range records {
-
-			record.configureRecord(m, keys[index])
-
-			if m.AfterFind.HasCallbacks() {
-				m.AfterFind.Trigger(record)
-			}
-
-		}
-
-		return records, nil
-
-	}
-
-	return nil, err
-
+	return FindByQuery(m, queryOrFunc)
 }
 
 // Delete deletes a single record of this type.  Returns nil if successful, otherwise

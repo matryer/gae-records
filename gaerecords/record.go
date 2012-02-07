@@ -260,6 +260,11 @@ func (r *Record) configureRecord(model *Model, key *datastore.Key) *Record {
 
 }
 
+// Find finds a child record of type specified by the model, with the specified id.
+func (r *Record) Find(model *Model, id int64) (*Record, os.Error) {
+	return FindRecordWithParent(model, id, r)
+}
+
 // Put saves or updates this record.  Returns nil if successful, otherwise returns the os.Error
 // that was retrned by the datastore.
 //  record.Put()
