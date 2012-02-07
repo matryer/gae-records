@@ -349,9 +349,17 @@ func (r *Record) DatastoreKey() *datastore.Key {
 		var key *datastore.Key
 
 		if r.IsPersisted() {
-			key = r.model.NewKeyWithID(r.ID())
+			if r.HasParent() {
+				key = r.model.NewKeyWithIDAndParent(r.ID(), r.Parent().DatastoreKey())
+			} else {
+				key = r.model.NewKeyWithID(r.ID())
+			}
 		} else {
-			key = r.model.NewKey()
+			if r.HasParent() {
+				key = r.model.NewKeyWithParent(r.Parent().DatastoreKey())
+			} else {
+				key = r.model.NewKey()
+			}
 		}
 
 		r.datastoreKey = key

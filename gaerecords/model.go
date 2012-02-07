@@ -577,3 +577,13 @@ func (m *Model) NewKey() *datastore.Key {
 func (m *Model) NewKeyWithID(id int64) *datastore.Key {
 	return datastore.NewKey(m.AppEngineContext(), m.recordType, "", int64(id), nil)
 }
+
+// NewKey creates a new datastore Key for this kind of record.
+func (m *Model) NewKeyWithParent(parent *datastore.Key) *datastore.Key {
+	return datastore.NewIncompleteKey(m.AppEngineContext(), m.recordType, parent)
+}
+
+// NewKeyWithID creates a new datastore Key for this kind of record with the specified ID.
+func (m *Model) NewKeyWithIDAndParent(id int64, parent *datastore.Key) *datastore.Key {
+	return datastore.NewKey(m.AppEngineContext(), m.recordType, "", int64(id), parent)
+}

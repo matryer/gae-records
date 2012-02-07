@@ -18,6 +18,32 @@ func TestRecordParent(t *testing.T) {
 	
 }
 
+func TestParentRecordDatastoreKey(t *testing.T) {
+	
+	ParentRecords := NewModel("TestParentRecordDatastoreKey_Parents")
+	ChildRecords := ParentRecords.HasMany("TestParentRecordDatastoreKey_Children")
+	
+	parent := ParentRecords.New()
+	parent.Put()
+	child := ChildRecords.New().SetParent(parent)
+	child.Put()
+	
+	key := child.DatastoreKey()
+	parentKey := key.Parent()
+	
+	if parentKey == nil {
+		t.Errorf("key.Parent() should not be nil when SetParent() is called")
+	} else {
+	
+		assertEqual(t, parent.ID(), parentKey.IntID())
+		assertEqual(t, ParentRecords.RecordType(), parentKey.Kind())
+		assertEqual(t, child.ID(), key.IntID())
+		assertEqual(t, ChildRecords.RecordType(), key.Kind())
+	
+	}
+	
+}
+
 func TestHasManyRecord_ValidOnlyWithParent(t *testing.T) {
 	
 	Authors := NewModel("TestHasManyRecord_ValidOnlyWithParent_Authors")
